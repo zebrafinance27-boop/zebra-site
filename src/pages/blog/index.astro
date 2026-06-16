@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const fmt = (d) => d.toLocaleDateString("he-IL", { year: "numeric", month: "long", day: "numeric" });
+---
+<Base
+  title="הבלוג של זברה — מדריכים וטיפים על הלוואות ומימון"
+  description="מאמרים, מדריכים וטיפים על הלוואות, מימון, איחוד הלוואות והלוואה כנגד רכב — מהצוות של זברה."
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">הבלוג</span>
+      <h1>מדריכים וטיפים על הלוואות ומימון</h1>
+      <p>כל מה שכדאי לדעת לפני שלוקחים הלוואה — בשפה פשוטה, מהצוות של זברה.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      {posts.length === 0 ? (
+        <p style="text-align:center;color:var(--muted)">בקרוב יעלו כאן מאמרים חדשים.</p>
+      ) : (
+        <div class="post-grid">
+          {posts.map((post) => (
+            <a class="post-card" href={`/blog/${post.slug}/`}>
+              {post.data.cover && (
+                <div class="thumb"><img src={post.data.cover} alt={post.data.title} loading="lazy" /></div>
+              )}
+              <div class="pc-body">
+                <span class="pc-date">{fmt(post.data.pubDate)}</span>
+                <h3>{post.data.title}</h3>
+                <p>{post.data.description}</p>
+                <span class="pc-more">קראו עוד ←</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <LeadForm />
+</Base>

@@ -1,0 +1,27 @@
+---
+import Base from "../layouts/Base.astro";
+import LeadForm from "../components/LeadForm.astro";
+---
+<Base
+  title="צור קשר | זברה"
+  description="מעוניינים בהלוואה או בשאלה? השאירו פרטים ונחזור אליכם, או חייגו אלינו ישירות. בלי התחייבות."
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">צור קשר</span>
+      <h1>נשמח לעזור לך</h1>
+      <p>השאירו פרטים בטופס ונחזור אליכם בהקדם, או צרו קשר ישירות בכל אחת מהדרכים הבאות.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap prose" style="text-align:center">
+      <p>אפשר להתקשר אלינו, לשלוח הודעת WhatsApp, או פשוט להשאיר פרטים בשאלון הקצר למטה — ונחזור אליכם עם הצעה מותאמת אישית, בלי התחייבות ובלי עלות.</p>
+      <p>
+        <a class="btn" id="contactCall" href="tel:0500000000" style="display:inline-block;margin-top:10px">חייגו אלינו</a>
+      </p>
+    </div>
+  </section>
+
+  <LeadForm />
+</Base>

@@ -1,0 +1,55 @@
+---
+import Base from "../../layouts/Base.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const fmt = (d) => d.toLocaleDateString("he-IL", { year: "numeric", month: "long", day: "numeric" });
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  image: post.data.cover ? new URL(post.data.cover, Astro.site).toString() : undefined,
+  author: { "@type": "Organization", name: "זברה" },
+  publisher: {
+    "@type": "Organization",
+    name: "זברה",
+    logo: { "@type": "ImageObject", url: new URL("/images/logo.png", Astro.site).toString() },
+  },
+};
+---
+<Base
+  title={`${post.data.title} | זברה`}
+  description={post.data.description}
+  image={post.data.cover || "/images/zebra.webp"}
+  type="article"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
+
+  <article class="block">
+    <div class="wrap">
+      <a class="back-link" href="/blog/">← חזרה לבלוג</a>
+      <header class="article-head">
+        <div class="pc-date">{fmt(post.data.pubDate)}</div>
+        <h1>{post.data.title}</h1>
+      </header>
+      {post.data.cover && (
+        <div class="article-cover"><img src={post.data.cover} alt={post.data.title} /></div>
+      )}
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  <LeadForm />
+</Base>

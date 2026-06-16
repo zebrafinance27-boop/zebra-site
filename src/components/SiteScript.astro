@@ -1,0 +1,161 @@
+<script is:inline>
+/* =========================================================================
+   הגדרות — עדכנו כאן את פרטי הקשר שלכם:
+   ========================================================================= */
+const CONFIG = {
+  phone:    "0545995519",        // מספר טלפון להצגה ולחיוג
+  whatsapp: "972545995519",      // מספר WhatsApp בפורמט בינלאומי (972 במקום 0)
+  // הלידים נשלחים לכל הכתובות הבאות (אפשר להוסיף/להסיר):
+  webhooks: [
+    "https://webhooks.pipely.co.il/catch-lead?client_id=2c0a073a-7e10-4ae4-9891-90857db9aea5",
+    "https://hook.eu1.make.com/slzneu9bbw0b3rt1yybugtdjr2ledavf"
+  ],
+  sendToWhatsApp: true           // לאחר שליחה — להציע המשך ב-WhatsApp עם הפרטים
+};
+
+/* ----- לכידת פרמטרי UTM וטראקינג (נטענים מכתובת העמוד) ----- */
+const tracking = (function(){
+  const p = new URLSearchParams(location.search), t = {};
+  ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","fbclid"].forEach(k=>{
+    const v = p.get(k); if(v) t[k] = v;
+  });
+  t.landing_page = location.href;
+  t.referrer = document.referrer || "";
+  return t;
+})();
+
+/* ----- חיווט פרטי קשר ----- */
+(function(){
+  const tel="tel:"+CONFIG.phone;
+  ["hdrPhone","heroCall","footPhone","fabCall","contactCall"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=tel;});
+  const pretty=CONFIG.phone.replace(/(\d{3})(\d{3})(\d{0,4})/,"$1-$2-$3");
+  const fp=document.getElementById("footPhone");if(fp)fp.lastChild.textContent=pretty;
+  const wa="https://wa.me/"+CONFIG.whatsapp;
+  ["fabWa","footWa"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=wa;});
+})();
+
+/* ----- מנוע השאלון המדורג ----- */
+const wizard=document.getElementById("wizard");
+const picked={};       // לכל שאלה: {key, question, answer} — עם הטקסט המוצג בפועל
+function qText(screen){const t=document.querySelector('[data-screen="'+screen+'"] .q-title');return t?t.textContent.trim():screen;}
+function aText(el){const l=el.querySelector(".oc-label");return (l?l.textContent:el.textContent).trim();}
+let stack=[];          // היסטוריית מסכים לכפתור "חזרה"
+let curPct=25;
+
+const stepLabels={q1:"שאלה 1",q2:"שאלה 2",q3:"שאלה 2",details:"פרטים אחרונים",done:"סיום",no:""};
+function setProgress(p){curPct=p;document.getElementById("wzProg").style.width=p+"%";}
+
+function goScreen(name,pct){
+  const cur=wizard.querySelector(".screen.active");
+  const next=wizard.querySelector('[data-screen="'+name+'"]');
+  if(!next||cur===next)return;
+  const h0=cur?cur.offsetHeight:0, h1=next.offsetHeight;
+  wizard.style.height=h0+"px";
+  if(cur)cur.classList.remove("active");
+  next.classList.add("active");
+  requestAnimationFrame(()=>{wizard.style.height=h1+"px";});
+  clearTimeout(wizard._t);
+  wizard._t=setTimeout(()=>{if(next.classList.contains("active"))wizard.style.height="auto";},420);
+  if(pct!=null)setProgress(pct);
+  document.getElementById("wzStep").textContent=stepLabels[name]||"";
+}
+function nav(to,pct){const cur=wizard.querySelector(".screen.active").dataset.screen;stack.push({s:cur,p:curPct});goScreen(to,pct);}
+function back(){const prev=stack.pop();if(prev)goScreen(prev.s,prev.p);}
+function restart(){stack=[];Object.keys(picked).forEach(k=>delete picked[k]);wizard.querySelectorAll(".opt-card.sel").forEach(o=>o.classList.remove("sel"));goScreen("q1",25);}
+
+/* בחירה עם משוב קצר ואז מעבר */
+function pick(el,then){el.classList.add("sel");setTimeout(()=>{then();el.classList.remove("sel");},180);}
+
+function answerQ1(v,el){picked.q1={key:v,question:qText("q1"),answer:aText(el)};pick(el,()=>{
+  if(v==="vehicle")nav("q2",55);
+  else if(v==="property"||v==="both")nav("details",80);
+  else if(v==="none")nav("q3",55);
+});}
+function answerQ2(v,el){picked.q2={key:v,question:qText("q2"),answer:aText(el)};pick(el,()=>{
+  if(v==="full"){nav("no",100);}else{nav("details",80);}
+});}
+function answerQ3(v,el){picked.q3={key:v,question:qText("q3"),answer:aText(el)};pick(el,()=>{
+  if(v==="yes"){nav("no",100);}else{nav("details",80);}
+});}
+
+/* ----- שליחת הליד ----- */
+// נרמול טלפון: מקבל 05X..., +972..., 00972..., ומחזיר פורמט מקומי 0XXXXXXXXX
+function normalizePhone(raw){
+  let d=(raw||"").replace(/[^\d]/g,"");
+  if(d.startsWith("00")) d=d.slice(2);
+  if(d.startsWith("972")) d="0"+d.slice(3);
+  return d;
+}
+function validPhone(v){return /^0(5\d|7\d|[2-489])\d{7}$/.test(normalizePhone(v));}
+function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v||"").trim());}
+function submitLead(){
+  const name=document.getElementById("name"),phone=document.getElementById("phone"),email=document.getElementById("email");
+  let ok=true;
+  if(name.value.trim().length<2){name.classList.add("invalid");document.getElementById("errName").classList.add("show");ok=false;}
+  else{name.classList.remove("invalid");document.getElementById("errName").classList.remove("show");}
+  if(!validPhone(phone.value)){phone.classList.add("invalid");document.getElementById("errPhone").classList.add("show");ok=false;}
+  else{phone.classList.remove("invalid");document.getElementById("errPhone").classList.remove("show");}
+  if(!validEmail(email.value)){email.classList.add("invalid");document.getElementById("errEmail").classList.add("show");ok=false;}
+  else{email.classList.remove("invalid");document.getElementById("errEmail").classList.remove("show");}
+  if(!ok)return;
+
+  // בונים את התשובות לפי המסלול שנשאל בפועל — עם הטקסט המלא של השאלה והתשובה
+  const qa={};
+  if(picked.q1) qa[picked.q1.question]=picked.q1.answer;
+  if(picked.q1&&picked.q1.key==="vehicle"&&picked.q2) qa[picked.q2.question]=picked.q2.answer;
+  if(picked.q1&&picked.q1.key==="none"&&picked.q3) qa[picked.q3.question]=picked.q3.answer;
+
+  const lead=Object.assign({
+    name:name.value.trim(),
+    phone:normalizePhone(phone.value),
+    email:email.value.trim(),
+    time:new Date().toLocaleString("he-IL"),
+    form_version:"2026-06-11c"
+  }, qa, tracking);
+
+  // שליחה לכל הוובהוקים. Content-Type הוא text/plain כדי להימנע מבקשת CORS preflight
+  // שעלולה להיחסם; גוף הבקשה נשאר JSON תקין שהוובהוק יכול לפענח.
+  CONFIG.webhooks.forEach(url=>{
+    try{
+      fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify(lead),keepalive:true})
+        .catch(e=>console.error("webhook failed:",url,e));
+    }catch(e){console.error("webhook error:",url,e);}
+  });
+  console.log("LEAD:",lead);
+
+  if(CONFIG.sendToWhatsApp){
+    const qaLines=Object.entries(qa).map(([q,a])=>`${q} ${a}`).join("%0A");
+    const msg=`היי, אני ${lead.name}. השארתי פרטים באתר זברה.%0Aטלפון: ${lead.phone}%0Aאימייל: ${lead.email}%0A${qaLines}`;
+    const wa=document.getElementById("waConfirm");wa.href=`https://wa.me/${CONFIG.whatsapp}?text=${msg}`;wa.style.display="inline-block";
+  }
+  nav("done",100);
+}
+
+/* גובה דינמי בעת שינוי גודל חלון */
+window.addEventListener("resize",()=>{const a=wizard.querySelector(".screen.active");if(a)wizard.style.height="auto";});
+
+function scrollToForm(){document.getElementById("lead").scrollIntoView({behavior:"smooth",block:"start"});}
+
+/* ----- מספרים מונפשים ----- */
+function countUp(el){
+  const target=+el.dataset.to,suf=el.dataset.suf||"",dur=1200,t0=performance.now();
+  function step(t){const k=Math.min(1,(t-t0)/dur);el.textContent=Math.round(target*(1-Math.pow(1-k,3)))+suf;if(k<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+const countObs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){countUp(e.target);countObs.unobserve(e.target);}});},{threshold:.4});
+document.querySelectorAll(".bl .big[data-to]").forEach(el=>countObs.observe(el));
+
+/* ----- reveal on scroll ----- */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+/* ----- תפריט מובייל ----- */
+(function(){
+  const t=document.getElementById("navToggle"), n=document.getElementById("siteNav");
+  if(t&&n){
+    t.addEventListener("click",()=>{const o=n.classList.toggle("open");t.setAttribute("aria-expanded",o);});
+    n.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>n.classList.remove("open")));
+  }
+})();
+
+</script>

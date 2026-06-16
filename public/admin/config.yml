@@ -1,0 +1,36 @@
+# ====== הגדרות מערכת ניהול התוכן (Decap CMS) ======
+# שדה ה-backend יושלם בשלב 3 (חיבור GitHub + DecapBridge).
+# עד אז אפשר לבדוק את העורך מקומית עם local_backend.
+
+backend:
+  name: git-gateway
+  branch: main
+  # בשלב ההקמה נחבר את DecapBridge ונוסיף כאן:
+  # repo: USERNAME/REPO
+  # identity_url: https://auth.decapbridge.com/...   (מתקבל בהרשמה ל-DecapBridge)
+
+# לבדיקה מקומית (npx decap-server) — לא משפיע על הייצור:
+local_backend: true
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+# שפה ופורמט
+locale: "he"
+
+collections:
+  - name: "blog"
+    label: "מאמרים"
+    label_singular: "מאמר"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "כותרת", name: "title", widget: "string" }
+      - { label: "תיאור קצר (לקידום ולתצוגה בגוגל)", name: "description", widget: "text" }
+      - { label: "תאריך פרסום", name: "pubDate", widget: "datetime", date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "תמונה ראשית", name: "cover", widget: "image", required: false, hint: "תמונה שתופיע בראש המאמר וברשתות החברתיות" }
+      - { label: "טיוטה (לא יתפרסם)", name: "draft", widget: "boolean", default: false }
+      - { label: "תוכן המאמר", name: "body", widget: "markdown" }

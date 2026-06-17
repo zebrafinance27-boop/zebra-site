@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import LeadForm from "../components/LeadForm.astro";
 import Partners from "../components/Partners.astro";
 import Calculator from "../components/Calculator.astro";
+import Testimonials from "../components/Testimonials.astro";
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -166,19 +167,7 @@ const faqSchema = {
   </div>
 </section>
 
-<section class="block">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="eyebrow">לקוחות מספרים</span>
-      <h2>אנשים שכבר קיבלו מענה</h2>
-    </div>
-    <div class="quotes">
-      <div class="quote reveal"><div class="stars">★★★★★</div><p>"תהליך מהיר ופשוט, ליוו אותי בכל שלב. הכסף היה אצלי כבר למחרת."</p><div class="who">ד. כהן<span>תל אביב</span></div></div>
-      <div class="quote reveal"><div class="stars">★★★★★</div><p>"קיבלתי מימון לעסק בלי כל הבירוקרטיה שהכרתי מהבנק. שירות אדיב ומקצועי."</p><div class="who">מ. לוי<span>חיפה</span></div></div>
-      <div class="quote reveal"><div class="stars">★★★★★</div><p>"הלוואה כנגד הרכב והמשכתי לנסוע בו רגיל. בדיוק מה שהייתי צריך."</p><div class="who">ש. אברהם<span>באר שבע</span></div></div>
-    </div>
-  </div>
-</section>
+<Testimonials />
 
 <section class="block final">
   <div class="wrap reveal">

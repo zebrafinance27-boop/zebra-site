@@ -401,3 +401,33 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   .calc-controls{padding:26px 22px}
   .calc-result{padding:30px 22px}
 }
+
+/* ===== reviews & testimonial form ===== */
+.quotes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.q-body p{margin:0}
+@media (max-width:900px){.quotes-grid{grid-template-columns:1fr}}
+
+.rev-card{max-width:620px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:22px;padding:32px;box-shadow:var(--shadow)}
+.rev-row{margin-bottom:20px;display:flex;flex-direction:column;gap:8px}
+.rev-row label{font-weight:700;color:var(--ink)}
+.rev-row label .opt{font-weight:400;color:var(--muted);font-size:.88rem}
+.rev-row input,.rev-row textarea{width:100%;padding:13px 16px;border:2px solid var(--line);border-radius:12px;font:inherit;background:var(--cream);transition:border-color .2s,background .2s}
+.rev-row input:focus,.rev-row textarea:focus{outline:none;border-color:var(--green);background:#fff}
+.rev-row input.invalid,.rev-row textarea.invalid{border-color:#e0524d;background:#fef5f4}
+.rev-err{display:none;color:#e0524d;font-size:.85rem}
+.rev-err.show{display:block}
+.rev-card .btn{width:100%;margin-top:4px;justify-content:center}
+.rev-note{font-size:.82rem;color:var(--muted);text-align:center;margin-top:12px}
+
+.star-input{display:flex;gap:6px;direction:ltr;justify-content:flex-end}
+.star-input .star{background:none;border:none;cursor:pointer;font-size:2rem;line-height:1;color:#d8ddd2;padding:0;transition:transform .12s,color .12s}
+.star-input .star.on{color:var(--amber)}
+.star-input .star:hover{transform:scale(1.15)}
+
+/* honeypot — נסתר מבני אדם, גלוי לבוטים */
+.hp-field{position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0}
+
+.rev-thanks{text-align:center;padding:18px 6px}
+.rev-thanks .rev-check{width:64px;height:64px;border-radius:50%;background:var(--grad-green);color:#fff;font-size:2rem;display:grid;place-items:center;margin:0 auto 16px;box-shadow:0 12px 26px -12px rgba(76,138,36,.8)}
+.rev-thanks h3{font-size:1.5rem;font-weight:900;margin-bottom:8px}
+.rev-thanks p{color:var(--muted);margin-bottom:20px}

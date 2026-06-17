@@ -11,4 +11,16 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+// המלצות לקוחות — לכל המלצה קובץ. מוצגת באתר רק אם approved=true.
+const testimonials = defineCollection({
+  type: "content",
+  schema: z.object({
+    name: z.string().default("לקוח/ה"),
+    city: z.string().optional().default(""),
+    rating: z.coerce.number().min(1).max(5).default(5),
+    approved: z.boolean().default(false),
+    date: z.coerce.date().optional(),
+  }),
+});
+
+export const collections = { blog, testimonials };

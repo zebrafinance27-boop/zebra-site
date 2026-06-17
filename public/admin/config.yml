@@ -65,3 +65,20 @@ collections:
             fields:
               - { label: "שם הגוף", name: "name", widget: "string" }
               - { label: "לוגו", name: "logo", widget: "image" }
+
+  - name: "testimonials"
+    label: "המלצות לקוחות"
+    label_singular: "המלצה"
+    folder: "src/content/testimonials"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{fields.name}} — {{#if approved}}מאושר{{else}}ממתין לאישור{{/if}}"
+    fields:
+      - { label: "מאושר לפרסום", name: "approved", widget: "boolean", default: false, hint: "רק המלצות מאושרות מופיעות באתר. החליפו ל-כן כדי לפרסם." }
+      - { label: "שם", name: "name", widget: "string" }
+      - { label: "עיר", name: "city", widget: "string", required: false }
+      - { label: "דירוג", name: "rating", widget: "number", default: 5, min: 1, max: 5, value_type: "int" }
+      - { label: "תאריך", name: "date", widget: "datetime", date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD", required: false }
+      - { label: "תוכן ההמלצה", name: "body", widget: "text" }

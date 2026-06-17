@@ -10,7 +10,9 @@ const CONFIG = {
     "https://webhooks.pipely.co.il/catch-lead?client_id=2c0a073a-7e10-4ae4-9891-90857db9aea5",
     "https://hook.eu1.make.com/slzneu9bbw0b3rt1yybugtdjr2ledavf"
   ],
-  sendToWhatsApp: true           // לאחר שליחה — להציע המשך ב-WhatsApp עם הפרטים
+  sendToWhatsApp: true,          // לאחר שליחה — להציע המשך ב-WhatsApp עם הפרטים
+  // וובהוק נפרד להמלצות (תרחיש Make נפרד). יוחלף בכתובת האמיתית לאחר יצירת התרחיש:
+  reviewWebhook: "PASTE_REVIEW_WEBHOOK_URL_HERE"
 };
 
 /* ----- לכידת פרמטרי UTM וטראקינג (נטענים מכתובת העמוד) ----- */
@@ -186,6 +188,65 @@ document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
   term.addEventListener("input",calc);
   calc();
 })();
+
+/* ----- טופס המלצה: בחירת כוכבים + שליחה (עם honeypot) ----- */
+let reviewRating = 5;
+(function(){
+  const stars = document.getElementById("rvStars");
+  if(!stars) return;
+  const btns = Array.from(stars.querySelectorAll(".star"));
+  function paint(v){ btns.forEach(b=> b.classList.toggle("on", +b.dataset.v <= v)); }
+  btns.forEach(b=>{
+    b.addEventListener("click", ()=>{ reviewRating = +b.dataset.v; paint(reviewRating); });
+    b.addEventListener("mouseenter", ()=> paint(+b.dataset.v));
+  });
+  stars.addEventListener("mouseleave", ()=> paint(reviewRating));
+  paint(reviewRating); // ברירת מחדל 5
+})();
+
+function submitReview(){
+  const nameEl=document.getElementById("rvName");
+  const textEl=document.getElementById("rvText");
+  const cityEl=document.getElementById("rvCity");
+  const hp=document.getElementById("rvCompany");
+  if(!nameEl||!textEl) return;
+
+  // honeypot: אם השדה הנסתר מולא — כנראה בוט. עוצרים בשקט (מתנהגים כאילו הצליח).
+  if(hp && hp.value.trim() !== ""){ showReviewThanks(); return; }
+
+  let ok=true;
+  if(nameEl.value.trim().length<2){nameEl.classList.add("invalid");document.getElementById("rvErrName").classList.add("show");ok=false;}
+  else{nameEl.classList.remove("invalid");document.getElementById("rvErrName").classList.remove("show");}
+  if(textEl.value.trim().length<5){textEl.classList.add("invalid");document.getElementById("rvErrText").classList.add("show");ok=false;}
+  else{textEl.classList.remove("invalid");document.getElementById("rvErrText").classList.remove("show");}
+  if(!ok) return;
+
+  const review={
+    name: nameEl.value.trim(),
+    city: (cityEl?cityEl.value.trim():""),
+    rating: String(reviewRating),
+    text: textEl.value.trim(),
+    time: new Date().toLocaleString("he-IL"),
+    source: location.href
+  };
+
+  const url = CONFIG.reviewWebhook;
+  if(url && url.indexOf("http")===0){
+    const params=new URLSearchParams();
+    Object.entries(review).forEach(([k,v])=>{ if(String(v)!=="") params.append(k,String(v)); });
+    try{
+      fetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:params.toString(),keepalive:true})
+        .catch(e=>console.error("review webhook failed:",e));
+    }catch(e){console.error("review webhook error:",e);}
+  } else {
+    console.warn("reviewWebhook not configured yet:", review);
+  }
+  showReviewThanks();
+}
+function showReviewThanks(){
+  const f=document.getElementById("revForm"), t=document.getElementById("revThanks");
+  if(f&&t){f.style.display="none";t.style.display="block";t.scrollIntoView({behavior:"smooth",block:"center"});}
+}
 
 /* ----- תפריט מובייל ----- */
 (function(){

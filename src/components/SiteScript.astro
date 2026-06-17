@@ -105,12 +105,16 @@ function submitLead(){
   if(picked.q1&&picked.q1.key==="vehicle"&&picked.q2) qa[picked.q2.question]=picked.q2.answer;
   if(picked.q1&&picked.q1.key==="none"&&picked.q3) qa[picked.q3.question]=picked.q3.answer;
 
+  // סיכום שאלון מוכן (שדה אחד קבוע) — שורה לכל שאלה: "שאלה ← תשובה"
+  const qa_summary=Object.entries(qa).map(([q,a])=>`${q} ← ${a}`).join("\n");
+
   const lead=Object.assign({
     name:name.value.trim(),
     phone:normalizePhone(phone.value),
     email:email.value.trim(),
     time:new Date().toLocaleString("he-IL"),
-    form_version:"2026-06-11c"
+    form_version:"2026-06-11c",
+    qa_summary:qa_summary
   }, qa, tracking);
 
   // שליחה כ-form-urlencoded (כמו טופס רגיל): כל שדה מגיע בנפרד, בלי צורך ב-Parse JSON.

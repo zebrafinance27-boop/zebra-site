@@ -1,7 +1,9 @@
 ---
 import partners from "../data/partners.json";
 const items = partners.items || [];
-const loop = [...items, ...items];
+// repeat the set enough times so the row always fills wide screens with no gaps
+const SETS = 3;
+const loop = Array.from({ length: SETS }, () => items).flat();
 ---
 {items.length > 0 && (
   <section class="partners">
@@ -12,9 +14,9 @@ const loop = [...items, ...items];
       </div>
     </div>
     <div class="marquee">
-      <div class="marquee-track">
+      <div class="marquee-track" style={`--marquee-sets:${SETS}`}>
         {loop.map((p) => (
-          <div class="logo-cell"><img src={p.logo} alt={p.name} loading="lazy" /></div>
+          <div class="logo-cell"><img src={p.logo} alt={p.name}/></div>
         ))}
       </div>
     </div>

@@ -293,16 +293,17 @@ footer .brand img{height:40px}
 
 /* ===== partners / financial institutions — infinite marquee ===== */
 .partners{padding:66px 0;background:var(--paper);border-block:1px solid var(--line)}
-.marquee{position:relative;margin-top:36px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
-.marquee-track{display:flex;width:max-content;gap:18px;animation:marquee 38s linear infinite}
+.marquee{position:relative;direction:ltr;margin-top:36px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee-track{display:flex;direction:ltr;width:max-content;gap:18px;padding-inline:18px;animation:marquee var(--marquee-duration,40s) linear infinite;will-change:transform}
 .marquee:hover .marquee-track{animation-play-state:paused}
 .logo-cell{flex:0 0 auto;display:grid;place-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 30px;width:210px;height:104px;transition:box-shadow .2s,transform .2s,border-color .2s}
 .logo-cell:hover{box-shadow:var(--shadow-sm);transform:translateY(-4px);border-color:#dce6cf}
 .logo-cell img{max-height:52px;max-width:150px;width:auto;object-fit:contain}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* move by exactly one set (the track holds SETS copies; shift = 100% / SETS) */
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(calc(-100% / var(--marquee-sets,3)))}}
 @media (max-width:600px){
   .logo-cell{width:160px;height:88px;padding:18px 22px}
   .logo-cell img{max-height:42px;max-width:120px}
-  .marquee-track{animation-duration:28s}
+  .marquee-track{--marquee-duration:30s}
 }
-@media (prefers-reduced-motion:reduce){.marquee-track{animation:none;flex-wrap:wrap;justify-content:center}}
+@media (prefers-reduced-motion:reduce){.marquee-track{animation:none;flex-wrap:wrap;justify-content:center;width:auto}}

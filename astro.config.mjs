@@ -2,7 +2,6 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  // ⚠️ עדכנו לכתובת האמיתית אחרי שתחברו דומיין (חשוב ל-SEO ול-sitemap)
-  site: "https://zebra-loans.netlify.app",
+  site: "https://zebra-finance.co.il",
   integrations: [sitemap()],
 });

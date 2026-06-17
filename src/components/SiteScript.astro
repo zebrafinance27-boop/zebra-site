@@ -113,11 +113,14 @@ function submitLead(){
     form_version:"2026-06-11c"
   }, qa, tracking);
 
-  // שליחה לכל הוובהוקים. Content-Type הוא text/plain כדי להימנע מבקשת CORS preflight
-  // שעלולה להיחסם; גוף הבקשה נשאר JSON תקין שהוובהוק יכול לפענח.
+  // שליחה כ-form-urlencoded (כמו טופס רגיל): כל שדה מגיע בנפרד, בלי צורך ב-Parse JSON.
+  // סוג תוכן זה נחשב "בקשה פשוטה" ולכן אינו מפעיל CORS preflight.
+  const params=new URLSearchParams();
+  Object.entries(lead).forEach(([k,v])=>{ if(v!==undefined&&v!==null&&String(v)!=="") params.append(k,String(v)); });
+  const bodyStr=params.toString();
   CONFIG.webhooks.forEach(url=>{
     try{
-      fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify(lead),keepalive:true})
+      fetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:bodyStr,keepalive:true})
         .catch(e=>console.error("webhook failed:",url,e));
     }catch(e){console.error("webhook error:",url,e);}
   });

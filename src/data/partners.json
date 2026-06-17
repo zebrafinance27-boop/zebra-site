@@ -1,0 +1,14 @@
+{
+  "title": "עובדים עם מיטב הגופים הפיננסיים",
+  "items": [
+    { "name": "בנק הפועלים", "logo": "/images/partners/hapoalim.webp" },
+    { "name": "בנק לאומי", "logo": "/images/partners/leumi.webp" },
+    { "name": "בנק דיסקונט", "logo": "/images/partners/discount.webp" },
+    { "name": "מזרחי טפחות", "logo": "/images/partners/mizrahi-tefahot.webp" },
+    { "name": "בנק יהב", "logo": "/images/partners/yahav.webp" },
+    { "name": "ONE ZERO", "logo": "/images/partners/one-zero.webp" },
+    { "name": "מימון ישיר", "logo": "/images/partners/mimun-yashir.webp" },
+    { "name": "Be The Bank", "logo": "/images/partners/be-the-bank.webp" },
+    { "name": "Credit 360", "logo": "/images/partners/credit360.webp" }
+  ]
+}

@@ -47,3 +47,21 @@ collections:
       - { label: "תמונה ראשית", name: "cover", widget: "image", required: false, hint: "תמונה שתופיע בראש המאמר וברשתות החברתיות" }
       - { label: "טיוטה (לא יתפרסם)", name: "draft", widget: "boolean", default: false }
       - { label: "תוכן המאמר", name: "body", widget: "markdown" }
+
+  - name: "settings"
+    label: "הגדרות אתר"
+    files:
+      - name: "partners"
+        label: "לוגואים של גופים פיננסיים"
+        file: "src/data/partners.json"
+        format: "json"
+        fields:
+          - { label: "כותרת הסקשן", name: "title", widget: "string" }
+          - label: "לוגואים"
+            name: "items"
+            widget: "list"
+            label_singular: "לוגו"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "שם הגוף", name: "name", widget: "string" }
+              - { label: "לוגו", name: "logo", widget: "image" }

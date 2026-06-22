@@ -36,6 +36,8 @@ button{font-family:inherit}
 .phone-link{display:inline-flex;align-items:center;gap:8px;font-weight:600}
 .phone-link svg{width:18px;height:18px;stroke:var(--green-deep)}
 .header-cta .btn{padding:11px 22px;border-radius:12px}
+.hdr-call-m{display:none;width:40px;height:40px;border-radius:11px;background:var(--green-deep);align-items:center;justify-content:center;flex:none}
+.hdr-call-m svg{width:20px;height:20px;stroke:#fff;fill:none}
 
 /* ---------- hero ---------- */
 .hero{position:relative;padding:56px 0 64px;overflow:hidden}
@@ -253,6 +255,9 @@ footer .brand img{height:40px}
   .site-nav.open{transform:none}
   .nav-toggle{display:block}
   .header-cta .btn{display:none}
+  .header-cta .phone-link{display:none}
+  .hdr-call-m{display:inline-flex}
+  .floaters .fab.call{display:none}
 }
 
 /* ===== generic content pages ===== */

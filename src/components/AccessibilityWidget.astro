@@ -1,0 +1,182 @@
+---
+// וידג'ט נגישות — כלי עזר. אינו תחליף להנגשת קוד מלאה לפי תקן IS 5568.
+---
+<div class="zb-a11y">
+  <button type="button" id="zbA11yBtn" class="zb-a11y-btn"
+          aria-haspopup="dialog" aria-expanded="false" aria-label="אפשרויות נגישות">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="4" r="2"></circle>
+      <path d="M12 6v6m0 0l-4 6m4-6l4 6M5 8c2 1 4.5 1.5 7 1.5S17 9 19 8"></path>
+    </svg>
+  </button>
+
+  <div id="zbA11yPanel" class="zb-a11y-panel" role="dialog" aria-label="תפריט נגישות" hidden>
+    <div class="zb-a11y-head">
+      <span>נגישות</span>
+      <button type="button" id="zbA11yClose" class="zb-a11y-x" aria-label="סגירה">✕</button>
+    </div>
+
+    <div class="zb-a11y-row zb-a11y-font">
+      <span>גודל טקסט</span>
+      <div class="zb-a11y-stepper">
+        <button type="button" data-font="dec" aria-label="הקטנת טקסט">A−</button>
+        <button type="button" data-font="reset" aria-label="איפוס גודל">A</button>
+        <button type="button" data-font="inc" aria-label="הגדלת טקסט">A+</button>
+      </div>
+    </div>
+
+    <div class="zb-a11y-grid">
+      <button type="button" class="zb-a11y-toggle" data-toggle="contrast"><span>◐</span>ניגודיות גבוהה</button>
+      <button type="button" class="zb-a11y-toggle" data-toggle="links"><span>↬</span>הדגשת קישורים</button>
+      <button type="button" class="zb-a11y-toggle" data-toggle="readable"><span>Aa</span>גופן קריא</button>
+      <button type="button" class="zb-a11y-toggle" data-toggle="noanim"><span>❙❙</span>עצירת אנימציות</button>
+      <button type="button" class="zb-a11y-toggle" data-toggle="cursor"><span>➤</span>סמן גדול</button>
+    </div>
+
+    <button type="button" id="zbA11yReset" class="zb-a11y-reset">איפוס הכל</button>
+    <a href="/accessibility/" class="zb-a11y-statement">הצהרת נגישות</a>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var KEY = "zebra_a11y";
+    var root = document.documentElement;
+    var state = { font: 0, contrast: false, links: false, readable: false, noanim: false, cursor: false };
+
+    try { var s = localStorage.getItem(KEY); if (s) state = Object.assign(state, JSON.parse(s)); } catch (e) {}
+
+    var STEPS = [100, 108, 116, 125, 134];
+
+    function apply() {
+      var f = STEPS[Math.max(0, Math.min(STEPS.length - 1, state.font))];
+      root.style.fontSize = f + "%";
+      root.classList.toggle("a11y-contrast", state.contrast);
+      root.classList.toggle("a11y-links", state.links);
+      root.classList.toggle("a11y-readable", state.readable);
+      root.classList.toggle("a11y-noanim", state.noanim);
+      root.classList.toggle("a11y-cursor", state.cursor);
+      document.querySelectorAll(".zb-a11y-toggle").forEach(function (b) {
+        var k = b.getAttribute("data-toggle");
+        b.classList.toggle("on", !!state[k]);
+        b.setAttribute("aria-pressed", !!state[k]);
+      });
+    }
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} apply(); }
+
+    apply(); // החל מצב שמור מיד בטעינה
+
+    var btn = document.getElementById("zbA11yBtn");
+    var panel = document.getElementById("zbA11yPanel");
+    function openPanel(o) {
+      panel.hidden = !o;
+      btn.setAttribute("aria-expanded", o);
+      if (o) panel.classList.add("show"); else panel.classList.remove("show");
+    }
+    btn.addEventListener("click", function () { openPanel(panel.hidden); });
+    document.getElementById("zbA11yClose").addEventListener("click", function () { openPanel(false); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") openPanel(false); });
+
+    document.querySelectorAll("[data-font]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var a = b.getAttribute("data-font");
+        if (a === "inc") state.font = Math.min(STEPS.length - 1, state.font + 1);
+        else if (a === "dec") state.font = Math.max(0, state.font - 1);
+        else state.font = 0;
+        save();
+      });
+    });
+    document.querySelectorAll(".zb-a11y-toggle").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var k = b.getAttribute("data-toggle");
+        state[k] = !state[k];
+        save();
+      });
+    });
+    document.getElementById("zbA11yReset").addEventListener("click", function () {
+      state = { font: 0, contrast: false, links: false, readable: false, noanim: false, cursor: false };
+      save();
+    });
+  })();
+</script>
+
+<style>
+  .zb-a11y-btn {
+    position: fixed; bottom: 18px; right: 18px; z-index: 60;
+    width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer;
+    background: var(--green-deep); color: #fff; display: grid; place-items: center;
+    box-shadow: var(--shadow); transition: transform .15s;
+  }
+  .zb-a11y-btn:hover { transform: scale(1.08); }
+  .zb-a11y-btn svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .zb-a11y-btn svg circle { fill: #fff; stroke: none; }
+
+  .zb-a11y-panel {
+    position: fixed; bottom: 84px; right: 18px; z-index: 81;
+    width: min(320px, calc(100vw - 36px));
+    background: var(--paper); border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow); padding: 16px; border-top: 4px solid var(--green);
+    transform: translateY(12px) scale(.97); opacity: 0;
+    transition: transform .25s cubic-bezier(.16,1,.3,1), opacity .25s;
+  }
+  .zb-a11y-panel.show { transform: translateY(0) scale(1); opacity: 1; }
+
+  .zb-a11y-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .zb-a11y-head span { font-weight: 800; font-size: 1.05rem; color: var(--ink); }
+  .zb-a11y-x { border: none; background: transparent; cursor: pointer; font-size: 1rem; color: var(--muted); }
+
+  .zb-a11y-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 600; font-size: .92rem; }
+  .zb-a11y-stepper { display: flex; gap: 6px; }
+  .zb-a11y-stepper button {
+    border: 1.4px solid var(--line); background: var(--cream); border-radius: 9px;
+    padding: 6px 11px; cursor: pointer; font-weight: 700; font-family: inherit; color: var(--ink);
+  }
+  .zb-a11y-stepper button:hover { border-color: var(--green); }
+
+  .zb-a11y-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .zb-a11y-toggle {
+    display: flex; align-items: center; gap: 8px; text-align: right;
+    border: 1.4px solid var(--line); background: var(--paper); border-radius: 11px;
+    padding: 10px; cursor: pointer; font-family: inherit; font-weight: 600; font-size: .85rem; color: var(--ink);
+    transition: border-color .15s, background .15s;
+  }
+  .zb-a11y-toggle span { flex: none; width: 22px; height: 22px; border-radius: 7px; background: var(--tint); display: grid; place-items: center; font-size: .8rem; }
+  .zb-a11y-toggle:hover { border-color: var(--green); }
+  .zb-a11y-toggle.on { border-color: var(--green); background: var(--tint); }
+  .zb-a11y-toggle.on span { background: var(--green); color: #fff; }
+
+  .zb-a11y-reset {
+    width: 100%; margin-top: 12px; border: none; cursor: pointer; font-family: inherit;
+    background: var(--green); color: #fff; font-weight: 600; border-radius: 11px; padding: 11px;
+  }
+  .zb-a11y-reset:hover { background: var(--green-deep); }
+  .zb-a11y-statement { display: block; text-align: center; margin-top: 10px; font-size: .82rem; color: var(--muted); text-decoration: underline; }
+</style>
+
+<style is:global>
+  /* --- אפקטים שמוחלים על כל האתר --- */
+  html.a11y-links a { text-decoration: underline !important; }
+
+  html.a11y-readable, html.a11y-readable * { font-family: Arial, "Segoe UI", sans-serif !important; letter-spacing: .01em !important; }
+
+  html.a11y-noanim *, html.a11y-noanim *::before, html.a11y-noanim *::after {
+    animation: none !important; transition: none !important; scroll-behavior: auto !important;
+  }
+
+  html.a11y-cursor, html.a11y-cursor * {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'><path d='M5 2l14 8-6 1 4 7-3 2-4-7-5 4z' fill='black' stroke='white' stroke-width='1'/></svg>") 4 2, auto !important;
+  }
+
+  html.a11y-contrast body { background: #000 !important; color: #fff !important; }
+  html.a11y-contrast .site-header,
+  html.a11y-contrast section,
+  html.a11y-contrast .wrap,
+  html.a11y-contrast main { background: #000 !important; color: #fff !important; }
+  html.a11y-contrast h1, html.a11y-contrast h2, html.a11y-contrast h3,
+  html.a11y-contrast h4, html.a11y-contrast p, html.a11y-contrast li,
+  html.a11y-contrast span, html.a11y-contrast label { color: #fff !important; }
+  html.a11y-contrast a { color: #ffe600 !important; }
+  html.a11y-contrast .btn, html.a11y-contrast .zb-btn-accept { background: #ffe600 !important; color: #000 !important; box-shadow: none !important; }
+  /* לא משנים את עצם תפריט הנגישות והבאנר כדי שיישארו שמישים */
+  html.a11y-contrast .zb-a11y-panel, html.a11y-contrast .zb-cookie-card { background: #111 !important; color: #fff !important; }
+</style>

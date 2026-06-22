@@ -10,9 +10,31 @@
         <a id="footWa" href="#"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>WhatsApp</a>
       </div>
     </div>
+    <nav class="foot-links" aria-label="קישורים משפטיים">
+      <a href="/privacy/">מדיניות פרטיות</a>
+      <span class="foot-sep" aria-hidden="true">•</span>
+      <a href="/accessibility/">הצהרת נגישות</a>
+    </nav>
     <p class="disclaimer">
       זברה היא גוף המתווך בין הלווה למלווה, ואינה המלווה או חברת המימון. אנחנו עובדים עבורכם מול חברות המימון כדי להשיג את ההלוואה המשתלמת ביותר — על בסיס הצלחה בלבד, ללא דמי פתיחת תיק וללא עמלות מראש. ההלוואה עצמה ניתנת על-ידי גופים מממנים, ואישורה ותנאיה כפופים לבדיקתם ולאישורם. אין באמור משום הצעה או התחייבות למתן אשראי. אי-עמידה בפירעון ההלוואה עלולה לגרור חיוב בריבית פיגורים והליכי גבייה.
       <br>© זברה. כל הזכויות שמורות.
     </p>
   </div>
 </footer>
+
+<style>
+  .foot-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 4px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: .92rem;
+    font-weight: 600;
+  }
+  .foot-links a { color: var(--muted); transition: color .15s; }
+  .foot-links a:hover { color: var(--green); }
+  .foot-sep { color: var(--line); }
+</style>

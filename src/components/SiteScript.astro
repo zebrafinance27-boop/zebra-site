@@ -5,14 +5,13 @@
 const CONFIG = {
   phone:    "0545995519",        // מספר טלפון להצגה ולחיוג
   whatsapp: "972545995519",      // מספר WhatsApp בפורמט בינלאומי (972 במקום 0)
-  // הלידים נשלחים לכל הכתובות הבאות (אפשר להוסיף/להסיר):
+  // הלידים נשלחים ל-pipely (אמין) + נתפסים ע"י Netlify Forms (מייל). Make הוסר.
   webhooks: [
-    "https://webhooks.pipely.co.il/catch-lead?client_id=2c0a073a-7e10-4ae4-9891-90857db9aea5",
-    "https://hook.eu1.make.com/slzneu9bbw0b3rt1yybugtdjr2ledavf"
+    "https://webhooks.pipely.co.il/catch-lead?client_id=2c0a073a-7e10-4ae4-9891-90857db9aea5"
   ],
   sendToWhatsApp: true,          // לאחר שליחה — להציע המשך ב-WhatsApp עם הפרטים
   // וובהוק נפרד להמלצות (תרחיש Make נפרד). יוחלף בכתובת האמיתית לאחר יצירת התרחיש:
-  reviewWebhook: "https://hook.eu1.make.com/cgv8yw9qyor2bsmkwqdw4308ngr6pu8y"
+  reviewWebhook: "https://hook.eu1.make.com/y934zgedfuznudpdx3rspipy5k0b3up3"
 };
 
 /* ----- לכידת פרמטרי UTM וטראקינג (נטענים מכתובת העמוד) ----- */
@@ -130,6 +129,21 @@ function submitLead(){
         .catch(e=>console.error("webhook failed:",url,e));
     }catch(e){console.error("webhook error:",url,e);}
   });
+
+  // שליחה ל-Netlify Forms — תופס את הליד ושולח התראת מייל (מוגדר בלוח הבקרה של Netlify).
+  // שולחים רק את השדות הקבועים שהוצהרו בטופס הנסתר ב-LeadForm.astro.
+  (function(){
+    const netlifyFields=["name","phone","email","time","form_version","qa_summary",
+      "utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","fbclid","landing_page","referrer"];
+    const np=new URLSearchParams();
+    np.append("form-name","leads");
+    netlifyFields.forEach(k=>{ const v=lead[k]; if(v!==undefined&&v!==null&&String(v)!=="") np.append(k,String(v)); });
+    try{
+      fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:np.toString(),keepalive:true})
+        .catch(e=>console.error("netlify form failed:",e));
+    }catch(e){console.error("netlify form error:",e);}
+  })();
+
   console.log("LEAD:",lead);
 
   // אירוע Lead לפיקסל של מטא (פייסבוק) — נורה רק לאחר שליחה מוצלחת
@@ -230,17 +244,14 @@ function submitReview(){
     source: location.href
   };
 
-  const url = CONFIG.reviewWebhook;
-  if(url && url.indexOf("http")===0){
-    const params=new URLSearchParams();
-    Object.entries(review).forEach(([k,v])=>{ if(String(v)!=="") params.append(k,String(v)); });
-    try{
-      fetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:params.toString(),keepalive:true})
-        .catch(e=>console.error("review webhook failed:",e));
-    }catch(e){console.error("review webhook error:",e);}
-  } else {
-    console.warn("reviewWebhook not configured yet:", review);
-  }
+  // שליחה ל-Netlify Forms (טופס "testimonials"). אין יותר Make כאן.
+  const params=new URLSearchParams();
+  params.append("form-name","testimonials");
+  Object.entries(review).forEach(([k,v])=>{ if(String(v)!=="") params.append(k,String(v)); });
+  try{
+    fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:params.toString(),keepalive:true})
+      .catch(e=>console.error("netlify form failed:",e));
+  }catch(e){console.error("netlify form error:",e);}
   showReviewThanks();
 }
 function showReviewThanks(){

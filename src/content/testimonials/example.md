@@ -1,5 +1,5 @@
 ---
-approved: false
+approved: true
 name: ישראל ישראלי
 city: תל אביב
 rating: 5

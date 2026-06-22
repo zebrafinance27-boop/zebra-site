@@ -1,14 +1,18 @@
 ---
-// לשונית צד צפה שמובילה לטופס הלידים (#lead). אם אין טופס בעמוד — מפנה לדף הבית.
+// דסקטופ: לשונית אנכית צמודה לקצה ימין.
+// מובייל: כפתור צף צמוד לתחתית בסגנון ה-CTA של ההדר, שמופיע רק אחרי שגוללים מעבר לטופס (#lead).
 ---
-<a id="zbLeadTab" class="zb-lead-tab" href="#lead" aria-label="השארת פרטים">
-  השאירו פרטים
+<a id="zbLeadTab" class="zb-lead-tab" href="#lead" aria-label="בדקו התאמה">
+  <span class="lt-side">השאירו פרטים</span>
+  <span class="lt-pill">בדקו התאמה תוך 30 שניות</span>
 </a>
 
 <script is:inline>
   (function () {
     var t = document.getElementById("zbLeadTab");
     if (!t) return;
+
+    // לחיצה: גלילה לטופס באותו עמוד, או הפניה לדף הבית אם אין טופס
     t.addEventListener("click", function (e) {
       var target = document.getElementById("lead");
       e.preventDefault();
@@ -20,10 +24,30 @@
         window.location.href = "/#lead";
       }
     });
+
+    // הצגה במובייל רק אחרי שעוברים את הטופס בגלילה (בדסקטופ הלשונית גלויה תמיד)
+    var lead = document.getElementById("lead");
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var show;
+      if (lead) {
+        var r = lead.getBoundingClientRect();
+        show = r.bottom < 0;            // הטופס נגלל אל מעל לראש המסך
+      } else {
+        show = window.scrollY > window.innerHeight * 0.8; // עמוד ללא טופס — אחרי גלילה
+      }
+      t.classList.toggle("zb-show", show);
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
   })();
 </script>
 
 <style>
+  /* ===== דסקטופ: לשונית אנכית ===== */
   .zb-lead-tab {
     position: fixed;
     top: 50%;
@@ -57,12 +81,39 @@
     padding-right: 15px;
     box-shadow: -14px 0 30px -12px rgba(76,138,36,.95);
   }
-  .zb-lead-tab:active { transform: translateY(-50%) scale(.98); }
+  .lt-pill { display: none; }
 
+  /* ===== מובייל: כפתור צף צמוד לתחתית בסגנון ההדר ===== */
   @media (max-width: 640px) {
-    .zb-lead-tab { font-size: .82rem; padding: 15px 8px; }
+    .zb-lead-tab {
+      top: auto;
+      right: 14px;
+      left: 14px;
+      bottom: 14px;
+      writing-mode: horizontal-tb;
+      justify-content: center;
+      text-align: center;
+      font-size: 1.02rem;
+      letter-spacing: 0;
+      padding: 15px 20px;
+      border-radius: 14px;
+      box-shadow: 0 14px 30px -12px rgba(95,168,51,.95);
+      transform: translateY(140%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .32s cubic-bezier(.16,1,.3,1), opacity .32s, background .18s;
+    }
+    .zb-lead-tab::before { display: none; }      /* בלי עיפרון בכפתור התחתון */
+    .lt-side { display: none; }
+    .lt-pill { display: inline; }
+    .zb-lead-tab.zb-show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .zb-lead-tab:hover { padding-right: 20px; }  /* ביטול אפקט הדסקטופ */
   }
   @media (prefers-reduced-motion: reduce) {
-    .zb-lead-tab { transition: background .18s; }
+    .zb-lead-tab { transition: background .18s, opacity .2s; }
   }
 </style>

@@ -5,9 +5,10 @@
 const CONFIG = {
   phone:    "0545995519",        // מספר טלפון להצגה ולחיוג
   whatsapp: "972545995519",      // מספר WhatsApp בפורמט בינלאומי (972 במקום 0)
-  // הלידים נשלחים ל-pipely (אמין) + נתפסים ע"י Netlify Forms (מייל). Make הוסר.
+  // הלידים נשלחים ל-pipely (אמין) + ל-Make (→ monday) + נתפסים ע"י Netlify Forms (מייל).
   webhooks: [
-    "https://webhooks.pipely.co.il/catch-lead?client_id=2c0a073a-7e10-4ae4-9891-90857db9aea5"
+    "https://webhooks.pipely.co.il/catch-lead?client_id=2c0a073a-7e10-4ae4-9891-90857db9aea5",
+    "https://hook.eu1.make.com/slzneu9bbw0b3rt1yybugtdjr2ledavf"
   ],
   sendToWhatsApp: true,          // לאחר שליחה — להציע המשך ב-WhatsApp עם הפרטים
   // וובהוק נפרד להמלצות (תרחיש Make נפרד). יוחלף בכתובת האמיתית לאחר יצירת התרחיש:

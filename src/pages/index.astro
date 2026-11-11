@@ -19,17 +19,13 @@ const faqSchema = {
 <Base>
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
-<section class="hero">
-  <div class="wrap hero-grid">
-    <div class="hero-text reveal">
+<section class="zh-hero">
+  <div class="zh-bg" aria-hidden="true"><span class="zh-orb zh-orb1"></span><span class="zh-orb zh-orb2"></span><span class="zh-grid"></span></div>
+  <div class="wrap zh-hero-grid">
+    <div class="zh-hero-text reveal">
       <span class="eyebrow">הדרך הקלה להלוואה</span>
       <h1>צריכים מימון? אנחנו מתאימים לכם בדיוק את <span class="hl">ההלוואה הנכונה</span>.</h1>
-      <p class="lede">הלוואות לכל מטרה, לבעלי עסקים, וכנגד הרכב — בלי למסור את המפתחות. אישור מהיר, ללא בירוקרטיה, והכסף בחשבון תוך 24 שעות.</p>
-      <ul class="points">
-        <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>תהליך קצר</li>
-        <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>עד 100 תשלומים</li>
-        <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>כסף תוך 24 שעות</li>
-      </ul>
+      <p class="lede">הלוואות לכל מטרה, לבעלי עסקים וכנגד הרכב. אנחנו בודקים בשבילכם מול כ־30 גופי מימון ומביאים את ההצעה המשתלמת, בלי בירוקרטיה ובלי עמלות מראש.</p>
       <div class="hero-actions">
         <button class="btn" onclick="scrollToForm()">בדקו התאמה תוך 30 שניות</button>
         <a class="btn btn-line" id="heroCall" href="tel:0500000000">חייגו אלינו</a>
@@ -40,32 +36,68 @@ const faqSchema = {
       </div>
     </div>
 
-    <div class="hero-visual reveal">
-      <div class="stripes"><span></span><span></span><span></span></div>
-      <div class="spotlight"></div>
-      <img class="hero-zebra" src="/images/zebra.webp" alt="זברה">
+    <div class="zh-stage reveal" id="zhStage">
+      <div class="zh-halo" aria-hidden="true"></div>
+      <div class="zh-ring zh-ring1" aria-hidden="true"></div>
+      <div class="zh-ring zh-ring2" aria-hidden="true"></div>
+      <img class="zh-mascot" src="/images/zebra-mascot.webp" alt="הזברה של זברה מימון" width="820" height="1230" fetchpriority="high">
+      <div class="zh-float zh-f1" data-depth="0.6"><span class="zh-dot"></span><b>עובדים בשבילך,</b> לא בשביל הבנק</div>
+      <div class="zh-float zh-f2" data-depth="1"><span class="zh-ico">₪</span><span><b>בלי עמלה מראש</b><small>רק על בסיס הצלחה</small></span></div>
+      <div class="zh-float zh-f3" data-depth="0.8"><span class="zh-ico">24</span><span><b>הכסף בחשבון</b><small>תוך 24 שעות</small></span></div>
+      <div class="zh-float zh-f4" data-depth="0.4"><span class="zh-ico">30</span><span><b>כ־30 גופי מימון</b><small>בבדיקה אחת</small></span></div>
     </div>
   </div>
 </section>
 
 <LeadForm />
 
-<div class="trust">
-  <div class="wrap trust-row reveal">
-    <div class="trust-item"><div class="ti-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M12 5V3M9 3h6" stroke-linecap="round"/></svg></div><h4>תשובה מהירה</h4><span>בדקות בודדות</span></div>
-    <div class="trust-item"><div class="ti-ico"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 9l1.5 1.5L14 7M9 15h6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h4>תהליך פשוט</h4><span>100% אונליין</span></div>
-    <div class="trust-item"><div class="ti-ico"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg></div><h4>פרטיות מלאה</h4><span>שומרים על המידע שלך</span></div>
-    <div class="trust-item"><div class="ti-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 20c0-3.2 2.6-5 5.5-5s5.5 1.8 5.5 5" stroke-linecap="round"/><circle cx="17.5" cy="9" r="2.2"/><path d="M16.5 15.2c2.6.1 4.5 1.6 4.5 4.4" stroke-linecap="round"/></svg></div><h4>ליווי אישי</h4><span>צוות מקצועי לצידך</span></div>
-    <div class="trust-item"><div class="ti-ico"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5 5.6.5-4.2 3.7 1.3 5.5L12 20l-5.1 2.7 1.3-5.5L4 13.5l5.6-.5z" stroke-linejoin="round"/></svg></div><h4>פתרונות מותאמים</h4><span>לכל מטרה ובכל שלב</span></div>
+<section class="zh-stats">
+  <div class="wrap">
+    <div class="zh-stats-grid">
+      <div class="zh-stat bl reveal"><div class="big" data-to="3" data-suf="">3</div><p>שנים בשוק המימון</p></div>
+      <div class="zh-stat bl reveal"><div class="big" data-to="30" data-suf="">30</div><p>גופי מימון בבדיקה אחת</p></div>
+      <div class="zh-stat bl reveal"><div class="big" data-to="24" data-suf="">24</div><p>שעות עד שהכסף בחשבון</p></div>
+      <div class="zh-stat bl reveal"><div class="big" data-to="100" data-suf="">100</div><p>תשלומים בפריסה גמישה</p></div>
+    </div>
   </div>
-</div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">מה אנחנו עושים</span>
+      <h2>מימון שמתאים בדיוק אליכם</h2>
+      <p>מסלולים שונים, מטרה אחת: להביא לכם את הכסף בתנאים הכי נוחים, מהר.</p>
+    </div>
+    <div class="zh-cards">
+      <a class="zh-card reveal" href="/loans/kol-matara/" data-tilt>
+        <div class="zh-card-art"><span class="zh-card-glow"></span><img src="/images/zebra-any-purpose.webp" alt="" width="620" height="893" loading="lazy"></div>
+        <h3>הלוואה לכל מטרה</h3>
+        <p>שיפוץ, אירוע, לימודים, טיסה או איחוד הלוואות. אתם בוחרים את המטרה.</p>
+        <span class="zh-more">לפרטים <i></i></span>
+      </a>
+      <a class="zh-card reveal" href="/loans/baaley-asakim/" data-tilt>
+        <div class="zh-card-art"><span class="zh-card-glow"></span><img src="/images/zebra-business.webp" alt="" width="620" height="930" loading="lazy"></div>
+        <h3>הלוואות לבעלי עסקים</h3>
+        <p>הון חוזר, צמיחה או גישור על פערי תזרים, עם ליווי אישי לאורך כל הדרך.</p>
+        <span class="zh-more">לפרטים <i></i></span>
+      </a>
+      <a class="zh-card reveal" href="/loans/neged-rechev/" data-tilt>
+        <div class="zh-card-art zh-wide"><span class="zh-card-glow"></span><img src="/images/zebra-car.webp" alt="" width="760" height="757" loading="lazy"></div>
+        <h3>הלוואה כנגד הרכב</h3>
+        <p>מימון לפי שווי הרכב. הרכב והמפתחות נשארים אצלכם, גם עם שעבוד חלקי קיים.</p>
+        <span class="zh-more">לפרטים <i></i></span>
+      </a>
+    </div>
+  </div>
+</section>
 
 <section class="block">
   <div class="wrap">
     <div class="advocate reveal">
       <span class="eyebrow">למה זברה</span>
-      <h2>אנחנו עובדים בשבילכם</h2>
-      <p>זברה היא לא חברת מימון — אנחנו הגוף שמתווך בינך לבין המלווים, ועובד עבורך. אנחנו כאן כדי להילחם מול חברות המימון ולהשיג לך את ההלוואה המשתלמת ביותר.</p>
+      <h2>אנחנו עובדים בשבילכם, לא בשביל הבנק</h2>
+      <p>זברה היא לא חברת מימון. אנחנו מתווכים בינך לבין המלווים ועובדים עבורך: משווים, מתמקחים ומשיגים לך את ההלוואה המשתלמת ביותר.</p>
       <div class="adv-chips">
         <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>מתווכים, לא מלווים</span>
         <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>על בסיס הצלחה בלבד</span>
@@ -75,81 +107,26 @@ const faqSchema = {
   </div>
 </section>
 
-<Partners />
-
-<section class="block">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="eyebrow">מה אנחנו עושים</span>
-      <h2>מימון שמתאים בדיוק אליכם</h2>
-      <p>שלושה מסלולים, מטרה אחת — להביא לכם את הכסף בתנאים הכי נוחים, מהר.</p>
-    </div>
-    <div class="cards">
-      <div class="card reveal">
-        <div class="c-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9.5 14.5c0 1.1 1.1 1.8 2.5 1.8s2.5-.7 2.5-1.8-1.1-1.6-2.5-1.8-2.5-.7-2.5-1.8 1.1-1.8 2.5-1.8 2.5.7 2.5 1.8" stroke-linecap="round"/></svg></div>
-        <h3>הלוואות לכל מטרה</h3>
-        <p>שיפוץ, רכב, אירוע, איחוד הלוואות או כל צורך אחר.</p>
-        <ul>
-          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>פריסה גמישה עד 100 תשלומים</li>
-          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>החזר חודשי מותאם לתקציב</li>
-          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>אישור מהיר וללא בירוקרטיה</li>
-        </ul>
-      </div>
-      <div class="card reveal">
-        <div class="c-ico"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2M4 13h16" stroke-linecap="round"/></svg></div>
-        <h3>הלוואות לבעלי עסקים</h3>
-        <p>הון חוזר, צמיחה או גישור על פערי תזרים.</p>
-        <ul>
-          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>מימון מהיר להמשך פעילות</li>
-          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>מותאם לצרכים של העסק</li>
-          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>ליווי אישי לאורך כל הדרך</li>
-        </ul>
-      </div>
-      <div class="card reveal">
-        <div class="c-ico"><svg viewBox="0 0 24 24"><path d="M5 16l1.5-5h11L19 16M3 16h18v3H3z" stroke-linejoin="round"/><circle cx="7.5" cy="19" r="1.5"/><circle cx="16.5" cy="19" r="1.5"/></svg></div>
-        <h3>הלוואות כנגד הרכב</h3>
-        <p>מקבלים מימון על בסיס שווי הרכב — בלי לוותר על הניידות.</p>
-        <ul>
-          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>הרכב והמפתחות נשארים אצלכם</li>
-          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>גם עם מימון חלקי קיים</li>
-          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12"/><path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>סכום בהתאם לשווי הרכב</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="block" style="background:var(--paper);border-block:1px solid var(--line)">
+<section class="block zh-how">
   <div class="wrap">
     <div class="sec-head center reveal">
       <span class="eyebrow">איך זה עובד</span>
-      <h2>שלושה צעדים לכסף בחשבון</h2>
+      <h2>ארבעה צעדים לכסף בחשבון</h2>
     </div>
-    <div class="steps">
-      <div class="stepc reveal"><div class="num">01</div><h3>בודקים התאמה</h3><p>עונים על השאלון הקצר ומשאירים פרטים — פחות מדקה, הכל אונליין.</p></div>
-      <div class="stepc reveal"><div class="num">02</div><h3>מקבלים הצעה</h3><p>אנחנו בודקים ומחזירים לכם הצעה מותאמת אישית, מהר וברור.</p></div>
-      <div class="stepc reveal"><div class="num">03</div><h3>הכסף בחשבון</h3><p>תוך עד 24 שעות, בפריסה שנוחה לכם. בלי בירוקרטיה.</p></div>
+    <div class="zh-steps" id="zhSteps">
+      <div class="zh-line" aria-hidden="true"><i id="zhLineFill"></i></div>
+      <div class="zh-step reveal"><div class="zh-num">1</div><h3>ממלאים פרטים</h3><p>שאלון קצר של פחות מדקה, הכל אונליין.</p></div>
+      <div class="zh-step reveal"><div class="zh-num">2</div><h3>אנחנו בודקים</h3><p>משווים בשבילכם מול כ־30 גופי מימון.</p></div>
+      <div class="zh-step reveal"><div class="zh-num">3</div><h3>מקבלים הצעה</h3><p>הצעה מותאמת אישית, ברורה ושקופה.</p></div>
+      <div class="zh-step reveal"><div class="zh-num">4</div><h3>הכסף בחשבון</h3><p>תוך עד 24 שעות, בפריסה שנוחה לכם.</p></div>
     </div>
   </div>
 </section>
+
+<Partners />
 
 <Calculator />
 
-<section class="block">
-  <div class="wrap">
-    <div class="band reveal">
-      <div class="stripe-corner"><span></span><span></span><span></span></div>
-      <h2>השורה התחתונה</h2>
-      <p class="band-sub">הלוואה טובה מתחילה בהחלטה נכונה.</p>
-      <div class="band-grid">
-        <div class="bl"><div class="big" data-to="24" data-suf=" שעות">24 שעות</div><p>הכסף אצלכם בחשבון</p></div>
-        <div class="bl"><div class="big" data-to="100" data-suf="">100</div><p>תשלומים — פריסה גמישה</p></div>
-        <div class="bl"><div class="big" data-to="100" data-suf="%">100%</div><p>אונליין, בלי לצאת מהבית</p></div>
-        <div class="bl"><div class="big" data-to="0" data-suf="%">0%</div><p>סיכון — על בסיס הצלחה בלבד</p></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section class="block" style="background:var(--paper);border-block:1px solid var(--line)">
   <div class="wrap">
@@ -169,11 +146,61 @@ const faqSchema = {
 
 <Testimonials />
 
-<section class="block final">
-  <div class="wrap reveal">
-    <h2>מוכנים להתחיל?</h2>
-    <p>בדקו התאמה תוך 30 שניות — ונחזור אליכם עם ההצעה המתאימה לכם.</p>
-    <button class="btn" onclick="scrollToForm()">לבדיקת התאמה</button>
+<section class="block zh-final">
+  <div class="wrap">
+    <div class="zh-final-card reveal">
+      <div class="zh-final-text">
+        <h2>מוכנים להתחיל?</h2>
+        <p>בדקו התאמה תוך 30 שניות, ונחזור אליכם עם ההצעה המתאימה לכם. בלי עלות ובלי התחייבות.</p>
+        <button class="btn zh-btn-light" onclick="scrollToForm()">לבדיקת התאמה</button>
+      </div>
+      <img class="zh-final-mascot" src="/images/zebra-mascot.webp" alt="" width="820" height="1230" loading="lazy">
+    </div>
   </div>
 </section>
+
+<script is:inline>
+(function(){
+  var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine=window.matchMedia("(pointer: fine)").matches;
+  /* parallax for the floating hero cards */
+  var stage=document.getElementById("zhStage");
+  var floats=stage?stage.querySelectorAll("[data-depth]"):[];
+  var mx=0,my=0,ticking=false;
+  function paint(){
+    ticking=false;
+    var sy=Math.min(window.scrollY,700);
+    floats.forEach(function(el){
+      var d=+el.dataset.depth;
+      el.style.transform="translate3d("+(mx*14*d)+"px,"+(my*14*d-sy*0.12*d)+"px,0)";
+    });
+  }
+  function req(){if(!ticking){ticking=true;requestAnimationFrame(paint);}}
+  if(!reduce&&stage){
+    window.addEventListener("scroll",req,{passive:true});
+    if(fine){stage.addEventListener("mousemove",function(e){var r=stage.getBoundingClientRect();mx=(e.clientX-r.left)/r.width-.5;my=(e.clientY-r.top)/r.height-.5;req();});
+      stage.addEventListener("mouseleave",function(){mx=0;my=0;req();});}
+  }
+  /* 3D tilt on service cards */
+  if(!reduce&&fine){
+    document.querySelectorAll("[data-tilt]").forEach(function(card){
+      card.addEventListener("mousemove",function(e){var r=card.getBoundingClientRect();var x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+        card.style.transform="perspective(900px) rotateY("+(x*10)+"deg) rotateX("+(-y*10)+"deg) translateY(-6px)";
+        card.style.setProperty("--gx",(x+.5)*100+"%");card.style.setProperty("--gy",(y+.5)*100+"%");});
+      card.addEventListener("mouseleave",function(){card.style.transform="";});
+    });
+  }
+  /* "how it works" line fills while scrolling */
+  var steps=document.getElementById("zhSteps"),fill=document.getElementById("zhLineFill");
+  function line(){
+    if(!steps||!fill)return;
+    var r=steps.getBoundingClientRect(),vh=window.innerHeight;
+    var k=Math.max(0,Math.min(1,(vh*0.85-r.top)/(r.height+vh*0.35)));
+    fill.style.transform="scaleX("+k+")";fill.parentNode.style.setProperty("--k",k);
+    steps.querySelectorAll(".zh-step").forEach(function(s,i,all){s.classList.toggle("on",k>=(i+0.5)/all.length-0.05);});
+  }
+  if(reduce){if(fill)fill.style.transform="scaleX(1)";steps&&steps.querySelectorAll(".zh-step").forEach(function(s){s.classList.add("on");});}
+  else{window.addEventListener("scroll",function(){requestAnimationFrame(line);},{passive:true});window.addEventListener("resize",line);line();}
+})();
+</script>
 </Base>

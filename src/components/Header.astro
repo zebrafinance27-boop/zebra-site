@@ -5,18 +5,19 @@ const links = [
   { href: "/loans/kol-matara/", label: "הלוואה לכל מטרה" },
   { href: "/loans/baaley-asakim/", label: "לבעלי עסקים" },
   { href: "/loans/neged-rechev/", label: "כנגד רכב" },
+  { href: "/#lead", label: "בדיקת התאמה", cta: true },
   { href: "/blog/", label: "בלוג" },
   { href: "/reviews/", label: "המלצות" },
   { href: "/about/", label: "אודות" },
   { href: "/contact/", label: "צור קשר" },
 ];
-const isActive = (href) => href === "/" ? path === "/" : path.startsWith(href);
+const isActive = (href) => href.startsWith("/#") ? false : href === "/" ? path === "/" : path.startsWith(href);
 ---
 <header class="site-header">
   <div class="wrap header-row">
     <a class="brand" href="/" aria-label="זברה"><img src="/images/logo.png" alt="זברה" width="120" height="46"></a>
     <nav class="site-nav" id="siteNav">
-      {links.map((l) => <a href={l.href} class={isActive(l.href) ? "active" : ""}>{l.label}</a>)}
+      {links.map((l) => <a href={l.href} class={[isActive(l.href) ? "active" : "", l.cta ? "nav-cta" : ""].join(" ").trim() || undefined}>{l.label}</a>)}
     </nav>
     <div class="header-cta">
       <a class="phone-link" id="hdrPhone" href="tel:0500000000">

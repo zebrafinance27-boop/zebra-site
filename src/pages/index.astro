@@ -10,8 +10,8 @@ const faqSchema = {
   "@type": "FAQPage",
   mainEntity: [
     { "@type": "Question", name: "תוך כמה זמן מקבלים תשובה?", acceptedAnswer: { "@type": "Answer", text: "לרוב מקבלים תשובה ראשונית תוך דקות בודדות מרגע מילוי השאלון." } },
-    { "@type": "Question", name: "מתי הכסף מגיע לחשבון?", acceptedAnswer: { "@type": "Answer", text: "לאחר אישור ההלוואה והשלמת המסמכים, הכסף מועבר לחשבון תוך עד 24 שעות." } },
-    { "@type": "Question", name: "מהם תנאי ההחזר?", acceptedAnswer: { "@type": "Answer", text: "פריסה גמישה של עד 100 תשלומים, עם החזר חודשי שמתאים לתקציב." } },
+    { "@type": "Question", name: "מתי הכסף מגיע לחשבון?", acceptedAnswer: { "@type": "Answer", text: "זה תלוי במסלול ובגוף המממן. בהלוואה כנגד רכב הכסף מגיע לרוב תוך 24 שעות מרגע האישור והשלמת המסמכים; בשאר המסלולים לוח הזמנים משתנה, ונעדכן אתכם מראש." } },
+    { "@type": "Question", name: "מהם תנאי ההחזר?", acceptedAnswer: { "@type": "Answer", text: "הפריסה נקבעת לפי המסלול והגוף המממן, ואנחנו מתאימים אותה לתקציב שלכם. בהלוואה כנגד רכב אפשר לפרוס עד 100 תשלומים." } },
     { "@type": "Question", name: "כמה עולה לבדוק התאמה?", acceptedAnswer: { "@type": "Answer", text: "בדיקת ההתאמה ללא עלות ובלי התחייבות. עובדים על בסיס הצלחה בלבד, בלי דמי פתיחת תיק ובלי עמלות מראש." } }
   ]
 };
@@ -43,7 +43,7 @@ const faqSchema = {
       <img class="zh-mascot" src="/images/zebra-mascot.webp" alt="הזברה של זברה מימון" width="820" height="1230" fetchpriority="high">
       <div class="zh-float zh-f1" data-depth="0.6"><span class="zh-dot"></span><b>עובדים בשבילך,</b> לא בשביל הבנק</div>
       <div class="zh-float zh-f2" data-depth="1"><span class="zh-ico">₪</span><span><b>בלי עמלה מראש</b><small>רק על בסיס הצלחה</small></span></div>
-      <div class="zh-float zh-f3" data-depth="0.8"><span class="zh-ico">24</span><span><b>הכסף בחשבון</b><small>תוך 24 שעות</small></span></div>
+      <div class="zh-float zh-f3" data-depth="0.8"><span class="zh-ico">✓</span><span><b>בדיקה ללא עלות</b><small>ובלי התחייבות</small></span></div>
       <div class="zh-float zh-f4" data-depth="0.4"><span class="zh-ico">30</span><span><b>כ־30 גופי מימון</b><small>בבדיקה אחת</small></span></div>
     </div>
   </div>
@@ -56,8 +56,7 @@ const faqSchema = {
     <div class="zh-stats-grid">
       <div class="zh-stat bl reveal"><div class="big" data-to="3" data-suf="">3</div><p>שנים בשוק המימון</p></div>
       <div class="zh-stat bl reveal"><div class="big" data-to="30" data-suf="">30</div><p>גופי מימון בבדיקה אחת</p></div>
-      <div class="zh-stat bl reveal"><div class="big" data-to="24" data-suf="">24</div><p>שעות עד שהכסף בחשבון</p></div>
-      <div class="zh-stat bl reveal"><div class="big" data-to="100" data-suf="">100</div><p>תשלומים בפריסה גמישה</p></div>
+      <div class="zh-stat bl reveal"><div class="big" data-to="0" data-suf=" ₪">0 ₪</div><p>עמלה מראש, משלמים רק בהצלחה</p></div>
     </div>
   </div>
 </section>
@@ -85,7 +84,7 @@ const faqSchema = {
       <a class="zh-card reveal" href="/loans/neged-rechev/" data-tilt>
         <div class="zh-card-art zh-wide"><span class="zh-card-glow"></span><img src="/images/zebra-car.webp" alt="" width="760" height="757" loading="lazy"></div>
         <h3>הלוואה כנגד הרכב</h3>
-        <p>מימון לפי שווי הרכב. הרכב והמפתחות נשארים אצלכם, גם עם שעבוד חלקי קיים.</p>
+        <p>מימון לפי שווי הרכב. הרכב והמפתחות נשארים אצלכם, גם עם שעבוד חלקי קיים. לרוב הכסף בחשבון תוך 24 שעות, בפריסה של עד 100 תשלומים.</p>
         <span class="zh-more">לפרטים <i></i></span>
       </a>
     </div>
@@ -118,7 +117,7 @@ const faqSchema = {
       <div class="zh-step reveal"><div class="zh-num">1</div><h3>ממלאים פרטים</h3><p>שאלון קצר של פחות מדקה, הכל אונליין.</p></div>
       <div class="zh-step reveal"><div class="zh-num">2</div><h3>אנחנו בודקים</h3><p>משווים בשבילכם מול כ־30 גופי מימון.</p></div>
       <div class="zh-step reveal"><div class="zh-num">3</div><h3>מקבלים הצעה</h3><p>הצעה מותאמת אישית, ברורה ושקופה.</p></div>
-      <div class="zh-step reveal"><div class="zh-num">4</div><h3>הכסף בחשבון</h3><p>תוך עד 24 שעות, בפריסה שנוחה לכם.</p></div>
+      <div class="zh-step reveal"><div class="zh-num">4</div><h3>הכסף בחשבון</h3><p>הכסף מועבר ישירות לחשבון שלכם, בפריסה שמתאימה לכם.</p></div>
     </div>
   </div>
 </section>
@@ -136,8 +135,8 @@ const faqSchema = {
     </div>
     <div class="faq reveal">
       <details class="faq-item"><summary>תוך כמה זמן מקבלים תשובה?<span class="fq-ic"></span></summary><div class="faq-a">לרוב מקבלים תשובה ראשונית תוך דקות בודדות מרגע מילוי השאלון. נציג חוזר אליכם עם הצעה מותאמת בהקדם.</div></details>
-      <details class="faq-item"><summary>מתי הכסף מגיע לחשבון?<span class="fq-ic"></span></summary><div class="faq-a">לאחר אישור ההלוואה והשלמת המסמכים, הכסף מועבר לחשבון תוך עד 24 שעות.</div></details>
-      <details class="faq-item"><summary>מהם תנאי ההחזר?<span class="fq-ic"></span></summary><div class="faq-a">אנחנו בונים יחד אתכם פריסה גמישה של עד 100 תשלומים, עם החזר חודשי שמתאים לתקציב שלכם.</div></details>
+      <details class="faq-item"><summary>מתי הכסף מגיע לחשבון?<span class="fq-ic"></span></summary><div class="faq-a">זה תלוי במסלול ובגוף המממן. בהלוואה כנגד רכב הכסף מגיע לרוב תוך 24 שעות מרגע האישור והשלמת המסמכים; בשאר המסלולים לוח הזמנים משתנה, ונעדכן אתכם מראש.</div></details>
+      <details class="faq-item"><summary>מהם תנאי ההחזר?<span class="fq-ic"></span></summary><div class="faq-a">הפריסה נקבעת לפי המסלול והגוף המממן, ואנחנו מתאימים אותה לתקציב שלכם. בהלוואה כנגד רכב אפשר לפרוס עד 100 תשלומים.</div></details>
       <details class="faq-item"><summary>מה זה "הלוואה כנגד הרכב"?<span class="fq-ic"></span></summary><div class="faq-a">מקבלים מימון על בסיס שווי הרכב שבבעלותכם — בלי למסור את הרכב או את המפתחות, וממשיכים להשתמש בו כרגיל.</div></details>
       <details class="faq-item"><summary>כמה עולה לבדוק התאמה?<span class="fq-ic"></span></summary><div class="faq-a">בדיקת ההתאמה ללא עלות ובלי התחייבות. אנחנו עובדים על בסיס הצלחה בלבד — בלי דמי פתיחת תיק ובלי עמלות מראש.</div></details>
     </div>

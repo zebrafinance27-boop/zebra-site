@@ -479,7 +479,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 
 /* ---- counters ---- */
 .zh-stats{padding:56px 0 10px}
-.zh-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.zh-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:900px;margin-inline:auto}
 .zh-stat{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:28px 18px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--shadow-sm)}
 .zh-stat::before{content:"";position:absolute;inset:auto -30% -60% -30%;height:120%;background:radial-gradient(ellipse at 50% 100%,rgba(95,168,51,.14),transparent 60%)}
 .zh-stat .big{position:relative;font-size:clamp(2.4rem,4.2vw,3.2rem);font-weight:900;color:var(--green-deep);line-height:1}
@@ -563,7 +563,8 @@ section.block:has(.quotes){background:radial-gradient(ellipse 60% 50% at 20% 30%
   .zh-f2{top:215px;right:0}
   .zh-f3{bottom:56px;right:0}
   .zh-f4{bottom:120px;left:0}
-  .zh-stats-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .zh-stats-grid{grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .zh-stat{padding:20px 8px}.zh-stat p{font-size:.85rem}
   .zh-steps{grid-template-columns:1fr;gap:26px;padding-right:0}
   .zh-line{top:0;bottom:0;right:30px;left:auto;width:4px;height:auto}
   .zh-line i{transform-origin:top;transform:scaleY(var(--k,0))!important}

@@ -143,6 +143,54 @@ const faqSchema = {
   </div>
 </section>
 
+<section class="block zh-videos">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">לקוחות מספרים</span>
+      <h2>שמעו את זה מהם</h2>
+      <p>לקוחות אמיתיים מספרים איך זה נראה אצלם.</p>
+    </div>
+    <div class="zh-vids">
+      <figure class="zh-vid reveal">
+        <blockquote>״ההחזר החודשי ירד ביותר מחצי״</blockquote>
+        <button class="zh-vid-frame" type="button" data-src="/videos/testimonial-miri.mp4" aria-label="הפעלת הסרטון של מירי">
+          <img src="/videos/testimonial-miri.jpg" alt="מירי מספרת על התהליך" width="540" height="960" loading="lazy">
+          <span class="zh-play" aria-hidden="true"><i></i></span>
+        </button>
+        <figcaption>מירי</figcaption>
+      </figure>
+      <figure class="zh-vid reveal">
+        <blockquote>״נתן לנו אפשרות לנשום״</blockquote>
+        <button class="zh-vid-frame" type="button" data-src="/videos/testimonial-aviel.mp4" aria-label="הפעלת הסרטון של אביאל">
+          <img src="/videos/testimonial-aviel.jpg" alt="אביאל מספר על התהליך" width="540" height="960" loading="lazy">
+          <span class="zh-play" aria-hidden="true"><i></i></span>
+        </button>
+        <figcaption>אביאל</figcaption>
+      </figure>
+      <figure class="zh-vid reveal">
+        <blockquote>״הוא עזר לי למלא את כל הטפסים ובא איתי לבנק״</blockquote>
+        <button class="zh-vid-frame" type="button" data-src="/videos/testimonial-maya.mp4" aria-label="הפעלת הסרטון של מאיה">
+          <img src="/videos/testimonial-maya.jpg" alt="מאיה מספרת על התהליך" width="540" height="960" loading="lazy">
+          <span class="zh-play" aria-hidden="true"><i></i></span>
+        </button>
+        <figcaption>מאיה</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+document.querySelectorAll(".zh-vid-frame").forEach(function(b){
+  b.addEventListener("click",function(){
+    document.querySelectorAll(".zh-vids video").forEach(function(v){v.pause();});
+    var v=document.createElement("video");
+    v.src=b.dataset.src; v.controls=true; v.autoplay=true; v.playsInline=true; v.setAttribute("playsinline","");
+    v.poster=b.querySelector("img").src;
+    b.replaceWith(v); v.play().catch(function(){});
+  });
+});
+</script>
+
 <Testimonials />
 
 <section class="block zh-final">

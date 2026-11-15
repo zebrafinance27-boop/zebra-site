@@ -29,7 +29,7 @@ const tracking = (function(){
 /* ----- חיווט פרטי קשר ----- */
 (function(){
   const tel="tel:"+CONFIG.phone;
-  ["hdrPhone","heroCall","footPhone","fabCall","contactCall"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=tel;});
+  ["hdrPhone","hdrCallM","heroCall","footPhone","fabCall","contactCall"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=tel;});
   const pretty=CONFIG.phone.replace(/(\d{3})(\d{3})(\d{0,4})/,"$1-$2-$3");
   const fp=document.getElementById("footPhone");if(fp)fp.lastChild.textContent=pretty;
   const wa="https://wa.me/"+CONFIG.whatsapp;

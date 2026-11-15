@@ -634,3 +634,25 @@ section.block:has(.quotes){background:radial-gradient(ellipse 60% 50% at 20% 30%
 @media (max-width:900px){.zh-hero h1{font-size:clamp(1.7rem,7.4vw,3rem)}}
 @media (max-width:420px){.zh-eyebrow{font-size:.98rem}}
 @media (min-width:901px) and (max-width:1200px){.zh-hero h1{font-size:3.7vw}}
+
+/* ---- hero on tablet/phone: zebra beside the text (left) ---- */
+@media (max-width:900px){
+  .zh-hero-grid{grid-template-columns:1.2fr .8fr;column-gap:14px;row-gap:0;align-items:center;
+    grid-template-areas:"eye eye" "h1 h1" "lede stage" "act stage"}
+  .zh-hero-text{display:contents}
+  .zh-eyebrow{grid-area:eye}
+  .zh-hero h1{grid-area:h1}
+  .zh-hero .lede{grid-area:lede;align-self:end;font-size:1.02rem;margin-top:16px}
+  .zh-hero .hero-actions{grid-area:act;align-self:start;flex-direction:column;align-items:stretch;gap:10px;margin-top:18px}
+  .zh-hero .hero-actions .btn{width:100%;justify-content:center;text-align:center;padding-inline:10px}
+  .zh-stage{grid-area:stage;height:auto;min-height:0;margin-top:12px;align-self:end}
+  .zh-mascot{width:100%;height:auto;max-width:250px}
+  .zh-halo{width:80%;height:auto;aspect-ratio:1;left:10%;margin-left:0;bottom:12%}
+  .zh-ring1{width:120%;height:auto;aspect-ratio:1;bottom:-14%}
+  .zh-ring2{width:92%;height:auto;aspect-ratio:1;bottom:-6%}
+}
+@media (max-width:600px){
+  .zh-stage{height:auto}.zh-mascot{height:auto}
+  .zh-hero .lede{font-size:.95rem;line-height:1.6}
+  .zh-hero .hero-actions .btn{font-size:clamp(.8rem,3.6vw,.95rem);padding:13px 6px;white-space:nowrap}
+}

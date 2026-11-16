@@ -710,3 +710,9 @@ section.block.biz-sec{padding-block:14px}
   .biz-cards,.biz-steps{grid-template-columns:1fr}
 }
 .biz-faq{max-width:none}
+/* עמוד רכב: פסים לאורך כל החלק העליון, וזברה רחבה עם רכב */
+.biz-hero-full::before{-webkit-mask-image:none;mask-image:none}
+.biz-hero-wide{grid-template-columns:1fr 300px}
+.biz-zebra-wide{height:250px}
+.biz-zebra-wide img{height:auto;width:290px}
+@media (max-width:720px){.biz-hero-wide{grid-template-columns:1fr 140px}.biz-zebra-wide{height:140px}.biz-zebra-wide img{width:140px}}

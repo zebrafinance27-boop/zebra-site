@@ -185,22 +185,38 @@ document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
   const amountOut=document.getElementById("calcAmountOut");
   const termOut=document.getElementById("calcTermOut");
   const monthlyOut=document.getElementById("calcMonthly");
-  const ANNUAL_RATE=0.09; // ריבית לדוגמה להמחשה בלבד
+  const rate=document.getElementById("calcRate");
+  const rateOut=document.getElementById("calcRateOut");
+  const amountMax=document.getElementById("calcAmountMax");
+  const termMax=document.getElementById("calcTermMax");
+  const types=document.querySelectorAll(".calc-type");
   const ils=n=>"\u20aa"+Math.round(n).toLocaleString("he-IL");
   function fillTrack(el){
     const pct=((el.value-el.min)/(el.max-el.min))*100;
     el.style.setProperty("--pct",pct+"%");
   }
   function calc(){
-    const P=+amount.value, n=+term.value, r=ANNUAL_RATE/12;
+    const P=+amount.value, n=+term.value, r=(+rate.value)/100/12;
     const m = r>0 ? P*r/(1-Math.pow(1+r,-n)) : P/n;
     amountOut.textContent=ils(P);
     termOut.textContent=n+" \u05d7\u05d5\u05d3\u05e9\u05d9\u05dd";
+    rateOut.textContent=(+rate.value)+"%";
     monthlyOut.textContent=ils(m);
-    fillTrack(amount); fillTrack(term);
+    fillTrack(amount); fillTrack(term); fillTrack(rate);
   }
+  // Loan type: each type has its own max amount and max number of payments
+  types.forEach(btn=>btn.addEventListener("click",()=>{
+    types.forEach(b=>{b.classList.remove("is-active");b.setAttribute("aria-pressed","false");});
+    btn.classList.add("is-active");btn.setAttribute("aria-pressed","true");
+    amount.max=btn.dataset.maxAmount; term.max=btn.dataset.maxTerm;
+    if(+amount.value>+amount.max) amount.value=amount.max;
+    if(+term.value>+term.max) term.value=term.max;
+    amountMax.textContent=ils(+amount.max); termMax.textContent=term.max;
+    calc();
+  }));
   amount.addEventListener("input",calc);
   term.addEventListener("input",calc);
+  rate.addEventListener("input",calc);
   calc();
 })();
 

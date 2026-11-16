@@ -5,7 +5,7 @@ interface Props { all?: boolean }
 const { all = false } = Astro.props;
 const items = all ? googleReviews : googleReviews.filter((r) => r.home).slice(0, 6);
 ---
-<section class="block g-reviews">
+<section class={all ? "block g-reviews g-reviews-all" : "block g-reviews"}>
   <div class="wrap">
     {!all && (
       <div class="sec-head center reveal">

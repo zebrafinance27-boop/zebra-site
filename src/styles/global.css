@@ -723,7 +723,7 @@ section.block.biz-sec{padding-block:14px}
 .g-stars{color:#f0a500;letter-spacing:2px}
 .g-reviews .q-body p{margin:0 0 8px}
 .g-reviews .q-body p:last-child{margin-bottom:16px}
-.g-actions{margin:0 0 26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.g-actions{margin:0 0 40px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 @media (max-width:900px){.g-reviews .quotes{grid-template-columns:1fr}}
 /* קרוסלת ביקורות: 3 בתצוגה, גוללים/גוררים הצידה */
 .g-carousel{position:relative}
@@ -736,3 +736,6 @@ section.block.biz-sec{padding-block:14px}
 .g-prev{right:-20px}.g-next{left:-20px}
 @media (max-width:900px){.g-track .g-slide{flex-basis:calc((100% - 20px) / 2)}}
 @media (max-width:640px){.g-track .g-slide{flex-basis:86%}.g-arrow{display:none}}
+/* עמוד המלצות: כפתורים קרוב יותר לראש העמוד, ורווח בין כותרת לתת-כותרת */
+section.block.g-reviews-all{padding-top:28px}
+.rv-hero.biz-hero p{margin-top:16px}

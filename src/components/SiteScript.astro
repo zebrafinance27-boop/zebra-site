@@ -5,7 +5,7 @@
 const CONFIG = {
   phone:    "0545995519",        // מספר טלפון להצגה ולחיוג
   whatsapp: "972545995519",      // מספר WhatsApp בפורמט בינלאומי (972 במקום 0)
-  // הלידים נשלחים ל-Make (→ monday) + נתפסים ע"י Netlify Forms (מייל).
+  // הלידים נשלחים ל-Make (→ monday).
   webhooks: [
     "https://hook.eu1.make.com/slzneu9bbw0b3rt1yybugtdjr2ledavf"
   ],
@@ -142,21 +142,6 @@ function submitLead(){
     }catch(e){console.error("webhook error:",url,e);}
   });
 
-  // שליחה ל-Netlify Forms — תופס את הליד ושולח התראת מייל (מוגדר בלוח הבקרה של Netlify).
-  // שולחים רק את השדות הקבועים שהוצהרו בטופס הנסתר ב-LeadForm.astro.
-  (function(){
-    const netlifyFields=["name","phone","email","time","form_version","qa_summary",
-      "utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","fbclid","landing_page","referrer"];
-    const np=new URLSearchParams();
-    np.append("form-name","leads");
-    netlifyFields.forEach(k=>{ const v=lead[k]; if(v!==undefined&&v!==null&&String(v)!=="") np.append(k,String(v)); });
-    try{
-      fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:np.toString(),keepalive:true})
-        .catch(e=>console.error("netlify form failed:",e));
-    }catch(e){console.error("netlify form error:",e);}
-  })();
-
-  console.log("LEAD:",lead);
 
   // אירוע Lead לפיקסל של מטא (פייסבוק) — נורה רק לאחר שליחה מוצלחת
   if(window.fbq) fbq('track','Lead');

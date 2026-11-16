@@ -1,21 +1,61 @@
 ---
 import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
+
+const faqs = [
+  { q: "כמה זמן לוקח תהליך קבלת הלוואה?", a: "תהליך מהיר ודיגיטלי, בדרך כלל בין 24 שעות ולכל היותר 48 שעות. הזמן תלוי בעיקר בשיתוף הפעולה מצד הלקוח." },
+  { q: "מהם המסמכים הנדרשים לקבלת הלוואה?", a: "במסלול המהיר אין צורך במסמכים מלבד תעודת זהות וספח. הבדיקה נעשית דיגיטלית, וכל מה שנדרש הוא עוסק מורשה פעיל ופרטים בסיסיים בשאלון." },
+  { q: "האם כל בעל עסק זכאי לקבל הלוואה מהירה?", a: "ההלוואה מיועדת לעוסקים מורשים. הזכאות והתנאים נקבעים על-ידי הגוף המממן לפי בדיקה דיגיטלית, ולכן לא כל בקשה מאושרת. מלאו את השאלון הקצר, ונבדוק בשבילכם התאמה בלי עלות." },
+  { q: "איך לקבל הלוואה בתנאים טובים?", a: "דבר ראשון, חשוב תמיד לשמור על דירוג גבוה מול הבנק. הדרך הכי טובה היא להשוות בין כמה גופים, ובדיוק את זה אנחנו עושים בשבילכם. אנחנו עובדים עם כ-30 גופי מימון, משווים ביניהם, מנהלים את המשא ומתן ומביאים לכם את ההצעה המשתלמת ביותר שמצאנו. ומשלמים לנו רק אחרי שהכסף בחשבון." },
+];
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
 ---
 <Base
   title="הלוואות לבעלי עסקים | זברה"
-  description="מימון מהיר לעסק שלך: הון חוזר, צמיחה או גישור על פערי תזרים. אישור מהיר, פריסה נוחה וליווי אישי לאורך כל הדרך."
+  description="הלוואה לעוסקים מורשים עד ₪150,000: בלי הגשת מסמכים, בלי ערב ובלי שעבוד. משלמים לנו רק אחרי שהכסף בחשבון."
 >
-  <section class="page-hero">
-    <div class="wrap">
-      <span class="eyebrow">מסלולי הלוואה</span>
-      <h1>הלוואות לבעלי עסקים</h1>
-      <p>מימון שמאפשר לעסק שלך להמשיך לנוע קדימה — בלי הבירוקרטיה של הבנקים.</p>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+
+  <section class="page-hero biz-hero">
+    <div class="wrap biz-hero-grid">
+      <div class="biz-hero-text">
+        <h1>הלוואות לבעלי עסקים</h1>
+        <p>מימון שמאפשר לעסק שלך להמשיך לנוע קדימה — בלי הבירוקרטיה של הבנקים.</p>
+        <span class="biz-for"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>לעוסקים מורשים · עד ₪150,000</span>
+      </div>
+      <div class="biz-zebra"><img src="/images/zebra-business.webp" alt="הזברה של זברה עם תיק עסקים" width="620" height="930" fetchpriority="high"></div>
     </div>
   </section>
 
-  <section class="block">
-    <div class="wrap prose">
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <div class="biz-cards">
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/><path d="M4 4l16 16"/></svg></div>
+          <h3>בלי להגיש מסמכים</h3>
+          <p>הבדיקה נעשית דיגיטלית, בלי לאסוף ולסרוק ניירת.</p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+          <h3>בלי ערב ובלי שעבוד</h3>
+          <p>ההלוואה על שם בעל העסק בלבד.</p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10l9-6 9 6"/><path d="M5 10v9h14v-9"/><path d="M9 19v-5h6v5"/></svg></div>
+          <h3>בלי לצאת מהעסק</h3>
+          <p>התהליך כולו מרחוק, ואנחנו לצידכם עד החתימה.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap prose">
+      <h2>מימון שמתאים לקצב של העסק</h2>
       <p>כל עסק נתקל מדי פעם בצורך במימון — בין אם זה הון חוזר לתקופה עמוסה, השקעה בצמיחה, רכישת ציוד, או גישור על פער תזרימי זמני. אנחנו מתאימים לכם מימון מהיר ופתרון שמותאם בדיוק לקצב ולצרכים של העסק.</p>
 
       <h2>מתאים במיוחד עבור</h2>
@@ -24,9 +64,51 @@ import LeadForm from "../../components/LeadForm.astro";
         <li>מימון צמיחה, ציוד או הרחבת פעילות.</li>
         <li>גישור על פערי תזרים זמניים.</li>
       </ul>
+    </div>
+  </section>
 
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">מה צריך כדי להתחיל?</h2>
+      <div class="biz-docs">
+        <div class="biz-ic biz-ic-lg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/><path d="M10 13l4 4M14 13l-4 4"/></svg></div>
+        <div>
+          <h3>לא צריך להגיש מסמכים</h3>
+          <p>הבדיקה נעשית דיגיטלית. מה שנדרש מכם זה רק עוסק מורשה פעיל ופרטים בסיסיים בשאלון — ואת השאר אנחנו מסדרים מול הגוף המממן.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">איך זה עובד</h2>
+      <div class="biz-steps">
+        <div class="biz-step"><div class="biz-n">1</div><h3>ממלאים שאלון קצר</h3><p>כמה שאלות על העסק, פחות מדקה.</p></div>
+        <div class="biz-step"><div class="biz-n">2</div><h3>אנחנו בודקים התאמה</h3><p>משווים מול גופי המימון וחוזרים אליכם עם הצעה.</p></div>
+        <div class="biz-step"><div class="biz-n">3</div><h3>הכסף בחשבון</h3><p>אחרי אישור הגוף המממן וחתימה דיגיטלית.</p></div>
+      </div>
+      <p class="biz-fee"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>על בסיס הצלחה — משלמים לנו רק אחרי שהכסף בחשבון הבנק.</p>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap prose">
       <h2>היתרון של זברה</h2>
       <p>במקום לרוץ בין גופים שונים, אנחנו עושים את העבודה בשבילכם — משווים, מנהלים משא ומתן ומשיגים את ההצעה המשתלמת ביותר לעסק, על בסיס הצלחה בלבד, ללא דמי פתיחת תיק וללא עמלות מראש.</p>
+      <p class="biz-fine">ההלוואה ניתנת על-ידי גוף מממן ובכפוף לבדיקתו ולאישורו. מיועד לעוסקים מורשים.</p>
+    </div>
+  </section>
+
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">שאלות נפוצות</h2>
+      <div class="faq biz-faq">
+        {faqs.map((f) => (
+          <details class="faq-item"><summary>{f.q}<span class="fq-ic"></span></summary><div class="faq-a">{f.a}</div></details>
+        ))}
+      </div>
     </div>
   </section>
 

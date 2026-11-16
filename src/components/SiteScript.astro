@@ -42,9 +42,9 @@ const picked={};       // לכל שאלה: {key, question, answer} — עם הט
 function qText(screen){const t=document.querySelector('[data-screen="'+screen+'"] .q-title');return t?t.textContent.trim():screen;}
 function aText(el){const l=el.querySelector(".oc-label");return (l?l.textContent:el.textContent).trim();}
 let stack=[];          // היסטוריית מסכים לכפתור "חזרה"
-let curPct=25;
+let curPct=20;
 
-const stepLabels={q1:"שאלה 1",q2:"שאלה 2",q3:"שאלה 2",details:"פרטים אחרונים",done:"סיום",no:""};
+const stepLabels={q0:"שאלה 1",q1:"שאלה 2",q2:"שאלה 3",q3:"שאלה 3",b1:"שאלה 2",b2:"שאלה 3",b3:"שאלה 4",details:"פרטים אחרונים",done:"סיום",no:""};
 function setProgress(p){curPct=p;document.getElementById("wzProg").style.width=p+"%";}
 
 function goScreen(name,pct){
@@ -63,21 +63,30 @@ function goScreen(name,pct){
 }
 function nav(to,pct){const cur=wizard.querySelector(".screen.active").dataset.screen;stack.push({s:cur,p:curPct});goScreen(to,pct);}
 function back(){const prev=stack.pop();if(prev)goScreen(prev.s,prev.p);}
-function restart(){stack=[];Object.keys(picked).forEach(k=>delete picked[k]);wizard.querySelectorAll(".opt-card.sel").forEach(o=>o.classList.remove("sel"));goScreen("q1",25);}
+function restart(){stack=[];Object.keys(picked).forEach(k=>delete picked[k]);wizard.querySelectorAll(".opt-card.sel").forEach(o=>o.classList.remove("sel"));goScreen("q0",20);}
 
 /* בחירה עם משוב קצר ואז מעבר */
 function pick(el,then){el.classList.add("sel");setTimeout(()=>{then();el.classList.remove("sel");},180);}
 
+/* Q0: loan type. Any purpose / car continue to the existing questions; business has its own track */
+function answerQ0(v,el){picked.q0={key:v,question:qText("q0"),answer:aText(el)};pick(el,()=>{
+  if(v==="business")nav("b1",40);
+  else nav("q1",45);
+});}
+/* Business track: b1 type -> b2 years active -> b3 returns -> details (returns do not block) */
+function answerB(id,next,el){picked[id]={key:id,question:qText(id),answer:aText(el)};pick(el,()=>{
+  nav(next,{b2:60,b3:75,details:85}[next]);
+});}
 function answerQ1(v,el){picked.q1={key:v,question:qText("q1"),answer:aText(el)};pick(el,()=>{
-  if(v==="vehicle")nav("q2",55);
-  else if(v==="property"||v==="both")nav("details",80);
-  else if(v==="none")nav("q3",55);
+  if(v==="vehicle")nav("q2",65);
+  else if(v==="property"||v==="both")nav("details",85);
+  else if(v==="none")nav("q3",65);
 });}
 function answerQ2(v,el){picked.q2={key:v,question:qText("q2"),answer:aText(el)};pick(el,()=>{
-  if(v==="full"){nav("no",100);}else{nav("details",80);}
+  if(v==="full"){nav("no",100);}else{nav("details",85);}
 });}
 function answerQ3(v,el){picked.q3={key:v,question:qText("q3"),answer:aText(el)};pick(el,()=>{
-  if(v==="yes"){nav("no",100);}else{nav("details",80);}
+  if(v==="yes"){nav("no",100);}else{nav("details",85);}
 });}
 
 /* ----- שליחת הליד ----- */
@@ -103,9 +112,14 @@ function submitLead(){
 
   // בונים את התשובות לפי המסלול שנשאל בפועל — עם הטקסט המלא של השאלה והתשובה
   const qa={};
-  if(picked.q1) qa[picked.q1.question]=picked.q1.answer;
-  if(picked.q1&&picked.q1.key==="vehicle"&&picked.q2) qa[picked.q2.question]=picked.q2.answer;
-  if(picked.q1&&picked.q1.key==="none"&&picked.q3) qa[picked.q3.question]=picked.q3.answer;
+  if(picked.q0) qa[picked.q0.question]=picked.q0.answer;
+  if(picked.q0&&picked.q0.key==="business"){
+    ["b1","b2","b3"].forEach(k=>{ if(picked[k]) qa[picked[k].question]=picked[k].answer; });
+  }else{
+    if(picked.q1) qa[picked.q1.question]=picked.q1.answer;
+    if(picked.q1&&picked.q1.key==="vehicle"&&picked.q2) qa[picked.q2.question]=picked.q2.answer;
+    if(picked.q1&&picked.q1.key==="none"&&picked.q3) qa[picked.q3.question]=picked.q3.answer;
+  }
 
   // סיכום שאלון מוכן (שדה אחד קבוע) — שורה לכל שאלה: "שאלה ← תשובה"
   const qa_summary=Object.entries(qa).map(([q,a])=>`${q} ← ${a}`).join("\n");
@@ -185,22 +199,38 @@ document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
   const amountOut=document.getElementById("calcAmountOut");
   const termOut=document.getElementById("calcTermOut");
   const monthlyOut=document.getElementById("calcMonthly");
-  const ANNUAL_RATE=0.09; // ריבית לדוגמה להמחשה בלבד
+  const rate=document.getElementById("calcRate");
+  const rateOut=document.getElementById("calcRateOut");
+  const amountMax=document.getElementById("calcAmountMax");
+  const termMax=document.getElementById("calcTermMax");
+  const types=document.querySelectorAll(".calc-type");
   const ils=n=>"\u20aa"+Math.round(n).toLocaleString("he-IL");
   function fillTrack(el){
     const pct=((el.value-el.min)/(el.max-el.min))*100;
     el.style.setProperty("--pct",pct+"%");
   }
   function calc(){
-    const P=+amount.value, n=+term.value, r=ANNUAL_RATE/12;
+    const P=+amount.value, n=+term.value, r=(+rate.value)/100/12;
     const m = r>0 ? P*r/(1-Math.pow(1+r,-n)) : P/n;
     amountOut.textContent=ils(P);
     termOut.textContent=n+" \u05d7\u05d5\u05d3\u05e9\u05d9\u05dd";
+    rateOut.textContent=(+rate.value)+"%";
     monthlyOut.textContent=ils(m);
-    fillTrack(amount); fillTrack(term);
+    fillTrack(amount); fillTrack(term); fillTrack(rate);
   }
+  // Loan type: each type has its own max amount and max number of payments
+  types.forEach(btn=>btn.addEventListener("click",()=>{
+    types.forEach(b=>{b.classList.remove("is-active");b.setAttribute("aria-pressed","false");});
+    btn.classList.add("is-active");btn.setAttribute("aria-pressed","true");
+    amount.max=btn.dataset.maxAmount; term.max=btn.dataset.maxTerm;
+    if(+amount.value>+amount.max) amount.value=amount.max;
+    if(+term.value>+term.max) term.value=term.max;
+    amountMax.textContent=ils(+amount.max); termMax.textContent=term.max;
+    calc();
+  }));
   amount.addEventListener("input",calc);
   term.addEventListener("input",calc);
+  rate.addEventListener("input",calc);
   calc();
 })();
 

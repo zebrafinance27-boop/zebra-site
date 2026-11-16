@@ -1,22 +1,63 @@
 ---
 import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
+
+const faqs = [
+  { q: "תוך כמה זמן הכסף מגיע לחשבון?", a: "התהליך דיגיטלי ומהיר. לאחר אישור הגוף המממן, הכסף מגיע לחשבון הבנק שלכם תוך עד 2 ימי עסקים." },
+  { q: "אילו מסמכים צריך?", a: "תעודת זהות ותעודה מזהה נוספת — דרכון או רישיון נהיגה. במקרים מסוימים הגוף המממן עשוי לבקש גם דפי חשבון, תלושי שכר, או שומת מס לעצמאים." },
+  { q: "צריך להעביר את החשבון או את המשכורת?", a: "לא. ההלוואה מתאימה ללקוחות של כל הבנקים, בלי להעביר חשבון ובלי להעביר משכורת." },
+  { q: "אפשר לפרוע את ההלוואה מוקדם?", a: "כן. אפשר לפרוע את ההלוואה בכל עת, באופן מלא או חלקי, בהתאם לתנאי הגוף המממן." },
+  { q: "כמה עולה לבדוק התאמה?", a: "הבדיקה חינם ובלי התחייבות. שכר הטרחה משולם רק אחרי שההלוואה אושרה והכסף נכנס לחשבון." },
+];
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
 ---
 <Base
   title="הלוואה לכל מטרה | זברה"
-  description="הלוואה לכל מטרה בתנאים נוחים: שיפוץ, רכב, אירוע או איחוד הלוואות. בדיקה מול כ־30 גופי מימון, בלי עמלות מראש."
+  description="הלוואה לכל מטרה עד ₪200,000 ועד 120 תשלומים: בלי ערבים, בלי לעבור בנק, והכסף תוך עד 2 ימי עסקים מהאישור. משלמים לנו רק אחרי שהכסף בחשבון."
 >
-  <section class="page-hero">
-    <div class="wrap">
-      <span class="eyebrow">מסלולי הלוואה</span>
-      <h1>הלוואה לכל מטרה</h1>
-      <p>כל צורך, כל מטרה — אנחנו מתאימים לכם מימון בתנאים שנוחים בדיוק לכם.</p>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+
+  <section class="page-hero biz-hero">
+    <div class="wrap biz-hero-grid">
+      <div class="biz-hero-text">
+        <h1>הלוואה לכל מטרה</h1>
+        <p>כל צורך, כל מטרה — אנחנו מתאימים לכם מימון בתנאים שנוחים בדיוק לכם.</p>
+        <span class="biz-for"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>עד ₪200,000 · עד 120 תשלומים</span>
+      </div>
+      <div class="biz-zebra"><img src="/images/zebra-any-purpose.webp" alt="הזברה של זברה" width="620" height="893" fetchpriority="high"></div>
     </div>
   </section>
 
-  <section class="block">
-    <div class="wrap prose">
-      <p>בין אם מדובר בשיפוץ הבית, החלפת רכב, מימון אירוע משמחת, איחוד הלוואות קיימות או כל צורך אחר — הלוואה לכל מטרה נותנת לכם את הגמישות לקבל את הסכום שאתם צריכים, ולפרוס אותו בצורה שמתאימה לתקציב החודשי שלכם.</p>
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <div class="biz-cards">
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 9l5 5M21 9l-5 5"/></svg></div>
+          <h3>בלי ערבים ובלי ביטחונות</h3>
+          <p>לא צריך להביא ערב, לא משעבדים נכס.</p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10l9-6 9 6"/><path d="M5 10v9h14v-9"/><path d="M9 14h6"/></svg></div>
+          <h3>בלי לעבור בנק</h3>
+          <p>מתאים ללקוחות של כל הבנקים, בלי להעביר חשבון או משכורת.</p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg></div>
+          <h3>הכסף תוך עד 2 ימי עסקים</h3>
+          <p>מרגע האישור, ישירות לחשבון הבנק שלכם.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap prose">
+      <h2>מימון שמתאים לתקציב שלכם</h2>
+      <p>בין אם מדובר באירוע משמח, לימודים, החלפת רכב, איחוד הלוואות קיימות או כל צורך אחר — הלוואה לכל מטרה נותנת לכם את הגמישות לקבל את הסכום שאתם צריכים, ולפרוס אותו בצורה שמתאימה לתקציב החודשי שלכם.</p>
 
       <h2>למה לבחור בזברה?</h2>
       <ul>
@@ -25,9 +66,42 @@ import LeadForm from "../../components/LeadForm.astro";
         <li>בדיקה מול כ־30 גופי מימון, כדי למצוא את ההצעה המשתלמת.</li>
         <li>אנחנו עובדים בשבילכם מול חברות המימון — על בסיס הצלחה בלבד.</li>
       </ul>
+    </div>
+  </section>
 
-      <h2>איך מתחילים?</h2>
-      <p>ממלאים את השאלון הקצר, ונציג מטעמנו חוזר אליכם עם הצעה מותאמת אישית — בלי התחייבות ובלי עלות.</p>
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">מה צריך כדי להתחיל?</h2>
+      <div class="biz-docs">
+        <div class="biz-ic biz-ic-lg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M5.5 16c.5-1.5 1.7-2.3 3-2.3s2.5.8 3 2.3"/><path d="M14 10h4M14 13h4"/></svg></div>
+        <div>
+          <h3>תעודת זהות ותעודה מזהה נוספת</h3>
+          <p>דרכון או רישיון נהיגה. במקרים מסוימים הגוף המממן עשוי לבקש גם דפי חשבון, תלושי שכר, או שומת מס לעצמאים.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">איך זה עובד</h2>
+      <div class="biz-steps">
+        <div class="biz-step"><div class="biz-n">1</div><h3>ממלאים שאלון קצר</h3><p>כמה שאלות, פחות מדקה.</p></div>
+        <div class="biz-step"><div class="biz-n">2</div><h3>אנחנו בודקים התאמה</h3><p>משווים מול גופי המימון וחוזרים אליכם עם הצעה.</p></div>
+        <div class="biz-step"><div class="biz-n">3</div><h3>הכסף בחשבון</h3><p>שיחת וידאו קצרה, חתימה דיגיטלית, והכסף תוך עד 2 ימי עסקים.</p></div>
+      </div>
+      <p class="biz-fee"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>על בסיס הצלחה — משלמים לנו רק אחרי שהכסף בחשבון הבנק.</p>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">שאלות נפוצות</h2>
+      <div class="faq biz-faq">
+        {faqs.map((f) => (
+          <details class="faq-item"><summary>{f.q}<span class="fq-ic"></span></summary><div class="faq-a">{f.a}</div></details>
+        ))}
+      </div>
     </div>
   </section>
 

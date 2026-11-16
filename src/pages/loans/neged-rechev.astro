@@ -1,32 +1,110 @@
 ---
 import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
+
+const faqs = [
+  { q: "תוך כמה זמן הכסף נכנס לחשבון בנק?", a: "בדרך כלל תוך מספר שעות, ולכל היותר תוך 24 שעות הכסף בחשבון הבנק שלכם." },
+  { q: "כמה כסף אפשר לקבל?", a: "עד ₪500,000, בפריסה של עד 100 תשלומים. הסכום נקבע לפי שווי הרכב והמימון הקיים עליו." },
+  { q: "הרכב נשאר אצלי?", a: "כן. הרכב נשאר אצלכם ובבעלותכם, ואתם ממשיכים להשתמש בו כרגיל לאורך כל תקופת ההלוואה." },
+  { q: "יש על הרכב מימון קיים. אפשר בכל זאת?", a: "כן, כל עוד המימון הקיים הוא עד 50% משווי הרכב." },
+  { q: "היו לי בעיות בבנק. אפשר בכל זאת?", a: "כן, ההלוואה מתאימה גם למי שהייתה לו היסטוריה בעייתית מול הבנק. הסכום והתנאים נקבעים לפי שווי הרכב ובכפוף לאישור הגוף המממן." },
+  { q: "אילו מסמכים צריך עבור ההלוואה?", a: "תעודת זהות, רישיון רכב ואישור ניהול חשבון בנק." },
+  { q: "אפשר לסגור את ההלוואה לפני הזמן?", a: "כן. אפשר לסגור את ההלוואה בכל רגע נתון, באופן חלקי או מלא." },
+  { q: "אני יכול למכור את הרכב?", a: "כן, אפשר למכור את הרכב בכל רגע נתון. במעמד המכירה סוגרים את יתרת ההלוואה." },
+];
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
 ---
 <Base
-  title="הלוואה כנגד הרכב — בלי למסור מפתחות | זברה"
-  description="קבלו מימון על בסיס שווי הרכב שלכם — בלי למסור את הרכב או את המפתחות. גם עם מימון חלקי קיים. אישור מהיר וכסף בחשבון תוך 24 שעות."
+  title="הלוואה כנגד הרכב — הרכב נשאר אצלכם | זברה"
+  description="הלוואה כנגד הרכב עד ₪500,000 ועד 100 תשלומים. הרכב נשאר אצלכם ובבעלותכם, גם עם מימון קיים או היסטוריה בעייתית בבנק. כסף בחשבון תוך 24 שעות."
 >
-  <section class="page-hero">
-    <div class="wrap">
-      <span class="eyebrow">מסלולי הלוואה</span>
-      <h1>הלוואה כנגד הרכב</h1>
-      <p>מקבלים מימון על בסיס שווי הרכב — וממשיכים לנסוע בו כרגיל.</p>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+
+  <section class="page-hero biz-hero biz-hero-full">
+    <div class="wrap biz-hero-grid biz-hero-wide">
+      <div class="biz-hero-text">
+        <h1>הלוואה כנגד הרכב</h1>
+        <p>מקבלים מימון על בסיס שווי הרכב — וממשיכים לנסוע בו כרגיל.</p>
+        <span class="biz-for"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>עד ₪500,000 · עד 100 תשלומים</span>
+      </div>
+      <div class="biz-zebra biz-zebra-wide"><img src="/images/zebra-car.webp" alt="הזברה של זברה ליד רכב" width="760" height="757" fetchpriority="high"></div>
     </div>
   </section>
 
-  <section class="block">
-    <div class="wrap prose">
-      <p>הלוואה כנגד הרכב מאפשרת לכם לקבל מימון משמעותי על בסיס שווי הרכב שבבעלותכם — והכי חשוב: <strong>הרכב והמפתחות נשארים אצלכם</strong>. אתם ממשיכים להשתמש ברכב בדיוק כרגיל לאורך כל תקופת ההלוואה.</p>
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <div class="biz-cards">
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></div>
+          <h3>הרכב נשאר אצלכם ובבעלותכם</h3>
+          <p>ממשיכים לנסוע ברכב כרגיל לאורך כל תקופת ההלוואה.</p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg></div>
+          <h3>כסף בחשבון תוך 24 שעות</h3>
+          <p>בדרך כלל תוך מספר שעות, ולכל היותר תוך 24 שעות.</p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg></div>
+          <h3>גם כשהיו בעיות בבנק</h3>
+          <p>מתאים גם למי שהייתה לו היסטוריה בעייתית מול הבנק.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap prose">
+      <h2>מימון על בסיס שווי הרכב</h2>
+      <p>הלוואה כנגד הרכב מאפשרת לכם לקבל מימון משמעותי על בסיס שווי הרכב שבבעלותכם — והכי חשוב: <strong>הרכב נשאר אצלכם ובבעלותכם</strong>. אתם ממשיכים להשתמש ברכב בדיוק כרגיל לאורך כל תקופת ההלוואה.</p>
 
       <h2>למי זה מתאים?</h2>
       <ul>
         <li>בעלי רכב פרטי משנת 2012 ומעלה.</li>
         <li>מי שזקוק למימון מהיר לכל מטרה.</li>
         <li>גם אם קיים מימון חלקי על הרכב (עד 50% משוויו).</li>
+        <li>גם מי שהייתה לו היסטוריה בעייתית מול הבנק.</li>
       </ul>
+    </div>
+  </section>
 
-      <h2>איך זה עובד?</h2>
-      <p>הסכום נקבע בהתאם לשווי הרכב והמימון הקיים עליו. אנחנו בודקים את הנתונים, משווים מול חברות המימון, ומשיגים לכם את ההצעה המשתלמת ביותר — על בסיס הצלחה בלבד.</p>
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">מה צריך כדי להתחיל?</h2>
+      <div class="biz-docs">
+        <div class="biz-ic biz-ic-lg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M5.5 16c.5-1.5 1.7-2.3 3-2.3s2.5.8 3 2.3"/><path d="M14 10h4M14 13h4"/></svg></div>
+        <div>
+          <h3>3 מסמכים בלבד</h3>
+          <p>תעודת זהות, רישיון רכב ואישור ניהול חשבון בנק.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">איך זה עובד</h2>
+      <div class="biz-steps">
+        <div class="biz-step"><div class="biz-n">1</div><h3>ממלאים שאלון קצר</h3><p>כמה שאלות על הרכב, פחות מדקה.</p></div>
+        <div class="biz-step"><div class="biz-n">2</div><h3>אנחנו בודקים את הרכב</h3><p>שווי הרכב והמימון הקיים עליו, והשוואה מול גופי המימון.</p></div>
+        <div class="biz-step"><div class="biz-n">3</div><h3>הכסף בחשבון</h3><p>חתימה, והכסף בדרך כלל תוך מספר שעות ועד 24 שעות.</p></div>
+      </div>
+      <p class="biz-fee"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>על בסיס הצלחה — משלמים לנו רק אחרי שהכסף בחשבון הבנק.</p>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">שאלות נפוצות</h2>
+      <div class="faq biz-faq">
+        {faqs.map((f) => (
+          <details class="faq-item"><summary>{f.q}<span class="fq-ic"></span></summary><div class="faq-a">{f.a}</div></details>
+        ))}
+      </div>
     </div>
   </section>
 

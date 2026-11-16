@@ -716,3 +716,48 @@ section.block.biz-sec{padding-block:14px}
 .biz-zebra-wide{height:250px}
 .biz-zebra-wide img{height:auto;width:290px}
 @media (max-width:720px){.biz-hero-wide{grid-template-columns:1fr 140px}.biz-zebra-wide{height:140px}.biz-zebra-wide img{width:140px}}
+
+/* ===== ביקורות מגוגל ===== */
+.g-badge{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:-6px auto 16px;font-weight:600;color:#3d4a42;font-size:.98rem}
+.g-logo{width:22px;height:22px;flex:none}
+.g-stars{color:#f0a500;letter-spacing:2px}
+.g-reviews .q-body p{margin:0 0 8px}
+.g-reviews .q-body p:last-child{margin-bottom:16px}
+.g-actions{margin:0 0 40px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+@media (max-width:900px){.g-reviews .quotes{grid-template-columns:1fr}}
+/* קרוסלת ביקורות: 3 בתצוגה, גוללים/גוררים הצידה */
+.g-carousel{position:relative}
+.g-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:6px 4px 18px;scrollbar-width:thin;scrollbar-color:var(--line) transparent;cursor:grab;-webkit-overflow-scrolling:touch}
+.g-track.dragging{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto;user-select:none}
+.g-track:focus-visible{outline:2px solid var(--green-deep);outline-offset:4px;border-radius:12px}
+.g-track .g-slide{flex:0 0 calc((100% - 40px) / 3);scroll-snap-align:start;transform:none!important}
+.g-arrow{position:absolute;top:50%;z-index:2;width:42px;height:42px;margin-top:-30px;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--green-deep);font-size:1.6rem;line-height:1;cursor:pointer;box-shadow:0 10px 22px -14px rgba(20,24,27,.45);display:grid;place-items:center}
+.g-arrow:hover{border-color:var(--green-deep)}
+.g-prev{right:-20px}.g-next{left:-20px}
+@media (max-width:900px){.g-track .g-slide{flex-basis:calc((100% - 20px) / 2)}}
+@media (max-width:640px){.g-track .g-slide{flex-basis:86%}.g-arrow{display:none}}
+/* עמוד המלצות: כפתורים קרוב יותר לראש העמוד, ורווח בין כותרת לתת-כותרת */
+section.block.g-reviews-all{padding-top:28px}
+.rv-hero.biz-hero p{margin-top:24px}
+.g-reviews-all .g-actions{margin-bottom:64px}
+
+/* ===== עמוד אודות ===== */
+.ab-h1-b{display:block;color:var(--green-deep)}
+.biz-hero .ab-sub{margin-top:18px;max-width:52ch}
+.biz-hero-text .ab-trust{margin-top:auto;padding-top:14px}
+.ab-story p{font-size:1.12rem;color:#2b332f;line-height:1.85;margin:0 0 14px}
+.ab-story .ab-lead{font-size:1.25rem;font-weight:600;color:var(--ink)}
+.ab-pull{border-inline-start:4px solid var(--green-deep);background:var(--paper);border-radius:0 14px 14px 0;padding:16px 20px;font-weight:700;color:var(--green-darker)!important;margin-top:18px!important}
+.ab-fee{background:var(--grad-green);color:#fff;border-radius:22px;padding:26px 26px 24px;box-shadow:0 22px 40px -26px rgba(47,90,19,.8)}
+.ab-fee h2{color:#fff;font-size:1.7rem;font-weight:800;margin:0 0 12px}
+.ab-fee p{margin:0 0 10px;font-size:1.08rem;line-height:1.8;color:rgba(255,255,255,.92)}
+.ab-fee .ab-fee-big{font-size:1.25rem;font-weight:800;color:#fff;margin:6px 0 0}
+.ab-values{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.ab-partners-note{margin:22px 0 0;color:var(--muted);font-size:1.05rem;max-width:62ch}
+.ab-contact{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ab-contact .biz-card p{margin:4px 0 0;color:#2b332f;font-size:1rem}
+.ab-contact a{color:var(--ink);font-weight:600;text-decoration:none}
+.ab-contact a.ab-link{color:var(--green-deep);font-weight:700}
+section.block.ab-contact-sec{padding-bottom:48px}
+@media (max-width:820px){.ab-values{grid-template-columns:repeat(2,1fr)}.ab-contact{grid-template-columns:1fr}}
+@media (max-width:640px){.ab-values{grid-template-columns:1fr}}

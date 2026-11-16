@@ -11,8 +11,6 @@ const CONFIG = {
     "https://hook.eu1.make.com/slzneu9bbw0b3rt1yybugtdjr2ledavf"
   ],
   sendToWhatsApp: true,          // לאחר שליחה — להציע המשך ב-WhatsApp עם הפרטים
-  // וובהוק נפרד להמלצות (תרחיש Make נפרד). יוחלף בכתובת האמיתית לאחר יצירת התרחיש:
-  reviewWebhook: "https://hook.eu1.make.com/y934zgedfuznudpdx3rspipy5k0b3up3"
 };
 
 /* ----- לכידת פרמטרי UTM וטראקינג (נטענים מכתובת העמוד) ----- */
@@ -233,62 +231,6 @@ document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
   rate.addEventListener("input",calc);
   calc();
 })();
-
-/* ----- טופס המלצה: בחירת כוכבים + שליחה (עם honeypot) ----- */
-let reviewRating = 5;
-(function(){
-  const stars = document.getElementById("rvStars");
-  if(!stars) return;
-  const btns = Array.from(stars.querySelectorAll(".star"));
-  function paint(v){ btns.forEach(b=> b.classList.toggle("on", +b.dataset.v <= v)); }
-  btns.forEach(b=>{
-    b.addEventListener("click", ()=>{ reviewRating = +b.dataset.v; paint(reviewRating); });
-    b.addEventListener("mouseenter", ()=> paint(+b.dataset.v));
-  });
-  stars.addEventListener("mouseleave", ()=> paint(reviewRating));
-  paint(reviewRating); // ברירת מחדל 5
-})();
-
-function submitReview(){
-  const nameEl=document.getElementById("rvName");
-  const textEl=document.getElementById("rvText");
-  const cityEl=document.getElementById("rvCity");
-  const hp=document.getElementById("rvCompany");
-  if(!nameEl||!textEl) return;
-
-  // honeypot: אם השדה הנסתר מולא — כנראה בוט. עוצרים בשקט (מתנהגים כאילו הצליח).
-  if(hp && hp.value.trim() !== ""){ showReviewThanks(); return; }
-
-  let ok=true;
-  if(nameEl.value.trim().length<2){nameEl.classList.add("invalid");document.getElementById("rvErrName").classList.add("show");ok=false;}
-  else{nameEl.classList.remove("invalid");document.getElementById("rvErrName").classList.remove("show");}
-  if(textEl.value.trim().length<5){textEl.classList.add("invalid");document.getElementById("rvErrText").classList.add("show");ok=false;}
-  else{textEl.classList.remove("invalid");document.getElementById("rvErrText").classList.remove("show");}
-  if(!ok) return;
-
-  const review={
-    name: nameEl.value.trim(),
-    city: (cityEl?cityEl.value.trim():""),
-    rating: String(reviewRating),
-    text: textEl.value.trim(),
-    time: new Date().toLocaleString("he-IL"),
-    source: location.href
-  };
-
-  // שליחה ל-Netlify Forms (טופס "testimonials"). אין יותר Make כאן.
-  const params=new URLSearchParams();
-  params.append("form-name","testimonials");
-  Object.entries(review).forEach(([k,v])=>{ if(String(v)!=="") params.append(k,String(v)); });
-  try{
-    fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:params.toString(),keepalive:true})
-      .catch(e=>console.error("netlify form failed:",e));
-  }catch(e){console.error("netlify form error:",e);}
-  showReviewThanks();
-}
-function showReviewThanks(){
-  const f=document.getElementById("revForm"), t=document.getElementById("revThanks");
-  if(f&&t){f.style.display="none";t.style.display="block";t.scrollIntoView({behavior:"smooth",block:"center"});}
-}
 
 /* ----- תפריט מובייל ----- */
 (function(){

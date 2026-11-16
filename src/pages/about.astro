@@ -1,35 +1,88 @@
 ---
 import Base from "../layouts/Base.astro";
 import LeadForm from "../components/LeadForm.astro";
+import Partners from "../components/Partners.astro";
+import { GOOGLE_PROFILE_URL } from "../data/googleReviews";
 ---
 <Base
-  title="אודות זברה | הדרך הקלה להלוואה"
-  description="זברה היא גוף המתווך בין הלווה למלווה. אנחנו עובדים בשבילכם מול חברות המימון להשגת ההלוואה המשתלמת ביותר — על בסיס הצלחה בלבד."
+  title="אודות זברה | בצד שלכם, לא בצד של הבנק"
+  description="זברה מלווה לקוחות פרטיים ובעלי עסקים בהשגת הלוואות ומשכנתאות בתנאים שמתאימים להם. פעילים מאז 2024, מול כ-30 גופי מימון, בנקים וחברות ביטוח. משלמים רק אחרי שהכסף בחשבון."
 >
-  <section class="page-hero">
-    <div class="wrap">
-      <span class="eyebrow">אודות</span>
-      <h1>אנחנו עובדים בשבילכם</h1>
-      <p>זברה היא לא חברת מימון — אנחנו הגוף שמתווך בינך לבין המלווים, ועובד עבורך.</p>
+  <section class="page-hero biz-hero">
+    <div class="wrap biz-hero-grid">
+      <div class="biz-hero-text">
+        <h1>בצד שלכם.<span class="ab-h1-b">לא בצד של הבנק.</span></h1>
+        <p class="ab-sub">זברה מלווה לקוחות פרטיים ובעלי עסקים בהשגת הלוואות ומשכנתאות — בתנאים שמתאימים להם, לא לבנק ולא לחברת המימון.</p>
+        <ul class="zh-trust ab-trust">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>פעילים מאז 2024</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>כ-30 גופי מימון, בנקים וחברות ביטוח</li>
+        </ul>
+      </div>
+      <div class="biz-zebra"><img src="/images/zebra-mascot.webp" alt="הזברה של זברה" width="820" height="1230" fetchpriority="high"></div>
     </div>
   </section>
 
-  <section class="block">
-    <div class="wrap prose">
-      <p>בעולם ההלוואות קל ללכת לאיבוד בין הצעות, ריביות ותנאים. כאן אנחנו נכנסים לתמונה. ב'זברה' אנחנו נלחמים מול חברות המימון ומשיגים לכם את ההלוואה המשתלמת ביותר — בתנאים הכי טובים שאפשר, ובתהליך פשוט ומהיר.</p>
-
-      <h2>מה מנחה אותנו</h2>
-      <ul>
-        <li><strong>מתווכים, לא מלווים</strong> — אנחנו בצד שלכם מול חברות המימון.</li>
-        <li><strong>על בסיס הצלחה בלבד</strong> — בלי דמי פתיחת תיק ובלי עמלות מראש.</li>
-        <li><strong>ליווי אישי</strong> — צוות מקצועי שמלווה אתכם בכל שלב.</li>
-        <li><strong>שקיפות</strong> — תנאים ברורים, בלי אותיות קטנות.</li>
-      </ul>
-
-      <h2>הדרך הקלה להלוואה</h2>
-      <p>המטרה שלנו פשוטה: להפוך את קבלת ההלוואה לחוויה קלה, מהירה והוגנת — כך שתוכלו להתמקד במה שחשוב לכם באמת.</p>
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap ab-story">
+      <h2 class="biz-h2">למה הקמנו את זברה?</h2>
+      <p class="ab-lead">את זברה הקמנו ב-2024, אחרי שראינו שוב ושוב את אותו פער: אנשים שמתקשים לקבל מימון מהבנקים ומחברות הביטוח.</p>
+      <p>וגם מי שכן מקבל, יוצא פעמים רבות עם תנאים גרועים, בלי לדעת בכלל שאפשר אחרת. ריבית גבוהה מדי, פריסה שלא מתאימה, התחייבויות שלא הוסברו עד הסוף.</p>
+      <p>הסיבה פשוטה: העולם הפיננסי מורכב, והידע נמצא כמעט תמיד בצד של מי שמלווה. מול הלקוח עומד גוף מקצועי עם אינטרס ברור, ולצד הלקוח, לרוב, אין אף אחד.</p>
+      <p class="ab-pull">את הפער הזה באנו לסגור: אנחנו בודקים, משווים ומנהלים את המשא ומתן — כדי שתקבלו הלוואה שבנויה עבורכם.</p>
     </div>
   </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <div class="ab-fee">
+        <h2>שקיפות מלאה: איך אנחנו מרוויחים</h2>
+        <p>הבדיקה אצלנו חינם ובלי התחייבות. אנחנו לא גובים דמי פתיחת תיק ולא עמלות מראש.</p>
+        <p>שכר הטרחה משולם רק אחרי שההלוואה אושרה והכסף נכנס לחשבון שלכם.</p>
+        <p class="ab-fee-big">לא הצלחנו? לא שילמתם.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">מה מנחה אותנו</h2>
+      <div class="ab-values">
+        <div class="biz-card"><h3>בצד שלכם</h3><p>אנחנו לא חברת מימון. אנחנו עובדים עבורכם מול חברות המימון.</p></div>
+        <div class="biz-card"><h3>על בסיס הצלחה</h3><p>האינטרס שלנו זהה לשלכם: להשיג לכם את ההלוואה.</p></div>
+        <div class="biz-card"><h3>ליווי אישי</h3><p>אדם אחד שמכיר את התיק שלכם, מהשיחה הראשונה ועד החתימה.</p></div>
+        <div class="biz-card"><h3>בגובה העיניים</h3><p>מסבירים כל תנאי בשפה פשוטה, בלי אותיות קטנות.</p></div>
+      </div>
+      <p class="ab-partners-note">זברה רשומה ועובדת מול הבנקים, חברות הביטוח וגופי המימון המובילים בישראל. כך בקשה אחת שלכם נבחנת מול כ-30 גופים — במקום שתרוצו ביניהם לבד.</p>
+    </div>
+  </section>
+
+  <Partners title="חלק מהשותפים שלנו לפעילות" />
 
   <LeadForm />
+
+  <section class="block biz-sec ab-contact-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">יצירת קשר</h2>
+      <div class="ab-contact">
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></div>
+          <h3>טלפון ומייל</h3>
+          <p><a href="tel:0545995519" dir="ltr">054-599-5519</a></p>
+          <p><a href="mailto:zebra.finance27@gmail.com" dir="ltr">zebra.finance27@gmail.com</a></p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+          <h3>כתובת</h3>
+          <p>כיכר מאירהוף 4, חיפה</p>
+          <p><a class="ab-link" href={GOOGLE_PROFILE_URL} target="_blank" rel="noopener">לניווט בגוגל מפות ←</a></p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>שעות פעילות</h3>
+          <p>ראשון–חמישי: 9:00–18:00</p>
+          <p>שישי: 8:30–12:00</p>
+        </div>
+      </div>
+    </div>
+  </section>
 </Base>

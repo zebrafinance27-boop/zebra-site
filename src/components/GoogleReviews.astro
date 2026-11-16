@@ -17,20 +17,70 @@ const items = all ? googleReviews : googleReviews.filter((r) => r.home).slice(0,
       <span class="g-stars" aria-hidden="true">★★★★★</span>
       <span>ביקורות אמיתיות מלקוחות בגוגל</span>
     </div>
-    <div class={all ? "quotes quotes-grid" : "quotes"}>
-      {items.map((r) => (
-        <div class="quote reveal">
-          <div class="stars" aria-label={`${r.rating} כוכבים`}>{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</div>
-          <div class="q-body">{r.text.map((p) => <p>{p}</p>)}</div>
-          <div class="who">{r.name}<span>ביקורת בגוגל</span></div>
-        </div>
-      ))}
-    </div>
     <div class="g-actions">
-      <a class="btn" href={GOOGLE_REVIEW_URL} target="_blank" rel="noopener">כתבו לנו ביקורת בגוגל</a>
+      <a class="btn" href={GOOGLE_REVIEW_URL} target="_blank" rel="noopener">כתבו לנו המלצה בגוגל</a>
       {all
         ? <a class="btn btn-line" href={GOOGLE_PROFILE_URL} target="_blank" rel="noopener">לכל הביקורות בגוגל</a>
         : <a class="btn btn-line" href="/reviews/">לכל ההמלצות</a>}
     </div>
+
+    {all ? (
+      <div class="quotes quotes-grid">
+        {items.map((r) => (
+          <div class="quote reveal">
+            <div class="stars" aria-label={`${r.rating} כוכבים`}>{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</div>
+            <div class="q-body">{r.text.map((p) => <p>{p}</p>)}</div>
+            <div class="who">{r.name}<span>ביקורת בגוגל</span></div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="g-carousel">
+        <button class="g-arrow g-prev" type="button" aria-label="לביקורות הקודמות">›</button>
+        <div class="g-track" tabindex="0" aria-label="ביקורות מגוגל — גוללים הצידה לעוד">
+          {items.map((r) => (
+            <div class="quote g-slide">
+              <div class="stars" aria-label={`${r.rating} כוכבים`}>{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</div>
+              <div class="q-body">{r.text.map((p) => <p>{p}</p>)}</div>
+              <div class="who">{r.name}<span>ביקורת בגוגל</span></div>
+            </div>
+          ))}
+        </div>
+        <button class="g-arrow g-next" type="button" aria-label="לביקורות הבאות">‹</button>
+      </div>
+    )}
   </div>
 </section>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".g-carousel").forEach((c) => {
+    const track = c.querySelector<HTMLElement>(".g-track");
+    if (!track) return;
+    const step = () => {
+      const s = track.querySelector<HTMLElement>(".g-slide");
+      return s ? s.offsetWidth + 20 : track.clientWidth;
+    };
+    // RTL: גלילה שמאלה = ערך שלילי
+    c.querySelector(".g-next")?.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
+    c.querySelector(".g-prev")?.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
+
+    // גרירה עם העכבר (במגע — גלילה טבעית של הדפדפן)
+    let down = false, startX = 0, startScroll = 0, moved = false;
+    track.addEventListener("pointerdown", (e) => {
+      if (e.pointerType !== "mouse") return;
+      down = true; moved = false; startX = e.clientX; startScroll = track.scrollLeft;
+      track.classList.add("dragging");
+    });
+    window.addEventListener("pointermove", (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 4) moved = true;
+      track.scrollLeft = startScroll - dx;
+    });
+    window.addEventListener("pointerup", () => {
+      if (!down) return;
+      down = false; track.classList.remove("dragging");
+    });
+    track.addEventListener("click", (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+  });
+</script>

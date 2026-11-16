@@ -682,7 +682,7 @@ section.block:has(.quotes){background:radial-gradient(ellipse 60% 50% at 20% 30%
 .biz-zebra{position:relative;display:flex;justify-content:center;align-items:flex-end;height:270px}
 .biz-zebra::before{content:"";position:absolute;bottom:10px;left:50%;width:250px;height:250px;margin-left:-125px;border-radius:50%;background:radial-gradient(circle at 50% 45%,rgba(95,168,51,.45),rgba(95,168,51,.14) 45%,transparent 70%);filter:blur(6px)}
 .biz-zebra img{position:relative;height:262px;width:auto;filter:drop-shadow(0 22px 26px rgba(20,24,27,.25))}
-.biz-sec{padding-block:14px}
+section.block.biz-sec{padding-block:14px}
 .biz-sec .prose h2{margin:6px 0 10px}
 .biz-sec .prose p{margin-bottom:10px}
 .biz-sec .prose ul{margin-bottom:6px}
@@ -703,6 +703,6 @@ section.block:has(.quotes){background:radial-gradient(ellipse 60% 50% at 20% 30%
 @media (max-width:720px){
   .biz-hero-grid{grid-template-columns:1fr 120px;gap:10px}
   .biz-zebra{height:165px}.biz-zebra::before{width:120px;height:120px;margin-left:-60px}.biz-zebra img{height:160px}
-  .biz-sec{padding-block:10px}.biz-cards,.biz-steps{gap:10px}
+  section.block.biz-sec{padding-block:10px}.biz-cards,.biz-steps{gap:10px}
   .biz-cards,.biz-steps{grid-template-columns:1fr}
 }

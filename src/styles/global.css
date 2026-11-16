@@ -104,7 +104,7 @@ button{font-family:inherit}
 .privacy-note svg{width:13px;height:13px;vertical-align:-2px;stroke:var(--green-deep)}
 .result{text-align:center;padding:18px 6px 8px}
 .result .badge{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;animation:pop .4s ease}
-.result .badge.ok{background:var(--green)}
+.result .badge.ok{background:var(--green-deep)}
 .result .badge.no{background:#b8bfac}
 .result .badge svg{width:38px;height:38px;stroke:#fff;stroke-width:3;fill:none}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
@@ -153,7 +153,7 @@ section.block{padding:80px 0}
 /* how it works */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
 .stepc{position:relative;padding-top:16px}
-.stepc .num{font-family:"Noto Sans Hebrew",sans-serif;font-weight:900;font-size:2.7rem;color:var(--green);line-height:1}
+.stepc .num{font-family:"Noto Sans Hebrew",sans-serif;font-weight:900;font-size:2.7rem;color:var(--green-deep);line-height:1}
 .stepc h3{font-size:1.22rem;font-weight:700;margin:10px 0 6px}
 .stepc p{color:var(--muted)}
 .stepc::after{content:"";position:absolute;top:30px;left:-13px;width:26px;height:2px;background:var(--line)}
@@ -168,7 +168,7 @@ section.block{padding:80px 0}
 .band .band-sub{text-align:center;color:#c9d2c3;margin-bottom:40px}
 .band-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;z-index:2}
 .bl{text-align:center}
-.bl .big{font-family:"Noto Sans Hebrew",sans-serif;font-weight:900;font-size:2.3rem;color:var(--green);margin-bottom:4px}
+.bl .big{font-family:"Noto Sans Hebrew",sans-serif;font-weight:900;font-size:2.3rem;color:var(--green-deep);margin-bottom:4px}
 .bl p{color:#d7ded2;font-size:.97rem}
 
 /* faq */
@@ -320,7 +320,7 @@ footer .brand img{height:40px}
   --amber:#F5A524;
   --amber-deep:#E08A00;
   --lime:#8FD64A;
-  --grad-green:linear-gradient(135deg,#6FBF3E 0%,#4C8A24 100%);
+  --grad-green:linear-gradient(135deg,#4C8A24 0%,#2F5A13 100%);
   --grad-band:linear-gradient(135deg,#2F5A13 0%,#4C8A24 50%,#5FA833 100%);
 }
 /* heading weight bump (Noto needs heavier weights for presence) */
@@ -627,7 +627,7 @@ section.block:has(.quotes){background:radial-gradient(ellipse 60% 50% at 20% 30%
 
 /* nav: highlighted "check eligibility" link */
 .site-nav a.nav-cta{color:var(--green-darker);background:var(--tint);border:1px solid #d6e5c5;border-radius:999px;padding:6px 14px;font-weight:800}
-.site-nav a.nav-cta:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.site-nav a.nav-cta:hover{background:var(--green-deep);color:#fff;border-color:var(--green-deep)}
 .site-nav a.nav-cta::after{display:none}
 @media (min-width:1041px){.site-nav a.nav-cta{display:none}}
 
@@ -636,7 +636,7 @@ section.block:has(.quotes){background:radial-gradient(ellipse 60% 50% at 20% 30%
 .zh-hero h1{font-size:clamp(1.7rem,4.3vw,3.4rem);font-weight:900;line-height:1.18;letter-spacing:-.01em}
 .zh-h1-a,.zh-h1-b{display:block}
 .zh-h1-a{color:var(--ink)}
-.zh-h1-b{color:var(--green)}
+.zh-h1-b{color:var(--green-deep)}
 @media (max-width:900px){.zh-hero h1{font-size:clamp(1.7rem,7.4vw,3rem)}}
 @media (max-width:420px){.zh-eyebrow{font-size:.98rem}}
 @media (min-width:901px) and (max-width:1200px){.zh-hero h1{font-size:3.7vw}}

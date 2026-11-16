@@ -1,3 +1,5 @@
 /admin/*  /admin/index.html  200
 /testimonial  /reviews/  301
 /testimonial/  /reviews/  301
+/contact  /about/  301
+/contact/  /about/  301

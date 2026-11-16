@@ -1,11 +1,25 @@
 ---
 import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
+
+const faqs = [
+  { q: "כמה זמן לוקח תהליך קבלת הלוואה?", a: "תהליך מהיר ודיגיטלי, בדרך כלל בין 24 שעות ולכל היותר 48 שעות. הזמן תלוי בעיקר בשיתוף הפעולה מצד הלקוח." },
+  { q: "מהם המסמכים הנדרשים לקבלת הלוואה?", a: "במסלול המהיר אין צורך במסמכים מלבד תעודת זהות וספח. הבדיקה נעשית דיגיטלית, וכל מה שנדרש הוא עוסק מורשה פעיל ופרטים בסיסיים בשאלון." },
+  { q: "האם כל בעל עסק זכאי לקבל הלוואה מהירה?", a: "ההלוואה מיועדת לעוסקים מורשים. הזכאות והתנאים נקבעים על-ידי הגוף המממן לפי בדיקה דיגיטלית, ולכן לא כל בקשה מאושרת. מלאו את השאלון הקצר, ונבדוק בשבילכם התאמה בלי עלות." },
+  { q: "איך לקבל הלוואה בתנאים טובים?", a: "דבר ראשון, חשוב תמיד לשמור על דירוג גבוה מול הבנק. הדרך הכי טובה היא להשוות בין כמה גופים, ובדיוק את זה אנחנו עושים בשבילכם. אנחנו עובדים עם כ-30 גופי מימון, משווים ביניהם, מנהלים את המשא ומתן ומביאים לכם את ההצעה המשתלמת ביותר שמצאנו. ומשלמים לנו רק אחרי שהכסף בחשבון." },
+];
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
 ---
 <Base
   title="הלוואות לבעלי עסקים | זברה"
   description="הלוואה לעוסקים מורשים עד ₪150,000: בלי הגשת מסמכים, בלי ערב ובלי שעבוד. משלמים לנו רק אחרי שהכסף בחשבון."
 >
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+
   <section class="page-hero biz-hero">
     <div class="wrap biz-hero-grid">
       <div class="biz-hero-text">
@@ -83,6 +97,18 @@ import LeadForm from "../../components/LeadForm.astro";
       <h2>היתרון של זברה</h2>
       <p>במקום לרוץ בין גופים שונים, אנחנו עושים את העבודה בשבילכם — משווים, מנהלים משא ומתן ומשיגים את ההצעה המשתלמת ביותר לעסק, על בסיס הצלחה בלבד, ללא דמי פתיחת תיק וללא עמלות מראש.</p>
       <p class="biz-fine">ההלוואה ניתנת על-ידי גוף מממן ובכפוף לבדיקתו ולאישורו. מיועד לעוסקים מורשים.</p>
+    </div>
+  </section>
+
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">שאלות נפוצות</h2>
+      <div class="faq biz-faq">
+        {faqs.map((f) => (
+          <details class="faq-item"><summary>{f.q}<span class="fq-ic"></span></summary><div class="faq-a">{f.a}</div></details>
+        ))}
+      </div>
     </div>
   </section>
 

@@ -709,3 +709,4 @@ section.block.biz-sec{padding-block:14px}
   section.block.biz-sec{padding-block:10px}.biz-cards,.biz-steps{gap:10px}
   .biz-cards,.biz-steps{grid-template-columns:1fr}
 }
+.biz-faq{max-width:none}

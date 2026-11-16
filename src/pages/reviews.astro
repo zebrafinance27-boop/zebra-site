@@ -1,42 +1,17 @@
 ---
 import Base from "../layouts/Base.astro";
-import { getCollection } from "astro:content";
-
-const approved = await getCollection("testimonials", ({ data }) => data.approved);
-const sorted = approved.sort(
-  (a, b) => (b.data.date?.valueOf() || 0) - (a.data.date?.valueOf() || 0)
-);
-const items = await Promise.all(
-  sorted.map(async (t) => ({ data: t.data, Content: (await t.render()).Content }))
-);
+import GoogleReviews from "../components/GoogleReviews.astro";
 ---
 <Base
   title="המלצות לקוחות | זברה"
-  description="מה הלקוחות שלנו מספרים על השירות של זברה — חוויות אמיתיות של אנשים שקיבלו מימון."
+  description="ביקורות אמיתיות של לקוחות זברה מגוגל — מה הלקוחות שלנו מספרים על הליווי והשירות."
 >
   <section class="page-hero">
     <div class="wrap">
-      <span class="eyebrow">מה הלקוחות אומרים</span>
       <h1>המלצות לקוחות</h1>
-      <p>אנשים אמיתיים, חוויות אמיתיות. תודה לכל מי שטרח לשתף.</p>
+      <p>ביקורות אמיתיות שלקוחות כתבו עלינו בגוגל. תודה לכל מי שטרח לשתף.</p>
     </div>
   </section>
 
-  <section class="block">
-    <div class="wrap">
-      {items.length === 0 ? (
-        <p style="text-align:center;color:var(--muted)">בקרוב יופיעו כאן המלצות. רוצים להיות הראשונים?</p>
-      ) : (
-        <div class="quotes quotes-grid">
-          {items.map(({ data, Content }) => (
-            <div class="quote reveal">
-              <div class="stars">{"★".repeat(data.rating)}{"☆".repeat(5 - data.rating)}</div>
-              <div class="q-body"><Content /></div>
-              <div class="who">{data.name}{data.city && <span>{data.city}</span>}</div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  </section>
+  <GoogleReviews all />
 </Base>

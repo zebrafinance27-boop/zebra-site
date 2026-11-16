@@ -716,3 +716,12 @@ section.block.biz-sec{padding-block:14px}
 .biz-zebra-wide{height:250px}
 .biz-zebra-wide img{height:auto;width:290px}
 @media (max-width:720px){.biz-hero-wide{grid-template-columns:1fr 140px}.biz-zebra-wide{height:140px}.biz-zebra-wide img{width:140px}}
+
+/* ===== ביקורות מגוגל ===== */
+.g-badge{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:-6px auto 24px;font-weight:600;color:#3d4a42;font-size:.98rem}
+.g-logo{width:22px;height:22px;flex:none}
+.g-stars{color:#f0a500;letter-spacing:2px}
+.g-reviews .q-body p{margin:0 0 8px}
+.g-reviews .q-body p:last-child{margin-bottom:16px}
+.g-actions{margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+@media (max-width:900px){.g-reviews .quotes{grid-template-columns:1fr}}

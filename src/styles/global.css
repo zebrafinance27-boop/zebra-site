@@ -738,4 +738,5 @@ section.block.biz-sec{padding-block:14px}
 @media (max-width:640px){.g-track .g-slide{flex-basis:86%}.g-arrow{display:none}}
 /* עמוד המלצות: כפתורים קרוב יותר לראש העמוד, ורווח בין כותרת לתת-כותרת */
 section.block.g-reviews-all{padding-top:28px}
-.rv-hero.biz-hero p{margin-top:16px}
+.rv-hero.biz-hero p{margin-top:24px}
+.g-reviews-all .g-actions{margin-bottom:64px}

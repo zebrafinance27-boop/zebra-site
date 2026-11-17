@@ -1,7 +1,7 @@
 :root{
   --ink:#14181b;
   --green:#5fa833;
-  --green-deep:#4c8a24;
+  --green-deep:#437d20;
   --green-darker:#2f5a13;
   --cream:#f6f5ef;
   --paper:#ffffff;
@@ -313,8 +313,8 @@ section.block{padding:80px 0}
   --amber:#F5A524;
   --amber-deep:#E08A00;
   --lime:#8FD64A;
-  --grad-green:linear-gradient(135deg,#4C8A24 0%,#2F5A13 100%);
-  --grad-band:linear-gradient(135deg,#2F5A13 0%,#4C8A24 50%,#5FA833 100%);
+  --grad-green:linear-gradient(135deg,#437D20 0%,#2F5A13 100%);
+  --grad-band:linear-gradient(135deg,#2F5A13 0%,#437D20 100%);
 }
 /* heading weight bump (Noto needs heavier weights for presence) */
 h1,h2,h3,h4,.display{font-weight:900}
@@ -744,7 +744,7 @@ section.block.g-reviews-all{padding-top:28px}
 .ab-pull{border-inline-start:4px solid var(--green-deep);background:var(--paper);border-radius:0 14px 14px 0;padding:16px 20px;font-weight:700;color:var(--green-darker)!important;margin-top:18px!important}
 .ab-fee{background:var(--grad-green);color:#fff;border-radius:22px;padding:26px 26px 24px;box-shadow:0 22px 40px -26px rgba(47,90,19,.8)}
 .ab-fee h2{color:#fff;font-size:1.7rem;font-weight:800;margin:0 0 12px}
-.ab-fee p{margin:0 0 10px;font-size:1.08rem;line-height:1.8;color:rgba(255,255,255,.92)}
+.ab-fee p{margin:0 0 10px;font-size:1.08rem;line-height:1.8;color:#fff}
 .ab-fee .ab-fee-big{font-size:1.25rem;font-weight:800;color:#fff;margin:6px 0 0}
 .ab-values{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .ab-partners-note{margin:22px 0 0;color:var(--muted);font-size:1.05rem;max-width:62ch}
@@ -775,7 +775,7 @@ footer.ft::before{content:"";position:absolute;inset:0;z-index:-1;background:rep
 .ft-bottom{margin-top:34px;padding-top:18px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:.9rem;font-weight:600;border-top:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.75)}
 .ft-bottom nav{display:flex;gap:16px;flex-wrap:wrap}
 .ft-bottom a{color:rgba(255,255,255,.85)}.ft-bottom a:hover{color:#fff;text-decoration:underline}
-.ft-disc{margin:14px 0 0;font-size:.8rem;line-height:1.75;color:rgba(255,255,255,.66)}
+.ft-disc{margin:14px 0 0;font-size:.8rem;line-height:1.75;color:rgba(255,255,255,.8)}
 @media (max-width:900px){.ft-top{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){
   footer.ft{padding:30px 0 20px}
@@ -813,3 +813,8 @@ footer.ft::before{content:"";position:absolute;inset:0;z-index:-1;background:rep
   .calc-result .btn{margin-top:4px}
   .calc-result .btn{font-size:.78rem;padding:10px 6px;line-height:1.25;white-space:normal;width:100%}
 }
+
+/* About: the page opens straight on the story */
+section.block.biz-sec.ab-first{padding-top:48px}
+.ab-story .ab-h1{font-size:clamp(1.9rem,4vw,2.6rem);font-weight:900;margin:0 0 16px}
+@media (max-width:720px){section.block.biz-sec.ab-first{padding-top:28px}}

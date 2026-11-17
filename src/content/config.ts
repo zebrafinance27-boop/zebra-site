@@ -6,7 +6,13 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     pubDate: z.coerce.date(),
+    // תמונה לכרטיס המאמר (לא חובה)
     cover: z.string().optional(),
+    // באילו עמודי הלוואה המאמר יופיע. אפשר כמה:
+    // car = כנגד רכב, business = בעלי עסקים, any = לכל מטרה
+    categories: z.array(z.enum(["car", "business", "any"])).default([]),
+    // תקציר קצר לכרטיס המאמר. אם אין, מוצג ה-description
+    excerpt: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });

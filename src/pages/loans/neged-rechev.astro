@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
+import RelatedArticles from "../../components/RelatedArticles.astro";
 import Steps from "../../components/Steps.astro";
 
 const faqs = [
@@ -98,6 +99,8 @@ const faqSchema = {
       </div>
     </div>
   </section>
+
+  <RelatedArticles category="car" />
 
   <LeadForm />
 </Base>

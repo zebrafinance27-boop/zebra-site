@@ -4,6 +4,7 @@ import LeadForm from "../components/LeadForm.astro";
 import Partners from "../components/Partners.astro";
 import Calculator from "../components/Calculator.astro";
 import GoogleReviews from "../components/GoogleReviews.astro";
+import Steps from "../components/Steps.astro";
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -80,7 +81,6 @@ const faqSchema = {
   <div class="wrap">
     <div class="sec-head center reveal">
       <h2>שמעו את זה מהם</h2>
-      <p>לקוחות אמיתיים מספרים איך זה נראה אצלם.</p>
     </div>
     <div class="zh-vids">
       <figure class="zh-vid reveal">
@@ -126,10 +126,9 @@ document.querySelectorAll(".zh-vid-frame").forEach(function(b){
 <section class="block">
   <div class="wrap">
     <div class="advocate reveal">
-      <h2>אנחנו עובדים בשבילכם, לא בשביל הבנק</h2>
+      <h2>אנחנו לא מלווים. אנחנו מתווכים.</h2>
       <p>זברה היא לא חברת מימון. אנחנו מתווכים בינך לבין המלווים ועובדים עבורך: משווים, מתמקחים ומשיגים לך את ההלוואה המשתלמת ביותר.</p>
       <div class="adv-chips">
-        <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>מתווכים, לא מלווים</span>
         <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>על בסיס הצלחה בלבד</span>
         <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>בלי דמי פתיחת תיק או עמלות מראש</span>
       </div>
@@ -137,20 +136,7 @@ document.querySelectorAll(".zh-vid-frame").forEach(function(b){
   </div>
 </section>
 
-<section class="block zh-how">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <h2>ארבעה צעדים לכסף בחשבון</h2>
-    </div>
-    <div class="zh-steps" id="zhSteps">
-      <div class="zh-line" aria-hidden="true"><i id="zhLineFill"></i></div>
-      <div class="zh-step reveal"><div class="zh-num">1</div><h3>ממלאים פרטים</h3><p>שאלון קצר של פחות מדקה, הכל אונליין.</p></div>
-      <div class="zh-step reveal"><div class="zh-num">2</div><h3>אנחנו בודקים</h3><p>משווים בשבילכם מול כ־30 גופי מימון.</p></div>
-      <div class="zh-step reveal"><div class="zh-num">3</div><h3>מקבלים הצעה</h3><p>הצעה מותאמת אישית, ברורה ושקופה.</p></div>
-      <div class="zh-step reveal"><div class="zh-num">4</div><h3>הכסף בחשבון</h3><p>הכסף מועבר ישירות לחשבון שלכם, בפריסה שמתאימה לכם.</p></div>
-    </div>
-  </div>
-</section>
+<Steps />
 
 <Partners />
 
@@ -166,8 +152,8 @@ document.querySelectorAll(".zh-vid-frame").forEach(function(b){
       <details class="faq-item"><summary>תוך כמה זמן מקבלים תשובה?<span class="fq-ic"></span></summary><div class="faq-a">לרוב מקבלים תשובה ראשונית תוך דקות בודדות מרגע מילוי השאלון. נציג חוזר אליכם עם הצעה מותאמת בהקדם.</div></details>
       <details class="faq-item"><summary>מתי הכסף מגיע לחשבון?<span class="fq-ic"></span></summary><div class="faq-a">זה תלוי במסלול ובגוף המממן. בהלוואה כנגד רכב הכסף מגיע לרוב תוך 24 שעות מרגע האישור והשלמת המסמכים; בשאר המסלולים לוח הזמנים משתנה, ונעדכן אתכם מראש.</div></details>
       <details class="faq-item"><summary>מהם תנאי ההחזר?<span class="fq-ic"></span></summary><div class="faq-a">הפריסה נקבעת לפי המסלול והגוף המממן, ואנחנו מתאימים אותה לתקציב שלכם. בהלוואה כנגד רכב אפשר לפרוס עד 100 תשלומים.</div></details>
-      <details class="faq-item"><summary>מה זה "הלוואה כנגד הרכב"?<span class="fq-ic"></span></summary><div class="faq-a">מקבלים מימון על בסיס שווי הרכב שבבעלותכם — בלי למסור את הרכב או את המפתחות, וממשיכים להשתמש בו כרגיל.</div></details>
-      <details class="faq-item"><summary>כמה עולה לבדוק התאמה?<span class="fq-ic"></span></summary><div class="faq-a">בדיקת ההתאמה חינם ובלי התחייבות. שכר הטרחה משולם רק אחרי שההלוואה אושרה והכסף נכנס לחשבון — בלי דמי פתיחת תיק ובלי תשלום מראש.</div></details>
+      <details class="faq-item"><summary>מה זה "הלוואה כנגד הרכב"?<span class="fq-ic"></span></summary><div class="faq-a">מקבלים מימון על בסיס שווי הרכב שבבעלותכם, בלי למסור את הרכב או את המפתחות, וממשיכים להשתמש בו כרגיל.</div></details>
+      <details class="faq-item"><summary>כמה עולה לבדוק התאמה?<span class="fq-ic"></span></summary><div class="faq-a">בדיקת ההתאמה חינם ובלי התחייבות. שכר הטרחה משולם רק אחרי שההלוואה אושרה והכסף נכנס לחשבון, בלי דמי פתיחת תיק ובלי תשלום מראש.</div></details>
     </div>
   </div>
 </section>
@@ -180,24 +166,6 @@ document.querySelectorAll(".zh-vid-frame").forEach(function(b){
 (function(){
   var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var fine=window.matchMedia("(pointer: fine)").matches;
-  /* parallax for the floating hero cards */
-  var stage=document.getElementById("zhStage");
-  var floats=stage?stage.querySelectorAll("[data-depth]"):[];
-  var mx=0,my=0,ticking=false;
-  function paint(){
-    ticking=false;
-    var sy=Math.min(window.scrollY,700);
-    floats.forEach(function(el){
-      var d=+el.dataset.depth;
-      el.style.transform="translate3d("+(mx*14*d)+"px,"+(my*14*d-sy*0.12*d)+"px,0)";
-    });
-  }
-  function req(){if(!ticking){ticking=true;requestAnimationFrame(paint);}}
-  if(!reduce&&stage){
-    window.addEventListener("scroll",req,{passive:true});
-    if(fine){stage.addEventListener("mousemove",function(e){var r=stage.getBoundingClientRect();mx=(e.clientX-r.left)/r.width-.5;my=(e.clientY-r.top)/r.height-.5;req();});
-      stage.addEventListener("mouseleave",function(){mx=0;my=0;req();});}
-  }
   /* 3D tilt on service cards */
   if(!reduce&&fine){
     document.querySelectorAll("[data-tilt]").forEach(function(card){
@@ -207,17 +175,6 @@ document.querySelectorAll(".zh-vid-frame").forEach(function(b){
       card.addEventListener("mouseleave",function(){card.style.transform="";});
     });
   }
-  /* "how it works" line fills while scrolling */
-  var steps=document.getElementById("zhSteps"),fill=document.getElementById("zhLineFill");
-  function line(){
-    if(!steps||!fill)return;
-    var r=steps.getBoundingClientRect(),vh=window.innerHeight;
-    var k=Math.max(0,Math.min(1,(vh*0.85-r.top)/(r.height+vh*0.35)));
-    fill.style.transform="scaleX("+k+")";fill.parentNode.style.setProperty("--k",k);
-    steps.querySelectorAll(".zh-step").forEach(function(s,i,all){s.classList.toggle("on",k>=(i+0.5)/all.length-0.05);});
-  }
-  if(reduce){if(fill)fill.style.transform="scaleX(1)";steps&&steps.querySelectorAll(".zh-step").forEach(function(s){s.classList.add("on");});}
-  else{window.addEventListener("scroll",function(){requestAnimationFrame(line);},{passive:true});window.addEventListener("resize",line);line();}
 })();
 </script>
 </Base>

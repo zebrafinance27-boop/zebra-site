@@ -804,10 +804,12 @@ footer.ft::before{content:"";position:absolute;inset:0;z-index:-1;background:rep
   .calc-type{font-size:.88rem;padding:6px 4px}
   .calc-label{flex-direction:column;align-items:flex-start;gap:2px}
   .calc-label strong{font-size:1.12rem}
-  .calc-result{position:absolute;left:12px;width:100px;top:108px;bottom:12px;padding:14px 8px;gap:6px;border-radius:20px}
+  .calc-result{position:absolute;left:12px;width:104px;top:108px;bottom:12px;padding:20px 8px 14px;gap:8px;border-radius:20px;justify-content:flex-start}
+  .calc-result::before{display:none}
   .calc-result::after{display:none}
-  .cr-label{font-size:.8rem;line-height:1.3}
-  .cr-amount{font-size:1.5rem}
-  .cr-note{font-size:.7rem;line-height:1.35;margin-bottom:0}
+  .cr-label{font-size:.76rem;line-height:1.3;text-wrap:balance}
+  .cr-amount{font-size:1.38rem;letter-spacing:-.01em}
+  .cr-note{font-size:.68rem;line-height:1.35;margin-bottom:0;text-wrap:balance;opacity:.9}
+  .calc-result .btn{margin-top:auto}
   .calc-result .btn{font-size:.78rem;padding:10px 6px;line-height:1.25;white-space:normal;width:100%}
 }

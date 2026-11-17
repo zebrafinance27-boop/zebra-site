@@ -2,20 +2,22 @@
 import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import { getCollection } from "astro:content";
+import { BLOG_CATEGORIES } from "../../data/blogCategories.js";
 
 const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 const fmt = (d) => d.toLocaleDateString("he-IL", { year: "numeric", month: "long", day: "numeric" });
+// רק קטגוריות שיש בהן מאמרים מקבלות כפתור סינון
+const usedCats = Object.keys(BLOG_CATEGORIES).filter((c) => posts.some((p) => p.data.categories.includes(c)));
 ---
 <Base
-  title="הבלוג של זברה: מדריכים וטיפים על הלוואות ומימון"
+  title="מאמרים ומדריכים על הלוואות ומימון | זברה"
   description="מאמרים, מדריכים וטיפים על הלוואות, מימון, איחוד הלוואות והלוואה כנגד רכב, מהצוות של זברה."
 >
   <section class="page-hero">
     <div class="wrap">
-      <span class="eyebrow">הבלוג</span>
-      <h1>מדריכים וטיפים על הלוואות ומימון</h1>
+      <h1>מאמרים ומדריכים</h1>
       <p>כל מה שכדאי לדעת לפני שלוקחים הלוואה, בשפה פשוטה, מהצוות של זברה.</p>
     </div>
   </section>
@@ -25,24 +27,94 @@ const fmt = (d) => d.toLocaleDateString("he-IL", { year: "numeric", month: "long
       {posts.length === 0 ? (
         <p style="text-align:center;color:var(--muted)">בקרוב יעלו כאן מאמרים חדשים.</p>
       ) : (
+        <>
+        {usedCats.length > 1 && (
+          <div class="cat-filter" role="group" aria-label="סינון לפי נושא">
+            <button type="button" class="cat-chip on" data-cat="" aria-pressed="true">כל המאמרים</button>
+            {usedCats.map((c) => (
+              <button type="button" class="cat-chip" data-cat={c} aria-pressed="false">{BLOG_CATEGORIES[c].label}</button>
+            ))}
+          </div>
+        )}
         <div class="post-grid">
           {posts.map((post) => (
-            <a class="post-card" href={`/blog/${post.slug}/`}>
-              {post.data.cover && (
-                <div class="thumb"><img src={post.data.cover} alt={post.data.title} loading="lazy" /></div>
-              )}
+            <a class="post-card" href={`/blog/${post.slug}/`} data-cats={post.data.categories.join(" ")}>
               <div class="pc-body">
-                <span class="pc-date">{fmt(post.data.pubDate)}</span>
+                <div class="pc-meta">
+                  {post.data.categories[0] && <span class="pc-tag">{BLOG_CATEGORIES[post.data.categories[0]].label}</span>}
+                  <span class="pc-date">{fmt(post.data.pubDate)}</span>
+                </div>
                 <h3>{post.data.title}</h3>
-                <p>{post.data.description}</p>
-                <span class="pc-more">קראו עוד ←</span>
+                <p>{post.data.excerpt || post.data.description}</p>
+                <span class="pc-more">לקריאת המאמר <span aria-hidden="true">←</span></span>
               </div>
             </a>
           ))}
         </div>
+        </>
       )}
     </div>
   </section>
 
   <LeadForm />
 </Base>
+
+<style>
+  .cat-filter { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 26px; }
+  .cat-chip {
+    font-family: inherit; font-weight: 600; font-size: .95rem; cursor: pointer;
+    background: var(--paper); color: var(--green-darker); border: 1.6px solid #d7e3c8;
+    border-radius: 999px; padding: 8px 18px; transition: background .15s, border-color .15s, color .15s;
+  }
+  .cat-chip:hover { border-color: var(--green); }
+  .cat-chip.on { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
+  .cat-chip:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+  .post-card[hidden] { display: none; }
+
+  /* כרטיסי מאמר: טקסט בלבד, גובה אחיד */
+  .post-grid { align-items: stretch; grid-template-columns: repeat(2, 1fr); max-width: 980px; margin-inline: auto; }
+  @media (max-width: 760px) { .post-grid { grid-template-columns: 1fr; } }
+  .post-grid .post-card { border-top: 4px solid var(--green); border-radius: 18px; }
+  .post-grid .post-card .pc-body { padding: 22px 24px 20px; gap: 10px; }
+  .post-grid .pc-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .post-grid .pc-tag { background: var(--tint); color: var(--green-darker); border-radius: 999px; padding: 3px 12px; font-size: .82rem; font-weight: 600; }
+  .post-grid .post-card h3 { font-size: 1.2rem; font-weight: 800; line-height: 1.4; }
+  .post-grid .post-card p {
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    line-height: 1.65;
+  }
+  .post-grid .post-card .pc-more { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 4px; }
+  @media (max-width: 600px) {
+    .post-grid .post-card .pc-body { padding: 18px 18px 16px; }
+    .post-grid .post-card h3 { font-size: 1.1rem; }
+  }
+</style>
+
+<script>
+  // סינון מאמרים לפי נושא. עובד גם מקישור עם ?cat=car
+  const chips = document.querySelectorAll(".cat-chip");
+  const cards = document.querySelectorAll(".post-card[data-cats]");
+  const apply = (cat) => {
+    chips.forEach((b) => {
+      const on = b.dataset.cat === cat;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    cards.forEach((c) => {
+      c.hidden = !!cat && !c.dataset.cats.split(" ").includes(cat);
+    });
+  };
+  if (chips.length) {
+    chips.forEach((b) =>
+      b.addEventListener("click", () => {
+        const cat = b.dataset.cat;
+        apply(cat);
+        const url = new URL(location.href);
+        if (cat) url.searchParams.set("cat", cat); else url.searchParams.delete("cat");
+        history.replaceState(null, "", url);
+      })
+    );
+    const start = new URLSearchParams(location.search).get("cat") || "";
+    if ([...chips].some((b) => b.dataset.cat === start)) apply(start);
+  }
+</script>

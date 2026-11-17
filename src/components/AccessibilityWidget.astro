@@ -113,7 +113,11 @@
 
   /* במובייל: לצד שמאל, קצת מתחת לאמצע המסך (לא בפינה התחתונה) */
   @media (max-width: 640px) {
-    .zb-a11y-btn { bottom: auto; right: auto; top: 58%; left: 14px; }
+    /* Small tab attached to the left edge: stays reachable without covering text */
+    .zb-a11y-btn { bottom: auto; right: auto; top: 58%; left: 0; width: 44px; height: 48px; border-radius: 0 14px 14px 0; box-shadow: 0 6px 16px -8px rgba(20,24,27,.45); }
+    .zb-a11y-btn svg { width: 24px; height: 24px; }
+    .zb-a11y-btn:hover { transform: none; }
+    .zb-a11y-btn:active { transform: scale(.97); }
     .zb-a11y-panel { bottom: auto; right: auto; top: 50%; left: 14px; transform: translateY(-40%) scale(.97); }
     .zb-a11y-panel.show { transform: translateY(-50%) scale(1); }
   }

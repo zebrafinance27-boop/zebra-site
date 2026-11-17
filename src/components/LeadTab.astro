@@ -112,6 +112,9 @@
       pointer-events: auto;
     }
     .zb-lead-tab:hover { padding-right: 20px; }  /* ביטול אפקט הדסקטופ */
+    /* When the bottom bar is showing, the WhatsApp button rises above it */
+    :global(.floaters) { transition: transform .32s cubic-bezier(.16,1,.3,1); }
+    :global(body:has(.zb-lead-tab.zb-show) .floaters) { transform: translateY(-70px); }
   }
   @media (prefers-reduced-motion: reduce) {
     .zb-lead-tab { transition: background .18s, opacity .2s; }

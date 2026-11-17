@@ -404,7 +404,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 @media (max-width:740px){
   .calc{grid-template-columns:1fr}
   .calc-controls{padding:26px 22px}
-  .calc-result{padding:30px 22px}
+  .calc-result{padding:22px 18px;order:-1;gap:4px} /* mobile: monthly result above the sliders, so it stays in view while adjusting */
 }
 
 /* ===== reviews & testimonial form ===== */

@@ -4,6 +4,8 @@ const blog = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
+    // כותרת לגוגל (Meta Title). אם ריקה: "כותרת המאמר | זברה"
+    seoTitle: z.string().optional(),
     description: z.string(),
     pubDate: z.coerce.date(),
     // תמונה לכרטיס המאמר (לא חובה)

@@ -12,13 +12,12 @@ const fmt = (d) => d.toLocaleDateString("he-IL", { year: "numeric", month: "long
 const usedCats = Object.keys(BLOG_CATEGORIES).filter((c) => posts.some((p) => p.data.categories.includes(c)));
 ---
 <Base
-  title="הבלוג של זברה: מדריכים וטיפים על הלוואות ומימון"
+  title="מאמרים ומדריכים על הלוואות ומימון | זברה"
   description="מאמרים, מדריכים וטיפים על הלוואות, מימון, איחוד הלוואות והלוואה כנגד רכב, מהצוות של זברה."
 >
   <section class="page-hero">
     <div class="wrap">
-      <span class="eyebrow">הבלוג</span>
-      <h1>מדריכים וטיפים על הלוואות ומימון</h1>
+      <h1>מאמרים ומדריכים</h1>
       <p>כל מה שכדאי לדעת לפני שלוקחים הלוואה, בשפה פשוטה, מהצוות של זברה.</p>
     </div>
   </section>
@@ -46,7 +45,7 @@ const usedCats = Object.keys(BLOG_CATEGORIES).filter((c) => posts.some((p) => p.
               <div class="pc-body">
                 <span class="pc-date">{fmt(post.data.pubDate)}</span>
                 <h3>{post.data.title}</h3>
-                <p>{post.data.description}</p>
+                <p>{post.data.excerpt || post.data.description}</p>
                 <span class="pc-more">קראו עוד ←</span>
               </div>
             </a>

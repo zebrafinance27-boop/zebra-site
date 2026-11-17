@@ -11,6 +11,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await post.render();
 const fmt = (d) => d.toLocaleDateString("he-IL", { year: "numeric", month: "long", day: "numeric" });
+const pageUrl = new URL(`/blog/${post.slug}/`, Astro.site).toString();
 
 const articleSchema = {
   "@context": "https://schema.org",
@@ -18,7 +19,10 @@ const articleSchema = {
   headline: post.data.title,
   description: post.data.description,
   datePublished: post.data.pubDate.toISOString(),
-  image: post.data.cover ? new URL(post.data.cover, Astro.site).toString() : undefined,
+  dateModified: post.data.pubDate.toISOString(),
+  mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
+  inLanguage: "he-IL",
+  image: new URL(post.data.cover || "/images/zebra.webp", Astro.site).toString(),
   author: { "@type": "Organization", name: "זברה" },
   publisher: {
     "@type": "Organization",
@@ -26,26 +30,42 @@ const articleSchema = {
     logo: { "@type": "ImageObject", url: new URL("/images/logo.png", Astro.site).toString() },
   },
 };
+
+// שאלות נפוצות: נשלפות אוטומטית מהחלק "## שאלות נפוצות..." במאמר (כל ### היא שאלה)
+const plain = (s) => s.replace(/<[^>]+>/g, "").replace(/\*\*|__|\*/g, "").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/\s+/g, " ").trim();
+const body = post.body.replace(/\r\n/g, "\n");
+const faqBlock = body.match(/^## [^\n]*שאלות נפוצות[^\n]*\n([\s\S]*?)(?=^## |(?![\s\S]))/m);
+const faqs = faqBlock
+  ? [...faqBlock[1].matchAll(/^### (.+)\n([\s\S]*?)(?=^### |(?![\s\S]))/gm)]
+      .map((m) => ({ q: plain(m[1]), a: plain(m[2]) }))
+      .filter((f) => f.q && f.a)
+  : [];
+const faqSchema = faqs.length && {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
 ---
 <Base
-  title={`${post.data.title} | זברה`}
+  title={post.data.seoTitle || `${post.data.title} | זברה`}
   description={post.data.description}
   image={post.data.cover || "/images/zebra.webp"}
   type="article"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
+  {faqSchema && <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />}
 
   <article class="block">
     <div class="wrap">
-      <a class="back-link" href="/blog/">← חזרה לבלוג</a>
       <header class="article-head">
+        <a class="back-link" href="/blog/"><span aria-hidden="true">→</span> כל המאמרים</a>
         <div class="pc-date">{fmt(post.data.pubDate)}</div>
         <h1>{post.data.title}</h1>
       </header>
       {post.data.cover && (
         <div class="article-cover"><img src={post.data.cover} alt={post.data.title} /></div>
       )}
-      <div class="prose">
+      <div class="prose article-body">
         <Content />
       </div>
     </div>
@@ -53,3 +73,45 @@ const articleSchema = {
 
   <LeadForm />
 </Base>
+
+<style is:global>
+  /* עיצוב רכיבים בתוך גוף המאמר */
+  .article-body > p:first-child { font-size: 1.2rem; color: var(--ink); }
+  .article-body h2 { scroll-margin-top: 90px; }
+
+  /* קופסת דוגמה / תרחיש להמחשה */
+  .article-body .ex-box {
+    background: var(--tint); border: 1px solid #d9e6c9; border-radius: 16px;
+    padding: 18px 22px 4px; margin: 20px 0 24px;
+  }
+  .article-body .ex-box > p:first-child { margin-bottom: 8px; }
+  .article-body .ex-box > p:first-child strong { color: var(--green-darker); font-size: .95rem; }
+  .article-body .ex-box p { font-size: 1.04rem; }
+
+  /* בלוק הנעה לפעולה */
+  .article-body .article-cta {
+    background: var(--paper); border: 1px solid var(--line); border-inline-start: 5px solid var(--green);
+    border-radius: 18px; box-shadow: var(--shadow-sm); padding: 24px 26px; margin: 34px 0;
+  }
+  .article-body .article-cta p { font-size: 1.12rem; font-weight: 600; color: var(--ink); margin-bottom: 12px; }
+  .article-body .article-cta strong { white-space: nowrap; }
+  .article-body .cta-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+  .article-body .cta-btns a { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .article-body .cta-btns .btn { color: #fff; }
+  .article-body .cta-btns .btn-line { color: var(--green-darker); }
+
+  /* שורת הבהרה */
+  .article-body .article-note {
+    font-size: .85rem; color: var(--muted); border-top: 1px solid var(--line);
+    padding-top: 14px; margin-top: 36px; line-height: 1.6;
+  }
+
+  @media (max-width: 600px) {
+    .article-body > p:first-child { font-size: 1.12rem; }
+    .article-body .ex-box { padding: 14px 16px 2px; border-radius: 14px; }
+    .article-body .article-cta { padding: 18px 18px; }
+    .article-body .article-cta p { font-size: 1.05rem; }
+    .article-body .cta-btns { flex-direction: column; }
+    .article-body .cta-btns a { width: 100%; }
+  }
+</style>

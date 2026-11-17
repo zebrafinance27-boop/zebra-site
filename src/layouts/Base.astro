@@ -9,9 +9,9 @@ import AccessibilityWidget from "../components/AccessibilityWidget.astro";
 import LeadTab from "../components/LeadTab.astro";
 
 const {
-  title = "זברה | הדרך הקלה להלוואה",
+  title = "זברה פיננסית | הלוואות ומשכנתאות – עובדים בשבילך, לא בשביל הבנק",
   description = "ב'זברה' מתאימים לכם את המימון המדויק: הלוואות לכל מטרה, לבעלי עסקים, וכנגד הרכב, בלי למסור מפתחות. בודקים בשבילכם מול כ־30 גופי מימון, בלי עמלות מראש.",
-  image = "/images/zebra.webp",
+  image = "/images/og-zebra.png",
   type = "website",
 } = Astro.props;
 
@@ -22,11 +22,21 @@ const path = Astro.url.pathname;
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "זברה",
+  name: "זברה פיננסית",
+  alternateName: "זברה",
   description: "גוף המתווך בין הלווה למלווה להשגת ההלוואה המשתלמת ביותר.",
   url: Astro.site?.toString(),
-  logo: new URL("/images/logo.png", Astro.site).toString(),
-  slogan: "הדרך הקלה להלוואה",
+  logo: new URL("/icon-512.png", Astro.site).toString(),
+  slogan: "עובדים בשבילך, לא בשביל הבנק",
+};
+
+// שם האתר שגוגל מציג מעל הכתובת בתוצאות החיפוש
+const siteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "זברה פיננסית",
+  alternateName: "זברה",
+  url: Astro.site?.toString(),
 };
 ---
 <!DOCTYPE html>
@@ -38,7 +48,10 @@ const orgSchema = {
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
-  <link rel="icon" href="/images/logo.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
   <!-- Meta Pixel Code -->
   <script is:inline>
@@ -59,6 +72,7 @@ const orgSchema = {
 
   <!-- Open Graph -->
   <meta property="og:type" content={type} />
+  <meta property="og:site_name" content="זברה פיננסית" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:image" content={ogImage} />
@@ -71,6 +85,7 @@ const orgSchema = {
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
   <slot name="head" />
 </head>
 <body>

@@ -1,10 +1,9 @@
 ---
-// מאמרים מהבלוג שקשורים לעמוד ההלוואה. מציג עד 3 מאמרים אחרונים מהקטגוריה,
-// ואם אין מאמרים בקטגוריה, החלק כולו לא מוצג.
+// מאמרים מהבלוג שקשורים לעמוד ההלוואה: רשימת קישורים נקייה.
+// מציג עד 6 מאמרים אחרונים מהקטגוריה. אם אין מאמרים בקטגוריה, החלק לא מוצג.
 import { getCollection } from "astro:content";
-import { BLOG_CATEGORIES } from "../data/blogCategories.js";
 
-const { category, limit = 3 } = Astro.props;
+const { category, limit = 6 } = Astro.props;
 
 const posts = (
   await getCollection("blog", ({ data }) => !data.draft && data.categories.includes(category))
@@ -13,65 +12,43 @@ const posts = (
   .slice(0, limit);
 ---
 {posts.length > 0 && (
-  <section class="block biz-sec rel-sec" aria-labelledby={`rel-${category}`}>
-    <div class="wrap biz-wrap">
-      <div class="rel-head">
-        <h2 class="biz-h2" id={`rel-${category}`}>כדאי לקרוא לפני שמחליטים</h2>
-        <a class="rel-all" href={`/blog/?cat=${category}`}>לכל המאמרים</a>
-      </div>
-      <div class="rel-grid">
+  <section class="rel-sec" aria-labelledby={`rel-${category}`}>
+    <div class="wrap rel-wrap">
+      <h2 class="rel-title" id={`rel-${category}`}>מאמרים<br />קשורים</h2>
+      <span class="rel-ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2" /><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2" /></svg>
+      </span>
+      <ul class="rel-list">
         {posts.map((post) => (
-          <a class="rel-card" href={`/blog/${post.slug}/`}>
-            <div class="rel-thumb">
-              <img src={post.data.cover || "/images/zebra.webp"} alt="" loading="lazy" />
-            </div>
-            <div class="rel-body">
-              <div class="rel-tags">
-                {post.data.categories.map((c) => <span>{BLOG_CATEGORIES[c].label}</span>)}
-              </div>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.excerpt || post.data.description}</p>
-              <span class="rel-more">לקריאת המאמר <span aria-hidden="true">←</span></span>
-            </div>
-          </a>
+          <li><a href={`/blog/${post.slug}/`}>{post.data.title}<span class="rel-arr" aria-hidden="true">‹</span></a></li>
         ))}
-      </div>
+        <li class="rel-all"><a href={`/blog/?cat=${category}`}>לכל המאמרים בבלוג<span class="rel-arr" aria-hidden="true">‹</span></a></li>
+      </ul>
     </div>
   </section>
 )}
 
 <style>
-  section.block.biz-sec.rel-sec { padding-bottom: 36px; }
-  .rel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
-  .rel-all { font-weight: 700; color: var(--green-deep); font-size: .95rem; white-space: nowrap; }
-  .rel-all:hover { text-decoration: underline; }
-  .rel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .rel-card {
-    display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line);
-    border-radius: 18px; overflow: hidden; box-shadow: 0 14px 30px -24px rgba(20,24,27,.35);
-    transition: transform .2s, box-shadow .2s, border-color .2s;
-  }
-  .rel-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-sm); border-color: #d7e3c8; }
-  .rel-card:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
-  .rel-thumb { aspect-ratio: 16 / 9; background: radial-gradient(circle at 50% 60%, rgba(95,168,51,.28), var(--tint) 62%); overflow: hidden; display: grid; place-items: center; }
-  .rel-thumb img { width: 100%; height: 100%; object-fit: contain; padding: 10px 0 0; }
-  .rel-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-  .rel-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .rel-tags span { background: var(--tint); color: var(--green-darker); border-radius: 999px; padding: 2px 10px; font-size: .8rem; font-weight: 600; }
-  .rel-card h3 { margin: 0; font-size: 1.08rem; font-weight: 800; line-height: 1.4; color: var(--ink); }
-  .rel-card p {
-    margin: 0; color: var(--muted); font-size: .95rem; flex: 1;
-    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .rel-more { font-weight: 700; color: var(--green-deep); font-size: .93rem; margin-top: 4px; }
-  @media (max-width: 900px) { .rel-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 600px) {
-    section.block.biz-sec.rel-sec { padding-bottom: 24px; }
-    .rel-grid { grid-template-columns: 1fr; gap: 10px; }
-    .rel-card { flex-direction: row; }
-    .rel-thumb { aspect-ratio: auto; width: 104px; flex: none; }
-    .rel-thumb img { padding: 6px 0 0; }
-    .rel-body { padding: 12px 14px; }
-    .rel-card p { -webkit-line-clamp: 2; font-size: .9rem; }
+  .rel-sec { background: var(--paper); border-block: 1px solid var(--line); padding: 44px 0; margin-top: 28px; }
+  .rel-wrap { max-width: 900px; display: grid; grid-template-columns: auto auto 1fr; align-items: center; gap: 36px; }
+  .rel-title { margin: 0; font-size: 2.6rem; font-weight: 900; line-height: 1.05; color: var(--green-darker); }
+  .rel-ic { width: 104px; height: 104px; border-radius: 50%; background: var(--green-deep); display: grid; place-items: center; flex: none; }
+  .rel-ic svg { width: 46px; height: 46px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .rel-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .rel-list a { display: inline-flex; align-items: center; gap: 8px; padding: 5px 0; font-weight: 600; font-size: 1.05rem; color: var(--ink); transition: color .15s; }
+  .rel-list a:hover { color: var(--green-deep); text-decoration: underline; text-underline-offset: 4px; }
+  .rel-list a:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; border-radius: 4px; }
+  .rel-arr { color: var(--green-deep); font-weight: 800; font-size: 1.2rem; line-height: 1; transition: transform .15s; }
+  .rel-list a:hover .rel-arr { transform: translateX(-3px); }
+  .rel-all a { color: var(--green-deep); font-weight: 700; font-size: .98rem; margin-top: 4px; }
+  @media (max-width: 720px) {
+    .rel-sec { padding: 30px 0; margin-top: 18px; }
+    .rel-wrap { grid-template-columns: auto 1fr; gap: 14px 18px; }
+    .rel-ic { width: 64px; height: 64px; grid-row: 1; grid-column: 1; }
+    .rel-ic svg { width: 30px; height: 30px; }
+    .rel-title { font-size: 1.9rem; grid-row: 1; grid-column: 2; }
+    .rel-list { grid-column: 1 / -1; }
+    .rel-list li:not(.rel-all) { border-bottom: 1px solid var(--line); }
+    .rel-list a { padding: 9px 0; font-size: 1rem; }
   }
 </style>

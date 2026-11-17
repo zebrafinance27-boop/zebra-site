@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
+import Steps from "../../components/Steps.astro";
 
 const faqs = [
   { q: "תוך כמה זמן הכסף מגיע לחשבון?", a: "התהליך דיגיטלי ומהיר. לאחר אישור הגוף המממן, הכסף מגיע לחשבון הבנק שלכם תוך עד 2 ימי עסקים." },
@@ -82,17 +83,7 @@ const faqSchema = {
     </div>
   </section>
 
-  <section class="block biz-sec">
-    <div class="wrap biz-wrap">
-      <h2 class="biz-h2">איך זה עובד</h2>
-      <div class="biz-steps">
-        <div class="biz-step"><div class="biz-n">1</div><h3>ממלאים שאלון קצר</h3><p>כמה שאלות, פחות מדקה.</p></div>
-        <div class="biz-step"><div class="biz-n">2</div><h3>אנחנו בודקים התאמה</h3><p>משווים מול גופי המימון וחוזרים אליכם עם הצעה.</p></div>
-        <div class="biz-step"><div class="biz-n">3</div><h3>הכסף בחשבון</h3><p>שיחת וידאו קצרה, חתימה דיגיטלית, והכסף תוך עד 2 ימי עסקים.</p></div>
-      </div>
-      <p class="biz-fee"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>על בסיס הצלחה: משלמים לנו רק אחרי שהכסף בחשבון הבנק.</p>
-    </div>
-  </section>
+  <Steps />
 
   <section class="block biz-sec">
     <div class="wrap biz-wrap">

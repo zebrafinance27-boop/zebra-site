@@ -39,14 +39,14 @@ const usedCats = Object.keys(BLOG_CATEGORIES).filter((c) => posts.some((p) => p.
         <div class="post-grid">
           {posts.map((post) => (
             <a class="post-card" href={`/blog/${post.slug}/`} data-cats={post.data.categories.join(" ")}>
-              {post.data.cover && (
-                <div class="thumb"><img src={post.data.cover} alt={post.data.title} loading="lazy" /></div>
-              )}
               <div class="pc-body">
-                <span class="pc-date">{fmt(post.data.pubDate)}</span>
+                <div class="pc-meta">
+                  {post.data.categories[0] && <span class="pc-tag">{BLOG_CATEGORIES[post.data.categories[0]].label}</span>}
+                  <span class="pc-date">{fmt(post.data.pubDate)}</span>
+                </div>
                 <h3>{post.data.title}</h3>
                 <p>{post.data.excerpt || post.data.description}</p>
-                <span class="pc-more">קראו עוד ←</span>
+                <span class="pc-more">לקריאת המאמר <span aria-hidden="true">←</span></span>
               </div>
             </a>
           ))}
@@ -70,6 +70,24 @@ const usedCats = Object.keys(BLOG_CATEGORIES).filter((c) => posts.some((p) => p.
   .cat-chip.on { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
   .cat-chip:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
   .post-card[hidden] { display: none; }
+
+  /* כרטיסי מאמר: טקסט בלבד, גובה אחיד */
+  .post-grid { align-items: stretch; grid-template-columns: repeat(2, 1fr); max-width: 980px; margin-inline: auto; }
+  @media (max-width: 760px) { .post-grid { grid-template-columns: 1fr; } }
+  .post-grid .post-card { border-top: 4px solid var(--green); border-radius: 18px; }
+  .post-grid .post-card .pc-body { padding: 22px 24px 20px; gap: 10px; }
+  .post-grid .pc-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .post-grid .pc-tag { background: var(--tint); color: var(--green-darker); border-radius: 999px; padding: 3px 12px; font-size: .82rem; font-weight: 600; }
+  .post-grid .post-card h3 { font-size: 1.2rem; font-weight: 800; line-height: 1.4; }
+  .post-grid .post-card p {
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    line-height: 1.65;
+  }
+  .post-grid .post-card .pc-more { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 4px; }
+  @media (max-width: 600px) {
+    .post-grid .post-card .pc-body { padding: 18px 18px 16px; }
+    .post-grid .post-card h3 { font-size: 1.1rem; }
+  }
 </style>
 
 <script>

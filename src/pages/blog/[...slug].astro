@@ -87,6 +87,21 @@ const faqSchema = faqs.length && {
   .article-body .ex-box > p:first-child { margin-bottom: 8px; }
   .article-body .ex-box > p:first-child strong { color: var(--green-darker); font-size: .95rem; }
   .article-body .ex-box p { font-size: 1.04rem; }
+  .article-body .ex-box > h3:first-child { margin: 0 0 10px; font-size: 1.12rem; color: var(--green-darker); }
+
+  /* טבלאות: גלילה אופקית במסך צר */
+  .article-body .table-wrap {
+    overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0 22px;
+    border: 1px solid var(--line); border-radius: 14px; background: var(--paper);
+  }
+  .article-body table { width: 100%; min-width: 440px; border-collapse: collapse; font-size: 1rem; }
+  .article-body th, .article-body td { padding: 12px 16px; text-align: start; vertical-align: top; line-height: 1.55; }
+  .article-body thead th { background: var(--green-deep); color: #fff; font-weight: 700; white-space: nowrap; }
+  .article-body tbody tr + tr td { border-top: 1px solid var(--line); }
+  .article-body tbody tr:nth-child(even) td { background: #fafaf6; }
+  .article-body tbody td:first-child { font-weight: 600; color: var(--ink); }
+  .article-body td { color: #33403a; }
+  .article-body .ex-box .table-wrap { margin: 14px 0 18px; }
 
   /* בלוק הנעה לפעולה */
   .article-body .article-cta {
@@ -114,6 +129,8 @@ const faqSchema = faqs.length && {
   @media (max-width: 600px) {
     .article-body > p:first-child { font-size: 1.12rem; }
     .article-body .ex-box { padding: 14px 16px 2px; border-radius: 14px; }
+    .article-body table { font-size: .95rem; }
+    .article-body th, .article-body td { padding: 10px 12px; }
     .article-body .article-cta { padding: 18px 18px; }
     .article-body .article-cta p { font-size: 1.05rem; }
     .article-body .cta-btns { flex-direction: column; }

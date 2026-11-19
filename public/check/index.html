@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#ffffff" />
+<meta name="robots" content="noindex, nofollow" />
+<title>בדיקת מימון כנגד רכב | זברה</title>
+<meta name="description" content="בדיקה דיגיטלית קצרה לגלות כמה כסף תוכלו לקבל כנגד הרכב שלכם – בלי למכור אותו." />
+<link rel="icon" href="/favicon-32.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="preload" as="image" href="/images/zebra-car.webp" />
+
+<!-- Tailwind (CDN build for the prototype — see README-check.md for a compiled production build) -->
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: { DEFAULT: "#5FA833", 50: "#EEF4E7", 100: "#DDEBCF", 500: "#5FA833", 600: "#4C8A24", 700: "#2F5A13" },
+          ink: { DEFAULT: "#14181B", 700: "#33403A", 500: "#5C6660" },
+          paper: "#F6F5EF",
+          line: "#E8E7DF",
+        },
+        fontFamily: { sans: ['"Noto Sans Hebrew"', "system-ui", "sans-serif"] },
+        boxShadow: {
+          card: "0 1px 2px rgba(20,24,27,.04), 0 8px 24px -12px rgba(20,24,27,.12)",
+          lift: "0 2px 4px rgba(20,24,27,.04), 0 18px 40px -18px rgba(20,24,27,.28)",
+          cta: "0 10px 24px -10px rgba(95,168,51,.75)",
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html, body { background: #ffffff; overflow-x: clip; }
+  body { -webkit-tap-highlight-color: transparent; font-feature-settings: "tnum"; }
+  .num { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+  /* step transitions — forward in RTL travels leftwards */
+  @keyframes inFwd { from { opacity: 0; transform: translateX(-22px); } to { opacity: 1; transform: none; } }
+  @keyframes inBack { from { opacity: 0; transform: translateX(22px); } to { opacity: 1; transform: none; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes pop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .anim-fwd { animation: inFwd .42s cubic-bezier(.16,1,.3,1) both; }
+  .anim-back { animation: inBack .42s cubic-bezier(.16,1,.3,1) both; }
+  .rise { animation: rise .55s cubic-bezier(.16,1,.3,1) both; }
+  .pop { animation: pop .5s cubic-bezier(.16,1,.3,1) both; }
+  .draw { stroke-dasharray: 40; stroke-dashoffset: 40; animation: draw .45s .15s ease-out forwards; }
+  .spin { animation: spin .9s linear infinite; }
+  .grow { transform-origin: right; animation: grow .9s .2s cubic-bezier(.16,1,.3,1) both; }
+  .float { animation: float 5s ease-in-out infinite; }
+  .shimmer { background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.55) 50%, transparent 100%); background-size: 200% 100%; animation: shimmer 2.6s linear infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+
+  /* range slider */
+  input[type=range].zb-range { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; border-radius: 999px; outline: none; cursor: pointer; direction: rtl; }
+  input[type=range].zb-range::-webkit-slider-thumb { -webkit-appearance: none; width: 32px; height: 32px; border-radius: 50%; background: #fff; border: 3px solid #5FA833; box-shadow: 0 4px 14px -2px rgba(20,24,27,.25); transition: transform .15s; }
+  input[type=range].zb-range:active::-webkit-slider-thumb { transform: scale(1.12); }
+  input[type=range].zb-range::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 3px solid #5FA833; box-shadow: 0 4px 14px -2px rgba(20,24,27,.25); }
+  input[type=range].zb-range:focus-visible { box-shadow: 0 0 0 4px rgba(95,168,51,.25); }
+
+  .stripes { background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.045) 0 14px, transparent 14px 34px); }
+  .safe-b { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+  .logo-head { width: 30px; height: 30px; overflow: hidden; position: relative; flex: none; }
+  .logo-head img { position: absolute; width: 52px; max-width: none; height: auto; top: -1px; left: -11px; }
+</style>
+</head>
+<body class="font-sans text-ink antialiased">
+<div id="root"></div>
+<noscript><div style="padding:24px;text-align:center">כדי לבצע את הבדיקה יש להפעיל JavaScript. אפשר גם להתקשר: 054-599-5519</div></noscript>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js" crossorigin></script>
+<script>
+"use strict";
+/* =====================================================================
+   CONFIG — public values only. Never put API keys / webhook URLs here.
+   The Make webhook URL, its secret and the Meta CAPI token live in
+   Netlify environment variables and are used only by
+   netlify/functions/submit-lead.mjs and netlify/functions/track.mjs.
+   ===================================================================== */
+const CONFIG = {
+  apiBase: "/api",                 // → /.netlify/functions/* (see public/_redirects)
+  phone: "0545995519",
+  whatsapp: "972545995519",
+  privacyUrl: "/privacy/",
+  accessibilityUrl: "/accessibility/",
+  metaPixelId: "3921297834677512", // Zebra-owned Pixel — same as src/layouts/Base.astro (public ID, safe in the browser)
+  minYear: 2011,
+  value: { min: 10000, max: 500000, step: 1000, initial: 50000 },
+  amount: { min: 5000, max: 500000, step: 1000 },
+  storageKey: "zb_check_v1",
+  // Every step gets its own URL so Meta can build audiences / custom conversions by URL:
+  //   /check/ → /check/year → /check/value → /check/lien → /check/amount → /check/details → /check/offer
+  // "path" needs the rewrite in public/_redirects. "hash" (#year…) for hosts without rewrites. "none" keeps one URL.
+  urlMode: "path",
+  basePath: "/check/",
+  storageTtlMs: 7 * 24 * 3600 * 1000,
+};
+
+/* DEMO MODE: on localhost / file:// or with ?demo=1 nothing leaves the browser.
+   ?live=1 forces live mode (for testing a deployed preview). */
+const QS = new URLSearchParams(location.search);
+const DEMO = !QS.has("live") && (location.protocol === "file:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || QS.has("demo"));
+
+const { useState, useEffect, useRef, useMemo, useCallback } = React;
+const html = htm.bind(React.createElement);
+
+/* ---------------- utils ---------------- */
+const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : "id-" + Date.now().toString(36) + Math.random().toString(36).slice(2));
+const nf = new Intl.NumberFormat("he-IL");
+const fmt = (n) => nf.format(Math.round(n || 0));
+const ILS = (n) => html`<span dir="ltr" className="num">₪${fmt(n)}</span>`;
+const digits = (s) => String(s || "").replace(/\D/g, "");
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const roundTo = (v, s) => Math.round(v / s) * s;
+// slider uses a quadratic scale so the common 20k–200k range gets most of the track
+const toPos = (v, min, max) => Math.round(Math.sqrt(clamp((v - min) / (max - min), 0, 1)) * 1000);
+const fromPos = (p, min, max, step) => clamp(roundTo(min + (max - min) * Math.pow(p / 1000, 2), step), min, max);
+const ls = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} },
+};
+const ss = {
+  get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} },
+};
+const getCookie = (n) => { const m = document.cookie.match(new RegExp("(?:^|; )" + n + "=([^;]*)")); return m ? decodeURIComponent(m[1]) : ""; };
+
+/* ---------------- attribution (captured once per session, survives step navigation) ---------------- */
+const ATTR = (() => {
+  const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid"];
+  let saved = null; try { saved = JSON.parse(sessionStorage.getItem("zb_attr")); } catch (e) {}
+  const fresh = {}; keys.forEach((k) => { const v = QS.get(k); if (v) fresh[k] = v.slice(0, 300); });
+  const a = Object.assign({}, saved || {}, fresh);
+  if (!a.landing_page) a.landing_page = location.origin + location.pathname;
+  if (!a.referrer) a.referrer = document.referrer || "";
+  if (!a.fbclid_ts && a.fbclid) a.fbclid_ts = Date.now();
+  ss.set("zb_attr", JSON.stringify(a));
+  return a;
+})();
+/* ---------------- step URLs ---------------- */
+const SLUGS = { 0: "", 1: "year", 2: "value", 3: "lien", 4: "amount", 5: "details", results: "offer" };
+// keeps the query string (utm_*, fbclid) on every step URL
+function urlFor(key) {
+  const slug = SLUGS[key] ?? "";
+  if (CONFIG.urlMode === "path") return CONFIG.basePath + slug + location.search;
+  if (CONFIG.urlMode === "hash") return location.pathname + location.search + (slug ? "#" + slug : "");
+  return undefined;
+}
+
+const fbc = () => getCookie("_fbc") || (ATTR.fbclid ? `fb.1.${ATTR.fbclid_ts}.${ATTR.fbclid}` : "");
+
+/* ---------------- Meta Pixel + CAPI (deduplicated by event_id) ----------------
+   Only event names + non-financial context are sent to Meta.
+   No amounts, lien status, balances or loan purpose are ever included. */
+const Track = {
+  log: [],
+  init() {
+    if (DEMO || !CONFIG.metaPixelId) return;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+    window.fbq.disablePushState = true;   // we send one PageView per step ourselves (with event_id for CAPI dedup)
+    window.fbq("init", CONFIG.metaPixelId);
+  },
+  // fires Pixel (browser) + mirrors to CAPI (server) with the same event_id
+  fire(name, { custom = false, eventId = uuid(), server = true } = {}) {
+    const params = { content_name: "car_equity_check" };
+    this.log.push({ name, eventId, at: new Date().toISOString() });
+    if (DEMO) { console.info("%c[demo] Meta event", "color:#5FA833", name, { eventId, params }); return eventId; }
+    if (window.fbq) window.fbq(custom ? "trackCustom" : "track", name, params, { eventID: eventId });
+    if (server) {
+      const body = JSON.stringify({ event_name: name, event_id: eventId, event_source_url: location.href, fbp: getCookie("_fbp"), fbc: fbc() });
+      try {
+        const ok = navigator.sendBeacon && navigator.sendBeacon(CONFIG.apiBase + "/track", new Blob([body], { type: "application/json" }));
+        if (!ok) fetch(CONFIG.apiBase + "/track", { method: "POST", headers: { "Content-Type": "application/json" }, body, keepalive: true }).catch(() => {});
+      } catch (e) {}
+    }
+    return eventId;
+  },
+  // once per browser session, so back/forward never double-counts a funnel step
+  once(name, opts) { const k = "zb_ev_" + name; if (ss.get(k)) return null; ss.set(k, "1"); return this.fire(name, opts); },
+};
+
+/* ---------------- domain ---------------- */
+const NOW_YEAR = new Date().getFullYear();
+/* Max number of monthly payments by vehicle year (Zebra's table). Keep in sync with netlify/functions/submit-lead.mjs */
+const TERM_BY_YEAR = { 2011: 12, 2012: 24, 2013: 24, 2014: 36, 2015: 36, 2016: 36, 2017: 48, 2018: 48, 2019: 60, 2020: 60, 2021: 72, 2022: 84 };
+const maxTerm = (year) => (year >= 2023 ? 100 : TERM_BY_YEAR[year] || null);
+/* Example loan routes. The rate is used only to compute an illustrative monthly payment and is never shown.
+   Route 1 = max term for the car year; route 2 = next shorter of 60/36/24/12. Keep in sync with submit-lead.mjs */
+const ROUTE_RATE = 0.095;
+const monthlyPayment = (principal, n) => { const r = ROUTE_RATE / 12; return (principal * r) / (1 - Math.pow(1 + r, -n)); };
+const loanRoutes = (amount, max) => (!amount || !max ? [] :
+  [max, ...[60, 36, 24, 12].filter((t) => t < max)].slice(0, 2).map((term) => ({ term, monthly: Math.round(monthlyPayment(amount, term)) })));
+const YEARS = Array.from({ length: NOW_YEAR - CONFIG.minYear + 1 }, (_, i) => NOW_YEAR - i);
+const LIEN = {
+  free: "הרכב בבעלותי וללא שעבוד",
+  loan: "קיימת הלוואה או שעבוד על הרכב",
+  unsure: "לא בטוח/ה",
+};
+const STEPS = [
+  null,
+  { label: "שנת הרכב", hint: "שאלה קצרה אחת בכל מסך" },
+  { label: "שווי הרכב" },
+  { label: "מצב השעבוד" },
+  { label: "סכום המימון" },
+  { label: "פרטים אחרונים" },
+];
+const TOTAL = 5;
+
+function computeEquity(s) {
+  const v = s.value;
+  if (s.lien === "free") return { equity: v, basis: "no_lien" };
+  if (s.lien === "unsure") return { equity: v, basis: "assumes_no_lien" };
+  if (s.lien === "loan") {
+    if (s.balanceUnknown || s.balance === "" || s.balance == null) return { equity: null, basis: "balance_unknown" };
+    return { equity: Math.max(0, v - Number(s.balance)), basis: "value_minus_balance" };
+  }
+  return { equity: null, basis: "incomplete" };
+}
+
+function normalizePhone(raw) {
+  let d = digits(raw);
+  if (d.startsWith("972")) d = "0" + d.slice(3);
+  return d;
+}
+function phoneError(raw) {
+  const d = normalizePhone(raw);
+  if (!d) return "נא להזין מספר טלפון נייד";
+  if (!/^05\d{8}$/.test(d)) return "נא להזין מספר נייד ישראלי תקין (10 ספרות, מתחיל ב-05)";
+  return "";
+}
+function nameError(raw) {
+  const v = String(raw || "").trim();
+  if (!v) return "נא להזין שם מלא";
+  if (v.length < 2 || !/[֐-׿a-zA-Z]/.test(v)) return "נא להזין שם תקין";
+  return "";
+}
+/* Email typo detection — keep in sync with netlify/functions/submit-lead.mjs.
+   Catches truncated / misspelled popular providers (gm.com, gmial.com, gmail.co, walla.co, hotmial.com…). */
+const MAIL_PROVIDERS = { gmail: "gmail.com", walla: "walla.co.il", hotmail: "hotmail.com", yahoo: "yahoo.com", outlook: "outlook.com", icloud: "icloud.com" };
+const MAIL_VALID = new Set(["gmail.com", "googlemail.com", "walla.co.il", "walla.com", "hotmail.com", "hotmail.co.il", "yahoo.com", "yahoo.co.il",
+  "outlook.com", "outlook.co.il", "icloud.com", "me.com", "live.com", "msn.com", "mail.com", "gmx.com", "aol.com", "protonmail.com", "proton.me",
+  "netvision.net.il", "bezeqint.net", "012.net.il", "zahav.net.il", "inter.net.il", "smile.net.il", "hot.net.il", "013net.net"]);
+function lev(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+  {
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1); // swapped letters
+  }
+  return d[a.length][b.length];
+}
+function emailSuggestion(raw) {
+  const v = String(raw || "").trim().toLowerCase();
+  const at = v.lastIndexOf("@");
+  if (at < 1) return null;
+  const local = v.slice(0, at), domain = v.slice(at + 1);
+  if (!domain || MAIL_VALID.has(domain)) return null;
+  const name = domain.split(".")[0];
+  for (const [p, canonical] of Object.entries(MAIL_PROVIDERS)) {
+    const close = name === p || (name.length >= 2 && p.startsWith(name)) || (name.length >= 4 && lev(name, p) <= 1);
+    if (close) return local + "@" + canonical;
+  }
+  return null;
+}
+function emailError(raw) {
+  const v = String(raw || "").trim();
+  if (!v) return "נא להזין כתובת מייל";
+  if (emailSuggestion(v)) return "נראה שיש טעות בכתובת המייל";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return "נא להזין כתובת מייל תקינה, למשל name@gmail.com";
+  return "";
+}
+
+const INITIAL = () => ({
+  step: 0,
+  year: null,
+  value: CONFIG.value.initial,
+  lien: null,               // free | loan | unsure
+  balance: "",
+  balanceUnknown: false,
+  amount: null,
+  name: "",
+  email: "",
+  phone: "",
+  consent: false,
+  company: "",              // honeypot
+  leadId: uuid(),
+  result: null,             // { ref, submittedAt, payload }
+});
+
+function loadState() {
+  const saved = ls.get(CONFIG.storageKey);
+  if (!saved || !saved.ts || Date.now() - saved.ts > CONFIG.storageTtlMs) return INITIAL();
+  const st = Object.assign(INITIAL(), saved.s);
+  if (st.step > TOTAL) st.step = TOTAL;                                   // state saved by an older funnel version
+  if (typeof st.year !== "number" || st.year < CONFIG.minYear) st.year = null;
+  if (!(st.value >= CONFIG.value.min)) st.value = CONFIG.value.initial;
+  return st;
+}
+
+/* ---------------- icons (stroke, 24 grid) ---------------- */
+const P = {
+  percent: html`<line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>`,
+  car: html`<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>`,
+  shield: html`<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>`,
+  check: html`<path d="M20 6 9 17l-5-5"/>`,
+  arrowL: html`<path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>`,
+  chevR: html`<path d="m9 18 6-6-6-6"/>`,
+  lock: html`<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>`,
+  clock: html`<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>`,
+  help: html`<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>`,
+  coin: html`<circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/>`,
+  trendDown: html`<path d="m22 17-8.5-8.5-5 5L2 7"/><path d="M16 17h6v-6"/>`,
+  layers: html`<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>`,
+  users: html`<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+  briefcase: html`<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>`,
+  home: html`<path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>`,
+  dots: html`<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>`,
+  phone: html`<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>`,
+  calendar: html`<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>`,
+  mail: html`<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>`,
+  user: html`<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>`,
+  chat: html`<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>`,
+  info: html`<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>`,
+  wallet: html`<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>`,
+  zap: html`<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>`,
+  key: html`<path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>`,
+  link: html`<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>`,
+  refresh: html`<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>`,
+  code: html`<path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/>`,
+};
+const Icon = ({ n, className = "w-5 h-5", sw = 2 }) => html`
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth=${sw} strokeLinecap="round" strokeLinejoin="round" className=${className} aria-hidden="true">${P[n]}</svg>`;
+
+/* ---------------- shared UI ---------------- */
+function Logo({ size = "md" }) {
+  return html`<div className="flex items-center gap-2 select-none" aria-label="זברה – הדרך הקלה להלוואה">
+    <div className="logo-head"><img src="/images/logo.png" alt="" /></div>
+    <div className="leading-none">
+      <div className=${"font-black tracking-tight " + (size === "lg" ? "text-[22px]" : "text-[19px]")}>זברה<span className="text-brand">.</span></div>
+      ${size === "lg" && html`<div className="text-[10.5px] text-ink-500 font-medium mt-0.5">הדרך הקלה להלוואה</div>`}
+    </div>
+  </div>`;
+}
+
+function PrimaryButton({ children, onClick, disabled, type = "button", loading, className = "" }) {
+  return html`<button type=${type} onClick=${onClick} disabled=${disabled || loading}
+    className=${"group relative w-full h-[58px] rounded-2xl bg-brand text-white font-bold text-[17px] shadow-cta flex items-center justify-center gap-2 overflow-hidden transition active:scale-[.985] hover:bg-brand-600 disabled:bg-[#BFD9AE] disabled:shadow-none disabled:cursor-not-allowed " + className}>
+    ${!disabled && !loading && html`<span className="absolute inset-0 shimmer pointer-events-none"></span>`}
+    ${loading ? html`<span className="w-5 h-5 rounded-full border-[2.5px] border-white/40 border-t-white spin"></span>` : children}
+  </button>`;
+}
+
+function TrustLine({ icon = "lock", children }) {
+  return html`<div className="flex items-center justify-center gap-1.5 text-[12.5px] text-ink-500 mt-3">
+    <${Icon} n=${icon} className="w-3.5 h-3.5 text-brand-600" />
+    <span>${children}</span>
+  </div>`;
+}
+
+function OptionCard({ selected, onClick, icon, title, sub, compact }) {
+  return html`<button type="button" onClick=${onClick} aria-pressed=${!!selected}
+    className=${"w-full text-right flex items-center gap-3.5 rounded-2xl border-2 bg-white transition-all duration-200 active:scale-[.99] " +
+      (compact ? "p-3.5 " : "p-4 ") +
+      (selected ? "border-brand bg-brand-50 shadow-card" : "border-line hover:border-[#cfd8c6] hover:shadow-card")}>
+    ${icon && html`<span className=${"shrink-0 w-11 h-11 rounded-xl grid place-items-center transition " + (selected ? "bg-brand text-white" : "bg-paper text-ink-700")}>
+      <${Icon} n=${icon} className="w-[22px] h-[22px]" />
+    </span>`}
+    <span className="flex-1 min-w-0">
+      <span className="block font-semibold text-[16px] leading-snug">${title}</span>
+      ${sub && html`<span className="block text-[13px] text-ink-500 mt-0.5">${sub}</span>`}
+    </span>
+    <span className=${"shrink-0 w-6 h-6 rounded-full border-2 grid place-items-center transition " + (selected ? "border-brand bg-brand text-white" : "border-line")}>
+      ${selected && html`<${Icon} n="check" className="w-3.5 h-3.5" sw=${3} />`}
+    </span>
+  </button>`;
+}
+
+function StepTitle({ eyebrow, title, sub }) {
+  return html`<div className="mb-6">
+    ${eyebrow && html`<div className="text-[12.5px] font-bold text-brand-600 mb-2 tracking-wide">${eyebrow}</div>`}
+    <h1 className="text-[26px] sm:text-[30px] leading-[1.2] font-extrabold tracking-tight">${title}</h1>
+    ${sub && html`<p className="text-[15px] text-ink-500 mt-2 leading-relaxed">${sub}</p>`}
+  </div>`;
+}
+
+/* Scroll an element to just under the sticky header, so it stays visible above the phone keyboard.
+   Runs twice because the keyboard opens at different speeds on different phones. */
+function revealUnderHeader(el) {
+  if (!el) return;
+  const go = () => {
+    const header = document.querySelector("header");
+    const top = el.getBoundingClientRect().top + window.scrollY - ((header && header.offsetHeight) || 0) - 12;
+    window.scrollTo(0, Math.max(0, top));   // instant: "smooth" is unreliable while a phone keyboard is opening
+  };
+  setTimeout(go, 120);
+  setTimeout(go, 480);
+}
+
+function MoneyInput({ value, onChange, placeholder, id, invalid, onEnter, autoFocus, revealTarget }) {
+  return html`<div className=${"flex items-center h-14 rounded-2xl border-2 bg-white px-4 transition focus-within:border-brand " + (invalid ? "border-red-400" : "border-line")}>
+    <span className="text-ink-500 font-bold text-lg ml-2">₪</span>
+    <input id=${id} dir="ltr" inputMode="numeric" pattern="[0-9]*" autoComplete="off" autoFocus=${autoFocus}
+      className="flex-1 min-w-0 bg-transparent outline-none text-[19px] font-bold num text-right placeholder:text-[#b5bab3] placeholder:font-medium"
+      placeholder=${placeholder} value=${value === "" || value == null ? "" : fmt(value)}
+      onFocus=${(e) => { if (window.matchMedia("(pointer: coarse)").matches) revealUnderHeader(revealTarget ? document.getElementById(revealTarget) : e.target.closest("div")); }}
+      onKeyDown=${(e) => { if (e.key === "Enter" && onEnter) onEnter(); }}
+      onChange=${(e) => { const d = digits(e.target.value).slice(0, 7); onChange(d === "" ? "" : Number(d)); }} />
+  </div>`;
+}
+
+function RangeSlider({ value, min, max, step, onChange, label, plus }) {
+  const pos = toPos(value, min, max);
+  const pct = pos / 10;
+  return html`<div>
+    <input type="range" className="zb-range" min="0" max="1000" value=${pos} aria-label=${label}
+      aria-valuetext=${"₪" + fmt(value)}
+      style=${{ background: `linear-gradient(to left, #5FA833 0%, #5FA833 ${pct}%, #E8E7DF ${pct}%, #E8E7DF 100%)` }}
+      onChange=${(e) => onChange(fromPos(+e.target.value, min, max, step))} />
+    <div className="flex justify-between text-[12px] text-ink-500 mt-2 num">
+      <span dir="ltr">₪${fmt(min)}</span><span dir="ltr">₪${fmt(max)}${plus ? "+" : ""}</span>
+    </div>
+  </div>`;
+}
+
+function Disclosure() {
+  return html`<footer className="mt-10 border-t border-line pt-5 pb-2 text-[12px] leading-relaxed text-ink-500">
+    <p>זברה עוסקת בייעוץ ובתיווך אשראי ואינה גוף מלווה. מתן האשראי ותנאיו כפופים לאישור הגורם המממן ולנתוני הלקוח. אין בבדיקה הראשונית התחייבות למתן אשראי. אי-עמידה בפירעון ההלוואה עלולה לגרור חיוב בריבית פיגורים והליכי הוצאה לפועל.</p>
+    <p className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1">
+      <a className="underline underline-offset-2 hover:text-ink" href=${CONFIG.privacyUrl} target="_blank" rel="noopener">מדיניות פרטיות</a>
+      <a className="underline underline-offset-2 hover:text-ink" href=${CONFIG.accessibilityUrl} target="_blank" rel="noopener">הצהרת נגישות</a>
+      <span>© ${NOW_YEAR} זברה</span>
+    </p>
+  </footer>`;
+}
+
+function DemoBar() {
+  if (!DEMO) return null;
+  return html`<div className="bg-[#FFF7E0] text-[#6B5310] text-[12px] font-semibold text-center py-1.5 px-4 border-b border-[#F0E2B8]">
+    מצב הדגמה · הנתונים לא נשלחים לשום שרת ולא נשמרים מחוץ לדפדפן
+  </div>`;
+}
+
+/* ---------------- screens ---------------- */
+function Welcome({ onStart, resume, onResume }) {
+  return html`<div className="rise">
+    <div className="relative -mx-4 sm:mx-0 px-4 pt-2">
+      <div className="absolute inset-x-6 top-6 bottom-2 rounded-[40px] bg-[radial-gradient(ellipse_at_center,#DDEBCF_0%,rgba(238,244,231,.6)_45%,transparent_72%)]"></div>
+      <img src="/images/zebra-car.webp" alt="דמות הזברה של זברה לצד רכב" width="760" height="760"
+        className="relative mx-auto w-[min(58vw,230px)] h-auto float" fetchpriority="high" />
+      <div className="absolute top-6 left-3 sm:left-6 bg-white/95 backdrop-blur rounded-2xl shadow-lift px-3 py-2 pop" style=${{ animationDelay: ".35s" }}>
+        <div className="text-[10.5px] text-ink-500 font-medium">מימון עד</div>
+        <div className="text-[18px] font-black text-brand-600 leading-none num">100%</div>
+        <div className="text-[10.5px] text-ink-500 font-medium">משווי הרכב*</div>
+      </div>
+      <div className="absolute bottom-6 right-3 sm:right-6 bg-ink text-white rounded-2xl shadow-lift px-3 py-2 flex items-center gap-2 pop" style=${{ animationDelay: ".55s" }}>
+        <span className="w-7 h-7 rounded-lg bg-brand grid place-items-center"><${Icon} n="car" className="w-4 h-4" /></span>
+        <div className="leading-tight"><div className="text-[12px] font-bold">ממשיכים לנסוע</div><div className="text-[10.5px] text-white/60">הרכב נשאר אצלכם</div></div>
+      </div>
+    </div>
+
+    <h1 className="text-[29px] sm:text-[34px] leading-[1.15] font-black tracking-tight mt-3">כמה כסף תוכלו לקבל <span className="text-brand-600">כנגד הרכב</span> שלכם?</h1>
+    <p className="text-[16px] text-ink-500 mt-3 leading-relaxed">בדיקה דיגיטלית קצרה שתעזור לכם לגלות את אפשרויות המימון שלכם – בלי למכור את הרכב.</p>
+
+    <div className="mt-7">
+      ${resume
+        ? html`<${PrimaryButton} onClick=${onResume}>המשך מהמקום שעצרתם <${Icon} n="arrowL" className="w-5 h-5" /><//>
+               <button type="button" onClick=${onStart} className="w-full mt-3 h-11 text-[14.5px] font-semibold text-ink-700 hover:text-ink">התחלת בדיקה חדשה</button>`
+        : html`<${PrimaryButton} onClick=${onStart}>בואו נתחיל בבדיקה <${Icon} n="arrowL" className="w-5 h-5 transition group-hover:-translate-x-1" /><//>`}
+      <div className="flex items-center justify-center gap-2 text-[13px] text-ink-500 mt-3 font-medium">
+        <span>ללא תשלום מראש</span><span className="w-1 h-1 rounded-full bg-[#c9cdc6]"></span><span>תהליך דיגיטלי</span><span className="w-1 h-1 rounded-full bg-[#c9cdc6]"></span><span className="flex items-center gap-1"><${Icon} n="clock" className="w-3.5 h-3.5" />כדקה</span>
+      </div>
+    </div>
+
+    <div className="mt-8 grid grid-cols-3 rounded-2xl border border-line divide-x divide-x-reverse divide-line text-center">
+      ${[["~30", "גופי מימון"], ["100", "תשלומים לכל היותר"], ["24h", "במקרים רבים הכסף בחשבון"]].map(([n, l]) => html`
+        <div key=${l} className="py-3.5 px-1.5"><div className="text-[19px] font-black num" dir="ltr">${n}</div><div className="text-[11px] text-ink-500 leading-tight mt-0.5">${l}</div></div>`)}
+    </div>
+    <p className="text-[11px] text-ink-500 mt-2.5 text-center">* המימון ותנאיו בכפוף לנתוני הלקוח, הרכב ואישור הגורם המממן.</p>
+  </div>`;
+}
+
+function StepYear({ s, set, next }) {
+  const pick = (y) => { set({ year: y }); setTimeout(next, 260); };
+  return html`<div>
+    <${StepTitle} title="מהי שנת הייצור של הרכב שלכם?" sub="אפשר למצוא אותה ברישיון הרכב." />
+    <div className="grid grid-cols-4 gap-2.5">
+      ${YEARS.map((y) => {
+        const on = s.year === y;
+        return html`<button key=${y} type="button" onClick=${() => pick(y)} aria-pressed=${on}
+          className=${"h-[54px] rounded-2xl border-2 text-[17px] font-bold num transition-all active:scale-95 " + (on ? "border-brand bg-brand text-white shadow-cta" : "border-line bg-white hover:border-[#cfd8c6]")}>${y}</button>`;
+      })}
+    </div>
+    <${TrustLine} icon="shield">הבדיקה הזו לא כוללת שאילתת אשראי<//>
+  </div>`;
+}
+
+function StepValue({ s, set, next }) {
+  const { min, max, step } = CONFIG.value;
+  const [bump, setBump] = useState(0);
+  const change = (v) => { set({ value: v }); setBump((b) => b + 1); };
+  const typedInvalid = s.value === "" || s.value < min;
+  return html`<div>
+    <${StepTitle} title="כמה הרכב שלכם שווה היום?" sub="בערך זה גם בסדר." />
+    <div className="rounded-3xl border border-line bg-white shadow-card p-5">
+      <div className="text-center text-[13px] text-ink-500 font-medium">שווי הרכב המשוער</div>
+      <div key=${bump} className="text-center text-[44px] font-black leading-tight mt-1 text-ink">${s.value === "" ? html`<span className="text-[#c9cdc6]">₪0</span>` : ILS(s.value)}</div>
+      <div className="mt-5"><${RangeSlider} value=${s.value || min} min=${min} max=${max} step=${step} onChange=${change} label="שווי הרכב" plus=${true} /></div>
+      <label className="block mt-5 text-[13px] font-semibold text-ink-700 mb-1.5" htmlFor="valIn">או הקלידו סכום</label>
+      <${MoneyInput} id="valIn" value=${s.value} placeholder="למשל 85,000" onChange=${(v) => set({ value: v })} onEnter=${() => !typedInvalid && next()} />
+    </div>
+    <div className="mt-6"><${PrimaryButton} onClick=${next} disabled=${typedInvalid}>המשך <${Icon} n="arrowL" className="w-5 h-5" /><//></div>
+    ${typedInvalid && s.value !== "" && html`<p role="alert" className="text-[13px] text-red-600 mt-2 text-center">נא להזין שווי רכב של ₪${fmt(min)} לפחות</p>`}
+    <${TrustLine} icon="zap">זברה עובדת עם כ-30 גופי מימון<//>
+  </div>`;
+}
+
+function StepLien({ s, set, next }) {
+  const pick = (l) => {
+    set({ lien: l });
+    if (l !== "loan") setTimeout(next, 260);
+    else revealUnderHeader(document.getElementById("balPanel"));   // bring the balance question above the keyboard
+  };
+  useEffect(() => { if (s.lien === "loan") revealUnderHeader(document.getElementById("balPanel")); }, []);
+  const balInvalid = s.lien === "loan" && !s.balanceUnknown && (s.balance === "" || s.balance === 0);
+  return html`<div>
+    <${StepTitle} title="האם קיימת כיום הלוואה על הרכב?" />
+    <div className="grid gap-2.5">
+      <${OptionCard} icon="key" title=${LIEN.free} selected=${s.lien === "free"} onClick=${() => pick("free")} />
+      <${OptionCard} icon="link" title=${LIEN.loan} selected=${s.lien === "loan"} onClick=${() => pick("loan")} />
+      <${OptionCard} icon="help" title="אני לא בטוח/ה" sub="נבדוק את זה יחד איתכם" selected=${s.lien === "unsure"} onClick=${() => pick("unsure")} />
+    </div>
+    ${s.lien === "loan" && html`<div id="balPanel" className="mt-4 rounded-3xl border border-line bg-paper p-5 rise">
+      <label htmlFor="balIn" className="block text-[16px] font-bold">מהי יתרת ההלוואה הקיימת על הרכב?</label>
+      <p className="text-[13.5px] text-ink-500 mt-1 mb-3">בערך זה גם בסדר.</p>
+      <div className=${s.balanceUnknown ? "opacity-40 pointer-events-none" : ""}>
+        <${MoneyInput} id="balIn" revealTarget="balPanel" autoFocus=${true} value=${s.balance} placeholder="למשל 30,000" onChange=${(v) => set({ balance: v, balanceUnknown: false })} onEnter=${() => !balInvalid && next()} />
+      </div>
+      <button type="button" onClick=${() => set({ balanceUnknown: !s.balanceUnknown })} aria-pressed=${s.balanceUnknown}
+        className="mt-3 flex items-center gap-2.5 text-[14.5px] font-semibold">
+        <span className=${"w-6 h-6 rounded-md border-2 grid place-items-center " + (s.balanceUnknown ? "bg-brand border-brand text-white" : "border-[#cfd2cb] bg-white")}>${s.balanceUnknown && html`<${Icon} n="check" className="w-3.5 h-3.5" sw=${3} />`}</span>
+        לא יודע/ת את היתרה המדויקת
+      </button>
+      <div className="mt-5"><${PrimaryButton} onClick=${next} disabled=${balInvalid}>המשך <${Icon} n="arrowL" className="w-5 h-5" /><//></div>
+    </div>`}
+    <${TrustLine} icon="lock">הפרטים נשמרים רק לצורך בדיקת הבקשה<//>
+    ${s.lien === "loan" && html`<div aria-hidden="true" className="h-[45vh] [@media(pointer:fine)]:hidden"></div>`}
+  </div>`;
+}
+
+function StepAmount({ s, set, next }) {
+  const { min, step } = CONFIG.amount;
+  const max = Math.max(min, Number(s.value) || min);   // never more than the car value entered
+  const { equity, basis } = computeEquity(s);
+  const amount = s.amount;
+  const [capped, setCapped] = useState(false);
+  useEffect(() => {
+    if (s.amount == null) {
+      const base = equity != null && equity > 0 ? roundTo(equity * 0.6, step) : roundTo(max * 0.5, step);
+      set({ amount: clamp(base, min, max) });
+    } else if (s.amount > max) set({ amount: max });   // car value was lowered after going back
+  }, []);
+  const [bump, setBump] = useState(0);
+  const change = (v) => { setCapped(false); set({ amount: v }); setBump((b) => b + 1); };
+  const typed = (v) => {
+    if (v !== "" && v > max) { setCapped(true); set({ amount: max }); }
+    else { setCapped(false); set({ amount: v }); }
+  };
+  const within = equity != null && amount != null && amount <= equity;
+  const ratio = equity ? clamp((amount || 0) / equity, 0, 1.4) : 0;
+  const invalid = amount === "" || amount == null || amount < 1000;
+  const quick = [0.25, 0.5, 0.75, 1].map((r) => ({ r, v: clamp(roundTo(max * r, step), min, max) }));
+
+  return html`<div>
+    <${StepTitle} title="איזה סכום תרצו לקבל?" sub=${html`בחרו סכום עד שווי הרכב שציינתם (${ILS(max)}).`} />
+    <div className="rounded-3xl bg-white border border-line shadow-card p-5">
+      <div className="text-center text-[13px] text-ink-500 font-medium">סכום המימון המבוקש</div>
+      <div key=${bump} className="text-center text-[46px] font-black leading-tight mt-1 text-brand-600">${amount === "" || amount == null ? html`<span className="text-[#c9cdc6]">₪0</span>` : ILS(amount)}</div>
+      <div className="mt-5"><${RangeSlider} value=${amount || min} min=${min} max=${max} step=${step} onChange=${change} label="סכום המימון המבוקש" /></div>
+      ${quick.length > 0 && html`<div className="grid grid-cols-4 gap-2 mt-4">
+        ${quick.map(({ r, v }) => html`<button key=${r} type="button" onClick=${() => change(v)}
+          className=${"h-10 rounded-xl text-[13px] font-bold transition border " + (amount === v ? "bg-ink text-white border-ink" : "bg-paper border-transparent text-ink-700 hover:border-line")}>${r * 100}%</button>`)}
+      </div>`}
+      <label className="block mt-5 text-[13px] font-semibold text-ink-700 mb-1.5" htmlFor="amtIn">או הקלידו סכום</label>
+      <${MoneyInput} id="amtIn" value=${amount} placeholder="למשל 30,000" onChange=${typed} onEnter=${() => !invalid && next()} />
+      ${capped && html`<p role="alert" className="text-[13px] text-brand-700 mt-2">הסכום המקסימלי הוא שווי הרכב שציינתם – ${ILS(max)}</p>`}
+    </div>
+
+    <div className="mt-3 rounded-3xl bg-ink text-white p-5 stripes relative overflow-hidden">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <div className="text-[12.5px] text-white/60 font-medium">אומדן ראשוני לשווי פנוי ברכב</div>
+          <div className="text-[26px] font-black mt-0.5">
+            ${equity != null ? html`${basis === "assumes_no_lien" ? html`<span className="text-[15px] font-semibold text-white/70">עד </span>` : ""}${ILS(equity)}` : html`<span className="text-[17px] font-bold">נחשב יחד איתכם</span>`}
+          </div>
+        </div>
+        <span className="w-11 h-11 rounded-2xl bg-brand grid place-items-center shrink-0"><${Icon} n="wallet" className="w-5 h-5" /></span>
+      </div>
+      ${equity != null && equity > 0 && html`<div className="mt-4">
+        <div className="h-2 rounded-full bg-white/15 overflow-hidden"><div className="h-full rounded-full transition-all duration-300 bg-brand" style=${{ width: Math.min(100, ratio * 100) + "%" }}></div></div>
+        <div className="text-[12px] text-white/60 mt-1.5">${within ? "הסכום המבוקש בטווח האומדן" : "הסכום המבוקש גבוה מהאומדן"}</div>
+      </div>`}
+      <p className="text-[12.5px] text-white/75 mt-3 leading-relaxed">
+        ${equity == null
+          ? "חסרים לנו נתונים לחישוב מדויק – זה בסדר. נשלים אותם יחד איתכם בהמשך הבדיקה."
+          : within
+          ? "אומדן תיאורטי בלבד: שווי הרכב פחות יתרת ההלוואה הקיימת."
+          : "לא נורא – הסכום אינו מוגבל לאומדן. קיימים פתרונות מימון נוספים שנבדוק עבורכם."}
+        ${basis === "assumes_no_lien" ? " (בהנחה שאין שעבוד על הרכב)" : ""}
+      </p>
+    </div>
+
+    <div className="mt-6"><${PrimaryButton} onClick=${next} disabled=${invalid}>המשך <${Icon} n="arrowL" className="w-5 h-5" /><//></div>
+    <${TrustLine} icon="calendar">${maxTerm(s.year) ? `לרכב משנת ${s.year}: פריסה של עד ${maxTerm(s.year)} תשלומים` : "פריסה של עד 100 תשלומים"}<//>
+  </div>`;
+}
+
+function StepDetails({ s, set, submit, submitting }) {
+  const [touched, setTouched] = useState({});
+  const [tried, setTried] = useState(false);
+  const errs = { name: nameError(s.name), email: emailError(s.email), phone: phoneError(s.phone), consent: s.consent ? "" : "יש לאשר את העברת הפרטים כדי להמשיך" };
+  const show = (k) => (tried || touched[k]) && errs[k];
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setTried(true);
+    if (errs.name || errs.email || errs.phone || errs.consent) {
+      const first = errs.name ? "nameIn" : errs.email ? "emailIn" : errs.phone ? "phoneIn" : "consentIn";
+      const el = document.getElementById(first); if (el) el.focus();
+      return;
+    }
+    submit();
+  };
+  const field = (k) => "flex items-center h-14 rounded-2xl border-2 bg-white px-4 gap-3 transition focus-within:border-brand " + (show(k) ? "border-red-400" : "border-line");
+  return html`<form onSubmit=${onSubmit} noValidate>
+    <div className="flex items-center gap-3 mb-5">
+      <img src="/images/zebra-mascot.webp" alt="" className="w-14 h-auto shrink-0" loading="lazy" />
+      <div className="rounded-2xl rounded-tr-md bg-paper px-4 py-2.5 text-[14px] font-medium text-ink-700">במסך הבא תראו את אפשרות המימון שלכם 🎉</div>
+    </div>
+    <${StepTitle} title="אנחנו כמעט שם!" sub="השאירו פרטים ובמסך הבא גלו את אפשרות המימון בהתאם לנתונים שמסרתם." />
+
+    <label htmlFor="nameIn" className="block text-[13.5px] font-semibold text-ink-700 mb-1.5">שם מלא</label>
+    <div className=${field("name")}>
+      <${Icon} n="user" className="w-5 h-5 text-ink-500" />
+      <input id="nameIn" name="name" autoComplete="name" enterKeyHint="next" className="flex-1 min-w-0 bg-transparent outline-none text-[17px] font-medium placeholder:text-[#b5bab3]"
+        placeholder="ישראל ישראלי" value=${s.name} maxLength="60" aria-invalid=${!!show("name")} aria-describedby="nameErr"
+        onChange=${(e) => set({ name: e.target.value })} onBlur=${() => setTouched((t) => ({ ...t, name: true }))} />
+    </div>
+    ${show("name") && html`<p id="nameErr" role="alert" className="text-[13px] text-red-600 mt-1.5">${errs.name}</p>`}
+
+    <label htmlFor="emailIn" className="block text-[13.5px] font-semibold text-ink-700 mb-1.5 mt-4">מייל</label>
+    <div className=${field("email")}>
+      <${Icon} n="mail" className="w-5 h-5 text-ink-500" />
+      <input id="emailIn" name="email" type="email" inputMode="email" autoComplete="email" dir="ltr" enterKeyHint="next" autoCapitalize="off" spellCheck="false"
+        className="flex-1 min-w-0 bg-transparent outline-none text-[17px] font-medium text-right placeholder:text-[#b5bab3]"
+        placeholder="name@gmail.com" value=${s.email} maxLength="100" aria-invalid=${!!show("email")} aria-describedby="emailErr"
+        onChange=${(e) => set({ email: e.target.value.trim() })} onBlur=${() => setTouched((t) => ({ ...t, email: true }))} />
+    </div>
+    ${show("email") && html`<div id="emailErr" role="alert" className="text-[13px] text-red-600 mt-1.5">
+      ${errs.email}
+      ${emailSuggestion(s.email) && html`<button type="button" onClick=${() => set({ email: emailSuggestion(s.email) })}
+        className="mt-1.5 flex items-center gap-1.5 rounded-xl bg-brand-50 border border-brand-100 px-3 py-2 text-[13.5px] font-semibold text-ink hover:border-brand transition">
+        התכוונתם ל-<span dir="ltr" className="font-bold text-brand-700">${emailSuggestion(s.email)}</span>? <span className="text-brand-700 underline underline-offset-2">תקנו</span>
+      </button>`}
+    </div>`}
+
+    <label htmlFor="phoneIn" className="block text-[13.5px] font-semibold text-ink-700 mb-1.5 mt-4">טלפון נייד</label>
+    <div className=${field("phone")}>
+      <${Icon} n="phone" className="w-5 h-5 text-ink-500" />
+      <input id="phoneIn" name="tel" type="tel" inputMode="tel" autoComplete="tel-national" dir="ltr" enterKeyHint="done"
+        className="flex-1 min-w-0 bg-transparent outline-none text-[17px] font-semibold num text-right placeholder:text-[#b5bab3] placeholder:font-medium"
+        placeholder="050-000-0000" value=${s.phone} maxLength="16" aria-invalid=${!!show("phone")} aria-describedby="phoneErr"
+        onChange=${(e) => set({ phone: e.target.value.replace(/[^\d\-+ ]/g, "") })} onBlur=${() => setTouched((t) => ({ ...t, phone: true }))} />
+    </div>
+    ${show("phone") && html`<p id="phoneErr" role="alert" className="text-[13px] text-red-600 mt-1.5">${errs.phone}</p>`}
+
+    <!-- honeypot -->
+    <input type="text" name="company" tabIndex="-1" autoComplete="off" value=${s.company} onChange=${(e) => set({ company: e.target.value })}
+      style=${{ position: "absolute", width: 1, height: 1, opacity: 0, overflow: "hidden", clipPath: "inset(50%)", pointerEvents: "none" }} aria-hidden="true" />
+
+    <label className=${"mt-5 flex items-start gap-3 rounded-2xl p-3.5 border-2 cursor-pointer transition " + (show("consent") ? "border-red-300 bg-red-50/50" : "border-transparent bg-paper")}>
+      <input id="consentIn" type="checkbox" checked=${s.consent} onChange=${(e) => set({ consent: e.target.checked })}
+        className="mt-0.5 w-5 h-5 shrink-0 accent-[#5FA833] cursor-pointer" />
+      <span className="text-[13px] leading-relaxed text-ink-700">
+        אני מאשר/ת לזברה לשמור ולהעביר את הפרטים שמסרתי לצורך בדיקת הבקשה, התאמת פתרון מימון ויצירת קשר עמי בטלפון, ב-SMS, בוואטסאפ או במייל, בהתאם ל<a href=${CONFIG.privacyUrl} target="_blank" rel="noopener" className="underline underline-offset-2 font-semibold text-ink">מדיניות הפרטיות</a>.
+      </span>
+    </label>
+    ${show("consent") && html`<p role="alert" className="text-[13px] text-red-600 mt-1.5">${errs.consent}</p>`}
+
+    <div className="mt-6"><${PrimaryButton} type="submit" loading=${submitting}>בדקו את אפשרויות המימון שלי<//></div>
+    <div className="mt-3 flex items-center justify-center gap-4 text-[12px] text-ink-500">
+      <span className="flex items-center gap-1"><${Icon} n="lock" className="w-3.5 h-3.5 text-brand-600" />חיבור מאובטח</span>
+      <span className="flex items-center gap-1"><${Icon} n="shield" className="w-3.5 h-3.5 text-brand-600" />ללא ת"ז או פרטי בנק</span>
+    </div>
+  </form>`;
+}
+
+const TASKS = ["קליטת נתוני הרכב", "חישוב אומדן מימון ראשוני", "שמירת הבקשה להמשך בדיקה"];
+function Processing({ done, error, onRetry, waLink }) {
+  return html`<div className="pt-6 rise">
+    <div className="mx-auto w-24 h-24 relative grid place-items-center">
+      ${!error && done < 3 && html`<div className="absolute inset-0 rounded-full border-[5px] border-brand-50 border-t-brand spin"></div>`}
+      ${!error && done >= 3 && html`<div className="absolute inset-0 rounded-full bg-brand pop"></div>`}
+      ${error ? html`<div className="absolute inset-0 rounded-full bg-[#FFF7E0]"></div>` : ""}
+      <div className="relative">
+        ${error
+          ? html`<${Icon} n="info" className="w-10 h-10 text-[#6B5310]" />`
+          : done >= 3
+          ? html`<svg viewBox="0 0 24 24" className="w-11 h-11 text-white" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path className="draw" d="M20 6 9 17l-5-5"/></svg>`
+          : html`<div className="logo-head scale-125"><img src="/images/logo.png" alt="" /></div>`}
+      </div>
+    </div>
+    <h1 className="text-center text-[24px] font-extrabold mt-6">${error ? "לא הצלחנו לשמור את הבקשה" : done >= 3 ? "הבקשה נשמרה" : "מעבדים את הנתונים שלכם…"}</h1>
+    <p className="text-center text-[14.5px] text-ink-500 mt-1.5">${error ? "הנתונים שמילאתם לא נמחקו. אפשר לנסות שוב, או להמשיך מיד בוואטסאפ." : "זה ייקח רק כמה שניות"}</p>
+
+    <ul className="mt-8 rounded-3xl border border-line bg-white shadow-card divide-y divide-line">
+      ${TASKS.map((t, i) => {
+        const st = i < done ? "done" : i === done && !error ? "run" : i === done && error ? "err" : "wait";
+        return html`<li key=${t} className="flex items-center gap-3.5 px-5 py-4">
+          <span className=${"w-8 h-8 rounded-full grid place-items-center shrink-0 transition " + (st === "done" ? "bg-brand text-white" : st === "err" ? "bg-[#FFF7E0] text-[#6B5310]" : "bg-paper")}>
+            ${st === "done" ? html`<svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path className="draw" d="M20 6 9 17l-5-5"/></svg>`
+              : st === "run" ? html`<span className="w-4 h-4 rounded-full border-2 border-brand-100 border-t-brand spin"></span>`
+              : st === "err" ? html`<span className="font-black text-sm">!</span>`
+              : html`<span className="w-2 h-2 rounded-full bg-[#cfd2cb]"></span>`}
+          </span>
+          <span className=${"text-[15.5px] font-semibold transition " + (st === "wait" ? "text-[#a3a8a1]" : "text-ink")}>${t}</span>
+        </li>`;
+      })}
+    </ul>
+    ${error && html`<div className="mt-6 grid gap-2.5 rise">
+      <${PrimaryButton} onClick=${onRetry}><${Icon} n="refresh" className="w-5 h-5" /> נסו שוב<//>
+      <a href=${waLink} target="_blank" rel="noopener" className="h-[54px] rounded-2xl border-2 border-line font-bold text-[16px] flex items-center justify-center gap-2 hover:border-brand"><${Icon} n="chat" className="w-5 h-5 text-brand-600" />המשך בוואטסאפ</a>
+    </div>`}
+  </div>`;
+}
+
+function Results({ s, onRestart }) {
+  const r = s.result;
+  const p = r.payload;
+  const equity = p.estimated_equity;
+  const value = p.vehicle_value;
+  const bal = p.existing_loan_balance;
+  const req = p.requested_amount;
+  const covered = equity != null && req <= equity;
+  const term = p.max_term_months || maxTerm(Number(p.vehicle_year));
+  const routes = loanRoutes(req, term);
+  const [ri, setRi] = useState(0);
+  const route = routes[ri] || routes[0];
+  const firstName = (p.full_name || "").trim().split(/\s+/)[0];
+  const balShare = value && bal ? clamp(bal / value, 0, 1) : 0;
+  const rows = [
+    ["calendar", "שנת הרכב", p.vehicle_year],
+    ["car", "שווי הרכב שהוזן", ILS(value)],
+    p.lien_status === "loan" ? ["link", "יתרת הלוואה קיימת", bal != null ? ILS(bal) : "לא ידועה"] : ["key", "מצב שעבוד", LIEN[p.lien_status]],
+    ["coin", "סכום המימון המבוקש", ILS(req)],
+    ["clock", "פריסה מקסימלית", term ? `${term} תשלומים` : "תיקבע עם הנציג"],
+    ["wallet", "אומדן שווי פנוי ברכב", equity != null ? ILS(equity) : "יחושב עם הנציג"],
+  ];
+  const [showDebug, setShowDebug] = useState(false);
+
+  return html`<div>
+    <div className="text-center rise">
+      <div className="relative mx-auto w-[74px] h-[74px] rounded-full bg-brand grid place-items-center pop shadow-cta">
+        <svg viewBox="0 0 24 24" className="w-9 h-9 text-white" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path className="draw" d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-paper px-3 py-1 text-[12px] font-semibold text-ink-700 num">מס' פנייה <span dir="ltr">${r.ref}</span></div>
+      <h1 className="text-[27px] leading-tight font-black mt-3 tracking-tight">הבדיקה הראשונית שלכם הושלמה!</h1>
+      <p className="text-[15px] text-ink-500 mt-2 leading-relaxed">${firstName ? firstName + ", " : ""}הנתונים שלכם התקבלו בהצלחה. צוות זברה ימשיך בבדיקת אפשרויות המימון המתאימות לכם.</p>
+    </div>
+
+    <!-- offer card: amount + route selector + monthly payment, one piece -->
+    <section className="mt-6 rounded-[28px] bg-ink text-white relative overflow-hidden shadow-lift rise" style=${{ animationDelay: ".12s" }} aria-label="אפשרות המימון שלכם">
+      <div className="absolute -left-16 -top-16 w-56 h-56 rounded-full bg-brand/20 blur-3xl pointer-events-none"></div>
+
+      <div className="relative p-6 pb-5">
+        <div className="flex items-center justify-between">
+          <span className="text-[13px] text-white/60 font-medium">אפשרות המימון שלכם</span>
+          <span className="flex items-center gap-1.5 bg-white/10 rounded-full pl-3 pr-1.5 py-1">
+            <span className="w-6 h-6 rounded-full bg-white overflow-hidden grid place-items-center"><span className="logo-head scale-[.6]"><img src="/images/logo.png" alt="" /></span></span>
+            <span className="text-[11.5px] font-bold">זברה</span>
+          </span>
+        </div>
+        <div className="text-[44px] font-black leading-none mt-2">${ILS(req)}</div>
+        <div className="text-[13px] text-white/60 mt-2">רכב משנת ${p.vehicle_year} · ללא תשלום מראש</div>
+      </div>
+
+      ${route && html`<div className="relative border-t border-white/10 p-6 pt-5">
+        ${routes.length > 1 && html`<div>
+          <div className="text-[12.5px] text-white/60 font-medium mb-2">בחרו מסלול החזר</div>
+          <div role="radiogroup" aria-label="מסלול החזר" className="grid gap-1 p-1 rounded-2xl bg-white/[.08]" style=${{ gridTemplateColumns: `repeat(${routes.length}, 1fr)` }}>
+            ${routes.map((rt, i) => html`<button key=${rt.term} type="button" role="radio" aria-checked=${ri === i} onClick=${() => setRi(i)}
+              className=${"rounded-xl py-2.5 px-2 text-center transition-all duration-200 " + (ri === i ? "bg-white text-ink shadow-card" : "text-white/75 hover:text-white")}>
+              <span className="block text-[15px] font-bold leading-tight"><span className="num">${rt.term}</span> תשלומים</span>
+              <span className=${"block text-[11.5px] mt-0.5 " + (ri === i ? "text-brand-700 font-semibold" : "text-white/50")}>${i === 0 ? "החזר חודשי נמוך" : "מסיימים מהר יותר"}</span>
+            </button>`)}
+          </div>
+        </div>`}
+
+        <div className="flex items-end justify-between gap-3 mt-5">
+          <div>
+            <div className="text-[12.5px] text-white/60 font-medium">החזר חודשי משוער</div>
+            <div key=${route.term} className="text-[36px] font-black leading-tight text-brand-100 rise" style=${{ animationDuration: ".35s" }}>${ILS(route.monthly)}</div>
+          </div>
+          <div className="text-left text-[13px] text-white/60 pb-1.5 leading-snug">
+            <div><span className="num font-bold text-white">${route.term}</span> תשלומים</div>
+            <div>לצורך המחשה</div>
+          </div>
+        </div>
+      </div>`}
+
+      <div className="relative border-t border-white/10 px-6 py-4 flex gap-3 items-start">
+        <span className=${"w-7 h-7 rounded-lg grid place-items-center shrink-0 mt-0.5 " + (covered ? "bg-brand" : "bg-white/15")}><${Icon} n=${covered ? "check" : "info"} className="w-4 h-4" sw=${covered ? 3 : 2} /></span>
+        <p className="text-[13px] leading-relaxed text-white/75">
+          ${equity == null
+            ? "הסכום בכפוף לבדיקת יתרת ההלוואה הקיימת על הרכב. נשלים אותה יחד איתכם."
+            : covered
+            ? html`הסכום נמצא בטווח השווי הפנוי המשוער ברכב (${ILS(equity)}).`
+            : html`השווי הפנוי המשוער ברכב הוא ${ILS(equity)}. נבדוק גם פתרונות מימון נוספים להשלמת הסכום.`}
+          ${p.estimate_basis === "assumes_no_lien" ? " (בהנחה שאין שעבוד על הרכב)" : ""}
+        </p>
+      </div>
+    </section>
+
+    <p className="mt-3 flex gap-2 text-[12px] text-ink-500 leading-relaxed px-1">
+      <${Icon} n="info" className="w-4 h-4 shrink-0 mt-0.5" />
+      <span>ההחזר החודשי משוער ומוצג לצורך המחשה בלבד, לפי הנתונים שמסרתם ושנת הייצור של הרכב. אין זה אישור אשראי או הצעת מימון מחייבת. הסכום, הפריסה, הריבית ותנאי ההלוואה בפועל כפופים לאישור הגורם המממן.</span>
+    </p>
+
+    <!-- what's next -->
+    <div className="mt-8 rise" style=${{ animationDelay: ".22s" }}>
+      <h2 className="text-[18px] font-extrabold mb-4">מה קורה עכשיו?</h2>
+      <ol className="relative">
+        ${[
+          ["user", "נציג זברה עובר על הנתונים", "ויוצר איתכם קשר להשלמת הפרטים הנדרשים."],
+          ["layers", "התאמה מול גופי המימון", "בודקים עבורכם את האפשרויות מבין כ-30 גופי מימון."],
+          ["wallet", "קבלת הכסף", "במקרים רבים הכסף בחשבון תוך 24 שעות מהאישור."],
+        ].map(([ic, t, d], i, a) => html`<li key=${t} className="flex gap-4 pb-5 relative">
+          ${i < a.length - 1 && html`<span className="absolute right-[19px] top-10 bottom-0 w-0.5 bg-line"></span>`}
+          <span className=${"relative w-10 h-10 rounded-full grid place-items-center shrink-0 " + (i === 0 ? "bg-brand text-white" : "bg-paper text-ink-700")}><${Icon} n=${ic} className="w-[18px] h-[18px]" /></span>
+          <div className="pt-1.5"><div className="font-bold text-[15px]">${t}</div><div className="text-[13.5px] text-ink-500 mt-0.5">${d}</div></div>
+        </li>`)}
+      </ol>
+      <div className="rounded-2xl bg-brand-50 border border-brand-100 p-4 flex items-center gap-3">
+        <img src="/images/zebra-mascot.webp" alt="" className="w-12 h-auto shrink-0" loading="lazy" />
+        <p className="text-[13.5px] leading-relaxed"><b>ללא תשלום מראש.</b> שכר הטרחה משולם בסוף התהליך, לאחר קבלת הכסף, בהתאם להסכם ההתקשרות.</p>
+      </div>
+    </div>
+
+    <!-- summary -->
+    <div className="mt-8 rounded-3xl border border-line bg-white shadow-card overflow-hidden rise" style=${{ animationDelay: ".38s" }}>
+      <div className="px-5 py-3.5 border-b border-line flex items-center justify-between">
+        <span className="font-bold text-[15px]">סיכום הבדיקה</span>
+        <span className="text-[12px] text-ink-500 num" dir="ltr">${new Date(r.submittedAt).toLocaleString("he-IL", { dateStyle: "short", timeStyle: "short" })}</span>
+      </div>
+      <dl>
+        ${rows.map(([ic, k, v]) => html`<div key=${k} className="flex items-center gap-3 px-5 py-3.5 border-b border-line last:border-0">
+          <span className="w-9 h-9 rounded-xl bg-paper text-ink-700 grid place-items-center shrink-0"><${Icon} n=${ic} className="w-[18px] h-[18px]" /></span>
+          <dt className="text-[14px] text-ink-500 flex-1">${k}</dt>
+          <dd className="text-[15px] font-bold text-left">${v}</dd>
+        </div>`)}
+      </dl>
+    </div>
+
+    ${DEMO && html`<div className="mt-8 rounded-2xl border border-dashed border-[#F0E2B8] bg-[#FFFCF2] p-4">
+      <button type="button" onClick=${() => setShowDebug(!showDebug)} className="w-full flex items-center justify-between text-[13px] font-bold text-[#6B5310]">
+        <span className="flex items-center gap-2"><${Icon} n="code" className="w-4 h-4" />מצב הדגמה: ה-Payload שהיה נשלח ל-Webhook</span>
+        <span>${showDebug ? "הסתר" : "הצג"}</span>
+      </button>
+      ${showDebug && html`<div>
+        <pre dir="ltr" className="mt-3 text-[11px] leading-relaxed bg-white rounded-xl p-3 overflow-x-auto text-left">${JSON.stringify(p, null, 2)}</pre>
+        <div className="mt-3 text-[12px] font-bold text-[#6B5310]">אירועי Meta שנרשמו (ללא נתונים פיננסיים):</div>
+        <pre dir="ltr" className="mt-1 text-[11px] bg-white rounded-xl p-3 overflow-x-auto text-left">${Track.log.map((e) => e.name + "  " + e.eventId).join("\n")}</pre>
+      </div>`}
+    </div>`}
+
+    <button type="button" onClick=${onRestart} className="mt-6 mx-auto block text-[13px] text-ink-500 underline underline-offset-2 hover:text-ink">בדיקה חדשה לרכב אחר</button>
+  </div>`;
+}
+
+/* ---------------- submission ---------------- */
+function buildPayload(s, eventId) {
+  const { equity, basis } = computeEquity(s);
+  const balance = s.lien === "loan" && !s.balanceUnknown && s.balance !== "" ? Number(s.balance) : null;
+  return {
+    lead_id: s.leadId,
+    full_name: s.name.trim(),
+    email: s.email.trim().toLowerCase(),
+    phone: normalizePhone(s.phone),
+    vehicle_year: String(s.year),
+    vehicle_value: Number(s.value),
+    lien_status: s.lien,
+    lien_status_label: LIEN[s.lien],
+    existing_loan_balance: balance,
+    balance_unknown: s.lien === "loan" ? !!s.balanceUnknown || s.balance === "" : false,
+    requested_amount: Number(s.amount),
+    estimated_equity: equity,
+    financing_option_estimate: equity != null ? Math.min(Number(s.amount), equity) : Number(s.amount),
+    max_term_months: maxTerm(s.year),
+    loan_routes: loanRoutes(Number(s.amount), maxTerm(s.year)),
+    estimate_basis: basis,
+    submitted_at: new Date().toISOString(),
+    consent: !!s.consent,
+    consent_text: "אישור העברת פרטים לצורך בדיקת הבקשה ויצירת קשר, בהתאם למדיניות הפרטיות",
+    utm_source: ATTR.utm_source || "",
+    utm_medium: ATTR.utm_medium || "",
+    utm_campaign: ATTR.utm_campaign || "",
+    utm_content: ATTR.utm_content || "",
+    utm_term: ATTR.utm_term || "",
+    fbclid: ATTR.fbclid || "",
+    landing_page: ATTR.landing_page,
+    referrer: ATTR.referrer,
+    // for Meta CAPI dedup — used server-side only, not forwarded as financial data
+    meta: { event_id: eventId, fbp: getCookie("_fbp"), fbc: fbc(), event_source_url: location.href },
+    company: s.company, // honeypot
+  };
+}
+
+async function sendLead(payload) {
+  if (DEMO) {
+    await sleep(700);
+    console.info("%c[demo] Lead payload (not sent)", "color:#5FA833;font-weight:bold", payload);
+    return { ok: true, ref: "DEMO-" + payload.lead_id.replace(/[^a-z0-9]/gi, "").slice(0, 6).toUpperCase() };
+  }
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 15000);
+  try {
+    const res = await fetch(CONFIG.apiBase + "/submit-lead", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: ctrl.signal,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || "HTTP " + res.status);
+    return data;
+  } finally { clearTimeout(t); }
+}
+
+/* ---------------- app shell ---------------- */
+function App() {
+  const [s, setS] = useState(loadState);
+  const [dir, setDir] = useState("fwd");
+  const [submitting, setSubmitting] = useState(false);
+  const [proc, setProc] = useState(null); // { done, error }
+  const [resumable, setResumable] = useState(() => { const x = loadState(); return !x.result && x.step > 0 && x.step <= TOTAL ? x.step : 0; });
+  const inflight = useRef(false);
+  const topRef = useRef(null);
+
+  const set = useCallback((patch) => setS((p) => Object.assign({}, p, patch)), []);
+
+  // persist everything (except honeypot) so refresh / back never loses data
+  useEffect(() => { const { company, ...rest } = s; ls.set(CONFIG.storageKey, { ts: Date.now(), s: rest }); }, [s]);
+
+  // pixel init; PageView is sent once per screen (each screen has its own URL)
+  useEffect(() => { Track.init(); }, []);
+  const screenKey = s.result ? "results" : s.step;
+  useEffect(() => { Track.fire("PageView"); }, [screenKey]);
+
+  // browser/phone back button walks the funnel instead of leaving the page
+  useEffect(() => {
+    const startStep = s.result ? "results" : s.step;
+    history.replaceState({ zb: startStep }, "", urlFor(startStep));
+    const onPop = (e) => {
+      setS((p) => {
+        if (p.result) { history.pushState({ zb: "results" }, "", urlFor("results")); return p; }
+        const to = e.state && typeof e.state.zb === "number" ? e.state.zb : 0;
+        setDir(to < p.step ? "back" : "fwd");
+        return Object.assign({}, p, { step: to });
+      });
+    };
+    addEventListener("popstate", onPop);
+    return () => removeEventListener("popstate", onPop);
+  }, []);
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" }); }, [s.step, !!s.result, !!proc]);
+
+  const go = (n) => { setDir("fwd"); history.pushState({ zb: n }, "", urlFor(n)); set({ step: n }); };
+  const next = () => {
+    const cur = s.step;
+    if (cur === 2) Track.once("VehicleDetailsCompleted", { custom: true });
+    if (cur === 4) Track.once("FinancingDetailsCompleted", { custom: true });
+    go(cur + 1);
+  };
+  const back = () => history.back();
+
+  const start = (fresh) => {
+    if (fresh) { const n = INITIAL(); setS(n); setResumable(0); }
+    Track.once("StartApplication", { custom: true });
+    setDir("fwd"); history.pushState({ zb: 1 }, "", urlFor(1)); set({ step: 1 });
+  };
+  const resume = () => { Track.once("StartApplication", { custom: true }); go(resumable); };
+
+  const submit = async () => {
+    if (inflight.current) return;           // double-submit guard
+    inflight.current = true; setSubmitting(true);
+    const leadEventId = "lead-" + s.leadId;  // deterministic → Pixel & CAPI dedupe, even on retry
+    const payload = buildPayload(s, leadEventId);
+    setProc({ done: 0, error: false });
+    const anim = (async () => { await sleep(750); setProc((p) => p && { ...p, done: Math.max(p.done, 1) }); await sleep(800); setProc((p) => p && { ...p, done: Math.max(p.done, 2) }); })();
+    try {
+      const [res] = await Promise.all([sendLead(payload), anim]);
+      setProc({ done: 3, error: false });
+      // Lead fires ONLY after the server confirmed the request was stored
+      if (!ss.get("zb_lead_" + s.leadId)) { ss.set("zb_lead_" + s.leadId, "1"); Track.fire("Lead", { eventId: leadEventId, server: false /* CAPI Lead is sent by submit-lead */ }); }
+      await sleep(650);
+      const { meta, company, ...clean } = payload;
+      history.replaceState({ zb: "results" }, "", urlFor("results"));
+      set({ result: { ref: res.ref || s.leadId.slice(0, 8).toUpperCase(), submittedAt: payload.submitted_at, payload: clean } });
+      setProc(null);
+    } catch (e) {
+      console.error("submit failed", e);
+      await anim;
+      setProc({ done: 2, error: true });
+    } finally {
+      inflight.current = false; setSubmitting(false);
+    }
+  };
+
+  const restart = () => { ls.del(CONFIG.storageKey); setProc(null); setResumable(0); setS(INITIAL()); setDir("back"); history.replaceState({ zb: 0 }, "", urlFor(0)); };
+
+  const waFallback = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent("היי זברה, התחלתי בדיקת מימון כנגד רכב ואשמח להמשיך איתכם.")}`;
+
+  // ---- render
+  const inFunnel = !s.result && !proc && s.step >= 1 && s.step <= TOTAL;
+  const pct = inFunnel ? Math.round(((s.step - 1) / TOTAL) * 100 + 100 / TOTAL / 2) : proc ? 100 : 0;
+  const remaining = inFunnel ? Math.max(5, (TOTAL - s.step + 1) * 8) : 0;
+
+  let body;
+  if (s.result) body = html`<${Results} s=${s} onRestart=${restart} />`;
+  else if (proc) body = html`<${Processing} done=${proc.done} error=${proc.error} onRetry=${submit} waLink=${waFallback} />`;
+  else if (s.step === 0) body = html`<${Welcome} onStart=${() => start(true)} resume=${resumable} onResume=${resume} />`;
+  else {
+    const props = { s, set, next };
+    body = [null,
+      html`<${StepYear} ...${props} />`,
+      html`<${StepValue} ...${props} />`,
+      html`<${StepLien} ...${props} />`,
+      html`<${StepAmount} ...${props} />`,
+      html`<${StepDetails} s=${s} set=${set} submit=${submit} submitting=${submitting} />`,
+    ][s.step];
+  }
+
+  return html`<div className="min-h-[100dvh] flex flex-col" ref=${topRef}>
+    <${DemoBar} />
+    <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-md">
+      <div className="max-w-[480px] mx-auto px-4 h-[60px] flex items-center justify-between">
+        <div className="w-20">
+          ${inFunnel && html`<button type="button" onClick=${back} aria-label="חזרה לשלב הקודם"
+            className="h-10 pl-3 pr-1.5 -mr-1.5 rounded-xl flex items-center gap-0.5 text-[14px] font-semibold text-ink-700 hover:bg-paper active:scale-95 transition">
+            <${Icon} n="chevR" className="w-5 h-5" />חזרה</button>`}
+        </div>
+        <${Logo} size=${s.step === 0 && !s.result && !proc ? "lg" : "md"} />
+        <div className="w-20 text-left">
+          ${inFunnel && html`<span className="text-[12.5px] font-bold text-ink-500 num">${s.step}<span className="text-[#b5bab3]">/${TOTAL}</span></span>`}
+        </div>
+      </div>
+      ${inFunnel && html`<div className="max-w-[480px] mx-auto px-4 pb-3">
+        <div className="flex gap-1.5" role="progressbar" aria-valuemin="0" aria-valuemax=${TOTAL} aria-valuenow=${s.step} aria-label=${"שלב " + s.step + " מתוך " + TOTAL}>
+          ${Array.from({ length: TOTAL }, (_, i) => html`<div key=${i} className="h-1.5 flex-1 rounded-full bg-line overflow-hidden">
+            <div className="h-full bg-brand rounded-full transition-all duration-500 ease-out" style=${{ width: i < s.step - 1 ? "100%" : i === s.step - 1 ? "55%" : "0%" }}></div>
+          </div>`)}
+        </div>
+        <div className="flex justify-between mt-2 text-[12px]">
+          <span className="font-bold text-ink-700">${STEPS[s.step].label}</span>
+          <span className="text-ink-500 flex items-center gap-1"><${Icon} n="clock" className="w-3.5 h-3.5" />עוד כ-${remaining} שניות</span>
+        </div>
+      </div>`}
+      <div className="h-px bg-line"></div>
+    </header>
+
+    <main className="flex-1 w-full max-w-[480px] mx-auto px-4 pt-6 safe-b">
+      <div key=${(s.result ? "r" : proc ? "p" : s.step)} className=${dir === "back" ? "anim-back" : "anim-fwd"}>${body}</div>
+      <${Disclosure} />
+    </main>
+  </div>`;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(html`<${App} />`);
+</script>
+</body>
+</html>

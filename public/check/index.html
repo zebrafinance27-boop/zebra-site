@@ -470,9 +470,9 @@ function RangeSlider({ value, min, max, step, onChange, label, plus }) {
 }
 
 function Disclosure() {
-  return html`<footer className="mt-10 border-t border-line pt-5 pb-2 text-[12px] leading-relaxed text-ink-500">
+  return html`<footer className="mt-10 border-t border-line pt-5 pb-2 text-[12px] leading-relaxed text-ink-500 text-center">
     <p>זברה עוסקת בייעוץ ובתיווך אשראי ואינה גוף מלווה. מתן האשראי ותנאיו כפופים לאישור הגורם המממן ולנתוני הלקוח. אין בבדיקה הראשונית התחייבות למתן אשראי. אי-עמידה בפירעון ההלוואה עלולה לגרור חיוב בריבית פיגורים והליכי הוצאה לפועל.</p>
-    <p className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1">
+    <p className="mt-2.5 flex flex-wrap justify-center gap-x-3 gap-y-1">
       <a className="underline underline-offset-2 hover:text-ink" href=${CONFIG.privacyUrl} target="_blank" rel="noopener">מדיניות פרטיות</a>
       <a className="underline underline-offset-2 hover:text-ink" href=${CONFIG.accessibilityUrl} target="_blank" rel="noopener">הצהרת נגישות</a>
       <span>© ${NOW_YEAR} זברה</span>
@@ -490,19 +490,10 @@ function DemoBar() {
 /* ---------------- screens ---------------- */
 function Welcome({ onStart, resume, onResume }) {
   return html`<div className="rise">
-    <div className="relative -mx-4 sm:mx-0 px-4 pt-2">
+    <div className="relative -mx-4 sm:mx-0 px-4 pt-2 lg:hidden">
       <div className="absolute inset-x-6 top-6 bottom-2 rounded-[40px] bg-[radial-gradient(ellipse_at_center,#DDEBCF_0%,rgba(238,244,231,.6)_45%,transparent_72%)]"></div>
       <img src="/images/zebra-car.webp" alt="דמות הזברה של זברה לצד רכב" width="760" height="760"
         className="relative mx-auto w-[min(58vw,230px)] h-auto float" fetchpriority="high" />
-      <div className="absolute top-6 left-3 sm:left-6 bg-white/95 backdrop-blur rounded-2xl shadow-lift px-3 py-2 pop" style=${{ animationDelay: ".35s" }}>
-        <div className="text-[10.5px] text-ink-500 font-medium">מימון עד</div>
-        <div className="text-[18px] font-black text-brand-600 leading-none num">100%</div>
-        <div className="text-[10.5px] text-ink-500 font-medium">משווי הרכב*</div>
-      </div>
-      <div className="absolute bottom-6 right-3 sm:right-6 bg-ink text-white rounded-2xl shadow-lift px-3 py-2 flex items-center gap-2 pop" style=${{ animationDelay: ".55s" }}>
-        <span className="w-7 h-7 rounded-lg bg-brand grid place-items-center"><${Icon} n="car" className="w-4 h-4" /></span>
-        <div className="leading-tight"><div className="text-[12px] font-bold">ממשיכים לנסוע</div><div className="text-[10.5px] text-white/60">הרכב נשאר אצלכם</div></div>
-      </div>
     </div>
 
     <h1 className="text-[29px] sm:text-[34px] leading-[1.15] font-black tracking-tight mt-3">כמה כסף תוכלו לקבל <span className="text-brand-600">כנגד הרכב</span> שלכם?</h1>
@@ -1061,38 +1052,13 @@ function Results({ s, onRestart }) {
   </div>`;
 }
 
-/* ---------------- desktop side rail (lg+ only): where you are + what you get at the end ---------------- */
-function SideRail({ step }) {
-  const items = [...STEPS.slice(1).map((x) => x.label), "תמונת המימון שלך"];
-  return html`<aside className="hidden lg:block sticky top-[150px] font-plex" aria-label="שלבי הבדיקה">
-    <div className="bg-forest text-white relative overflow-hidden">
-      <div className="absolute inset-0 grid-lines pointer-events-none"></div>
-      <div className="relative p-7">
-        <div className="text-[12px] text-white/55 border-b border-white/15 pb-3 flex justify-between">
-          <span><span className="fig text-lime">ZB</span>  בדיקת מימון כנגד רכב</span><span>כדקה</span>
-        </div>
-        <ol className="mt-4">
-          ${items.map((t, i) => {
-            const n = i + 1;
-            const st = n < step ? "done" : n === step ? "now" : "wait";
-            return html`<li key=${t} className=${"flex items-center gap-3 py-2.5 border-b border-white/10 last:border-0 " + (st === "wait" ? "text-white/40" : "text-white")}>
-              <span className=${"fig text-[12px] w-6 " + (st === "now" ? "text-lime" : "")}>${String(n).padStart(2, "0")}</span>
-              <span className=${"flex-1 text-[15px] " + (st === "now" ? "font-semibold" : "")}>${t}</span>
-              ${st === "done" ? html`<${Icon} n="check" className="w-4 h-4 text-lime" sw=${3} />` : st === "now" ? html`<span className="w-2 h-2 bg-lime"></span>` : ""}
-            </li>`;
-          })}
-        </ol>
-      </div>
-      <div className="relative border-t border-white/15 p-7 pt-5">
-        <div className="text-[12px] text-white/55">בסוף הבדיקה תקבלו</div>
-        <ul className="mt-3 grid gap-2 text-[14px]">
-          ${["פוטנציאל מימון משוער ברכב", "3 חלופות החזר להשוואה", "סימולטור לסכום ולמספר התשלומים"].map((t) => html`<li key=${t} className="flex items-center gap-2.5"><span className="w-1.5 h-1.5 bg-lime"></span>${t}</li>`)}
-        </ul>
-      </div>
+/* ---------------- desktop art (lg+ only): the zebra + car next to the funnel ---------------- */
+function SideArt() {
+  return html`<aside className="hidden lg:block sticky top-[130px]" aria-hidden="true">
+    <div className="relative pt-6 pb-10">
+      <div className="absolute inset-x-6 top-10 bottom-4 rounded-[48px] bg-[radial-gradient(ellipse_at_center,#DDEBCF_0%,rgba(238,244,231,.6)_45%,transparent_72%)]"></div>
+      <img src="/images/zebra-car.webp" alt="" width="760" height="760" className="relative mx-auto w-[min(100%,440px)] h-auto float" />
     </div>
-    ${step > 0 && html`<div className="mt-4 grid grid-cols-3 border border-line text-center">
-      ${[["~30", "גופי מימון"], ["0", "תשלום מראש"], ["100", "תשלומים לכל היותר"]].map(([n, l], i) => html`<div key=${l} className=${"py-3.5 " + (i ? "border-r border-line" : "")}><div className="fig text-[18px] font-semibold">${n}</div><div className="text-[11.5px] text-ink-500 mt-0.5">${l}</div></div>`)}
-    </div>`}
   </aside>`;
 }
 
@@ -1290,9 +1256,9 @@ function App() {
     <main className="flex-1 w-full max-w-[480px] lg:max-w-[1080px] mx-auto px-4 pt-6 lg:pt-10 safe-b">
       <div className=${wide ? "" : "lg:grid lg:grid-cols-[480px_minmax(0,1fr)] lg:gap-16 lg:items-start"}>
         <div key=${(s.result ? "r" : proc ? "p" : s.step)} className=${(dir === "back" ? "anim-back" : "anim-fwd") + " min-w-0"}>${body}</div>
-        ${!wide && html`<${SideRail} step=${proc ? TOTAL + 1 : s.step} />`}
+        ${!wide && html`<${SideArt} />`}
       </div>
-      <div className=${wide ? "" : "lg:max-w-[480px]"}><${Disclosure} /></div>
+      <div className="max-w-[720px] mx-auto"><${Disclosure} /></div>
     </main>
   </div>`;
 }

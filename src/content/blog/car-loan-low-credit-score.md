@@ -104,7 +104,7 @@ draft: false
 
 <aside class="article-cta">
 <p>היו לכם כמה החזרות או איחורים ואתם לא בטוחים אם המצב שלכם מאפשר קבלת הלוואה על הרכב? השאירו פרטים בזברה ונבדוק את האפשרויות בהתאם לנתונים שלכם, בלי התחייבות ובלי תשלום מראש. <a href="/loans/neged-rechev/">לבדיקת הלוואה כנגד הרכב</a></p>
-<div class="cta-btns"><a class="btn" href="#lead">להשארת פרטים</a><a class="btn btn-line" href="tel:0545995519">חייגו <span dir="ltr">054-599-5519</span></a></div>
+<div class="cta-btns"><a class="btn" href="/check/">בדקו כמה תקבלו על הרכב</a><a class="btn btn-line" href="tel:0545995519">חייגו <span dir="ltr">054-599-5519</span></a></div>
 </aside>
 
 ## לפני שמבקשים הלוואה: בדקו מה באמת מופיע בדוח האשראי שלכם
@@ -214,7 +214,7 @@ draft: false
 <aside class="article-cta">
 <p>אם אתם מחפשים הלוואה עם דירוג אשראי נמוך ויש לכם רכב בבעלותכם, בזברה נבדוק את האפשרויות שלכם מול כ-30 גופי מימון, עם אפשרות לקבלת תשובה ראשונית בתוך דקות. בלי תשלום מראש. שכר הטרחה משולם בסוף התהליך, לאחר קבלת הכסף, בהתאם להסכם ההתקשרות.</p>
 <p>השאירו פרטים באתר zebra-finance.co.il או התקשרו אלינו לבדיקה אישית: <strong dir="ltr">054-599-5519</strong></p>
-<div class="cta-btns"><a class="btn" href="#lead">להשארת פרטים</a><a class="btn btn-line" href="tel:0545995519">חייגו <span dir="ltr">054-599-5519</span></a></div>
+<div class="cta-btns"><a class="btn" href="/check/">בדקו כמה תקבלו על הרכב</a><a class="btn btn-line" href="tel:0545995519">חייגו <span dir="ltr">054-599-5519</span></a></div>
 </aside>
 
 <p class="article-note">המידע במאמר הוא כללי ואינו מהווה ייעוץ פיננסי או התחייבות למתן הלוואה.</p>

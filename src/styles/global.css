@@ -665,3 +665,10 @@ footer.ft::before{content:"";position:absolute;inset:0;z-index:-1;background:rep
 section.block.biz-sec.ab-first{padding-top:48px}
 .ab-story .ab-h1{font-size:clamp(1.9rem,4vw,2.6rem);font-weight:900;margin:0 0 16px}
 @media (max-width:720px){section.block.biz-sec.ab-first{padding-top:28px}}
+
+/* ===== menu link to the digital car check (/check/) ===== */
+.site-nav a.nav-check{color:#17300A;background:#EEF4E7;border:1px solid #cfe2b9;padding:5px 11px;font-weight:700}
+.site-nav a.nav-check::before{content:"";display:inline-block;width:7px;height:7px;background:#8FD64A;margin-inline-end:7px;vertical-align:middle;box-shadow:0 0 0 3px rgba(143,214,74,.3)}
+.site-nav a.nav-check:hover{background:#17300A;color:#fff;border-color:#17300A}
+.site-nav a.nav-check.active::after,.site-nav a.nav-check::after{display:none}
+@media (min-width:1041px) and (max-width:1260px){.site-nav{gap:14px}.site-nav a{font-size:.92rem}.header-cta .phone-link{display:none}}

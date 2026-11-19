@@ -104,7 +104,7 @@ draft: false
 
 <aside class="article-cta">
 <p>רוצים לדעת כמה כסף אפשר לקבל על הרכב שלכם, והאם ההלוואה יכולה להתאים למצב הכלכלי שלכם? השאירו פרטים באתר זברה ונבדוק את האפשרויות העומדות בפניכם, בלי תשלום מראש.</p>
-<div class="cta-btns"><a class="btn" href="#lead">להשארת פרטים</a><a class="btn btn-line" href="tel:0545995519">חייגו <span dir="ltr">054-599-5519</span></a></div>
+<div class="cta-btns"><a class="btn" href="/check/">בדקו כמה תקבלו על הרכב</a><a class="btn btn-line" href="tel:0545995519">חייגו <span dir="ltr">054-599-5519</span></a></div>
 </aside>
 
 ## אילו מסמכים צריך כדי לקבל הלוואה בשעבוד רכב?
@@ -196,7 +196,7 @@ draft: false
 <aside class="article-cta">
 <p>בזברה נבדוק כמה כסף תוכלו לקבל, אילו מסלולים מתאימים לנתונים שלכם והאם קיימת אפשרות טובה יותר עבורכם. אנחנו עובדים עם כ-30 גופי מימון, מספקים תשובה ראשונית מהירה ומלווים אתכם לאורך התהליך. בלי תשלום מראש. שכר הטרחה משולם בסוף התהליך, לאחר קבלת הכסף, בהתאם להסכם ההתקשרות.</p>
 <p>השאירו פרטים באתר zebra-finance.co.il או התקשרו אלינו: <strong dir="ltr">054-599-5519</strong></p>
-<div class="cta-btns"><a class="btn" href="#lead">להשארת פרטים</a><a class="btn btn-line" href="tel:0545995519">חייגו <span dir="ltr">054-599-5519</span></a></div>
+<div class="cta-btns"><a class="btn" href="/check/">בדקו כמה תקבלו על הרכב</a><a class="btn btn-line" href="tel:0545995519">חייגו <span dir="ltr">054-599-5519</span></a></div>
 </aside>
 
 <p class="article-note">המידע במאמר הוא כללי ואינו מהווה ייעוץ פיננסי או התחייבות למתן הלוואה.</p>

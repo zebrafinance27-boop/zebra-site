@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import RelatedArticles from "../../components/RelatedArticles.astro";
 import Steps from "../../components/Steps.astro";
+import CheckPromo from "../../components/CheckPromo.astro";
 
 const faqs = [
   { q: "תוך כמה זמן הכסף נכנס לחשבון בנק?", a: "בדרך כלל תוך מספר שעות, ולכל היותר תוך 24 שעות הכסף בחשבון הבנק שלכם." },
@@ -23,6 +24,7 @@ const faqSchema = {
 <Base
   title="הלוואה כנגד הרכב: הרכב נשאר אצלכם | זברה"
   description="הלוואה כנגד הרכב עד ₪500,000 ועד 100 תשלומים. הרכב נשאר אצלכם ובבעלותכם, גם עם מימון קיים או היסטוריה בעייתית בבנק. כסף בחשבון תוך 24 שעות."
+  checkCta={true}
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
@@ -31,6 +33,7 @@ const faqSchema = {
       <div class="biz-hero-text">
         <h1>הלוואה כנגד הרכב</h1>
         <p>מקבלים מימון על בסיס שווי הרכב, וממשיכים לנסוע בו כרגיל.</p>
+        <a class="btn biz-check-btn" href="/check/">בדקו כמה תקבלו על הרכב</a>
         <span class="biz-for"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>עד ₪500,000 · עד 100 תשלומים</span>
       </div>
       <div class="biz-zebra biz-zebra-wide"><img src="/images/zebra-car.webp" alt="הזברה של זברה ליד רכב" width="760" height="757" fetchpriority="high"></div>
@@ -74,6 +77,8 @@ const faqSchema = {
     </div>
   </section>
 
+  <CheckPromo />
+
   <section class="block biz-sec">
     <div class="wrap biz-wrap">
       <h2 class="biz-h2">מה צריך כדי להתחיל?</h2>
@@ -104,3 +109,8 @@ const faqSchema = {
 
   <LeadForm />
 </Base>
+
+<style>
+  .biz-check-btn { display: inline-flex; margin-top: 18px; text-decoration: none; }
+  @media (max-width: 720px) { .biz-check-btn { padding: 12px 18px; font-size: .95rem; margin-top: 12px; } }
+</style>

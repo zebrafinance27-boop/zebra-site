@@ -75,9 +75,7 @@ const faqSchema = faqs.length && {
     </div>
   </article>
 
-  {isCar && <CheckPromo />}
-
-  <LeadForm />
+  {isCar ? <CheckPromo /> : <LeadForm />}
 </Base>
 
 <style is:global>

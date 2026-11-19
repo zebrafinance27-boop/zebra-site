@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
+import CheckPromo from "../../components/CheckPromo.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -12,6 +13,8 @@ const { post } = Astro.props;
 const { Content } = await post.render();
 const fmt = (d) => d.toLocaleDateString("he-IL", { year: "numeric", month: "long", day: "numeric" });
 const pageUrl = new URL(`/blog/${post.slug}/`, Astro.site).toString();
+// car articles point readers to the digital car-equity check (/check/)
+const isCar = (post.data.categories || []).includes("car");
 
 const articleSchema = {
   "@context": "https://schema.org",
@@ -51,6 +54,7 @@ const faqSchema = faqs.length && {
   description={post.data.description}
   image={post.data.cover || "/images/zebra.webp"}
   type="article"
+  checkCta={isCar}
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
   {faqSchema && <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />}
@@ -70,6 +74,8 @@ const faqSchema = faqs.length && {
       </div>
     </div>
   </article>
+
+  {isCar && <CheckPromo />}
 
   <LeadForm />
 </Base>

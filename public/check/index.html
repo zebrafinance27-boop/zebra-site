@@ -884,9 +884,9 @@ function Results({ s, onRestart }) {
     ["פריסה עד", max ? html`<span className="fig">${max}</span><span className="text-[13px] font-medium text-white/60"> תשלומים</span>` : html`<span className="text-[14px] font-medium">תיקבע עם נציג</span>`],
   ];
 
-  return html`<div className="font-plex">
+  return html`<div className="font-plex lg:grid lg:grid-cols-2 lg:gap-x-12 lg:items-start">
     <!-- personal opening -->
-    <div>
+    <div className="lg:col-span-2 lg:max-w-[640px]">
       <div className="flex items-center justify-between rise">
         <span className="inline-flex items-center gap-2 text-[12.5px] font-semibold text-brand-700">
           <span className="w-[18px] h-[18px] bg-brand text-white grid place-items-center"><svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="square"><path className="draw" d="M20 6 9 17l-5-5"/></svg></span>
@@ -899,7 +899,7 @@ function Results({ s, onRestart }) {
     </div>
 
     <!-- 01 · snapshot -->
-    <section className="mt-8 bg-forest text-white relative overflow-hidden rise" style=${{ animationDelay: ".26s" }} aria-label="תמונת המצב שלך">
+    <section className="mt-8 lg:col-start-1 lg:row-start-2 bg-forest text-white relative overflow-hidden rise" style=${{ animationDelay: ".26s" }} aria-label="תמונת המצב שלך">
       <div className="absolute inset-0 grid-lines pointer-events-none"></div>
       <div className="relative px-5 pt-4 pb-5">
         <div className="flex items-center justify-between text-[12px] text-white/55 border-b border-white/15 pb-2.5">
@@ -933,7 +933,7 @@ function Results({ s, onRestart }) {
     </section>
 
     <!-- 02 · financing options -->
-    ${opts.length > 0 && html`<section className="mt-10 rise" style=${{ animationDelay: ".45s" }} aria-label="אפשרויות המימון שלך">
+    ${opts.length > 0 && html`<section className="mt-10 lg:mt-8 lg:col-start-2 lg:row-start-2 lg:row-span-2 rise" style=${{ animationDelay: ".45s" }} aria-label="אפשרויות המימון שלך">
       <${SectionHead} no="02" title="אפשרויות המימון שלך" aside=${html`<span className="text-[11px] font-semibold text-brand-700 border border-brand-700/40 px-1.5 py-0.5">סימולציה</span>`} />
       <p className="text-[13.5px] text-ink-500 mt-2.5 mb-3">על סכום של <${Fig} n=${amt} className="text-ink" /> · בחירת המסלול שמתאים לך</p>
 
@@ -972,7 +972,7 @@ function Results({ s, onRestart }) {
     </section>`}
 
     <!-- 03 · simulator -->
-    <section className="mt-10 rise" style=${{ animationDelay: ".7s" }} aria-label="סימולטור החזר">
+    <section className="mt-10 lg:col-start-1 lg:row-start-3 rise" style=${{ animationDelay: ".7s" }} aria-label="סימולטור החזר">
       <${SectionHead} no="03" title="התאמה אישית" aside=${selIdx < 0 ? html`<span className="text-[11px] font-semibold text-brand-700 border border-brand-700/40 px-1.5 py-0.5">מסלול מותאם</span>` : null} />
 
       <div className="mt-5">
@@ -1026,7 +1026,7 @@ function Results({ s, onRestart }) {
     </section>
 
     <!-- 04 · what's next -->
-    <section className="mt-10 rise" style=${{ animationDelay: ".85s" }}>
+    <section className="mt-10 lg:col-start-2 lg:row-start-4 rise" style=${{ animationDelay: ".85s" }}>
       <${SectionHead} no="04" title="מה קורה עכשיו?" />
       <ol className="mt-1">
         ${[
@@ -1040,11 +1040,11 @@ function Results({ s, onRestart }) {
       </ol>
     </section>
 
-    <p className="mt-5 text-[12px] text-ink-500 leading-relaxed border-r-2 border-line pr-3">
+    <p className="mt-5 lg:mt-10 lg:col-start-1 lg:row-start-4 lg:self-start text-[12px] text-ink-500 leading-relaxed border-r-2 border-line pr-3">
       מדובר בבדיקה ראשונית ובנתונים משוערים לצורך המחשה בלבד, לפי הנתונים שמסרת ושנת הייצור של הרכב. אין זה אישור אשראי או הצעת מימון מחייבת. קבלת מימון, הסכום, הפריסה, הריבית ותנאי ההלוואה בפועל כפופים לאישור הגורם המממן.
     </p>
 
-    ${DEMO && html`<div className="mt-8 border border-dashed border-[#F0E2B8] bg-[#FFFCF2] p-4">
+    ${DEMO && html`<div className="mt-8 lg:col-span-2 border border-dashed border-[#F0E2B8] bg-[#FFFCF2] p-4">
       <button type="button" onClick=${() => setShowDebug(!showDebug)} className="w-full flex items-center justify-between text-[13px] font-bold text-[#6B5310]">
         <span className="flex items-center gap-2"><${Icon} n="code" className="w-4 h-4" />מצב הדגמה: ה-Payload שהיה נשלח ל-Webhook</span>
         <span>${showDebug ? "הסתר" : "הצג"}</span>
@@ -1056,8 +1056,43 @@ function Results({ s, onRestart }) {
       </div>`}
     </div>`}
 
-    <button type="button" onClick=${onRestart} className="mt-6 mx-auto block text-[13px] text-ink-500 underline underline-offset-4 hover:text-ink">בדיקה חדשה לרכב אחר</button>
+    <button type="button" onClick=${onRestart} className="mt-6 lg:col-span-2 mx-auto block text-[13px] text-ink-500 underline underline-offset-4 hover:text-ink">בדיקה חדשה לרכב אחר</button>
   </div>`;
+}
+
+/* ---------------- desktop side rail (lg+ only): where you are + what you get at the end ---------------- */
+function SideRail({ step }) {
+  const items = [...STEPS.slice(1).map((x) => x.label), "תמונת המימון שלך"];
+  return html`<aside className="hidden lg:block sticky top-[150px] font-plex" aria-label="שלבי הבדיקה">
+    <div className="bg-forest text-white relative overflow-hidden">
+      <div className="absolute inset-0 grid-lines pointer-events-none"></div>
+      <div className="relative p-7">
+        <div className="text-[12px] text-white/55 border-b border-white/15 pb-3 flex justify-between">
+          <span><span className="fig text-lime">ZB</span>  בדיקת מימון כנגד רכב</span><span>כדקה</span>
+        </div>
+        <ol className="mt-4">
+          ${items.map((t, i) => {
+            const n = i + 1;
+            const st = n < step ? "done" : n === step ? "now" : "wait";
+            return html`<li key=${t} className=${"flex items-center gap-3 py-2.5 border-b border-white/10 last:border-0 " + (st === "wait" ? "text-white/40" : "text-white")}>
+              <span className=${"fig text-[12px] w-6 " + (st === "now" ? "text-lime" : "")}>${String(n).padStart(2, "0")}</span>
+              <span className=${"flex-1 text-[15px] " + (st === "now" ? "font-semibold" : "")}>${t}</span>
+              ${st === "done" ? html`<${Icon} n="check" className="w-4 h-4 text-lime" sw=${3} />` : st === "now" ? html`<span className="w-2 h-2 bg-lime"></span>` : ""}
+            </li>`;
+          })}
+        </ol>
+      </div>
+      <div className="relative border-t border-white/15 p-7 pt-5">
+        <div className="text-[12px] text-white/55">בסוף הבדיקה תקבלו</div>
+        <ul className="mt-3 grid gap-2 text-[14px]">
+          ${["פוטנציאל מימון משוער ברכב", "3 חלופות החזר להשוואה", "סימולטור לסכום ולמספר התשלומים"].map((t) => html`<li key=${t} className="flex items-center gap-2.5"><span className="w-1.5 h-1.5 bg-lime"></span>${t}</li>`)}
+        </ul>
+      </div>
+    </div>
+    ${step > 0 && html`<div className="mt-4 grid grid-cols-3 border border-line text-center">
+      ${[["~30", "גופי מימון"], ["0", "תשלום מראש"], ["100", "תשלומים לכל היותר"]].map(([n, l], i) => html`<div key=${l} className=${"py-3.5 " + (i ? "border-r border-line" : "")}><div className="fig text-[18px] font-semibold">${n}</div><div className="text-[11.5px] text-ink-500 mt-0.5">${l}</div></div>`)}
+    </div>`}
+  </aside>`;
 }
 
 /* ---------------- submission ---------------- */
@@ -1221,10 +1256,12 @@ function App() {
     ][s.step];
   }
 
+  const wide = !!s.result;   // results use the full desktop width; funnel screens get a side rail on desktop
+
   return html`<div className="min-h-[100dvh] flex flex-col" ref=${topRef}>
     <${DemoBar} />
     <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-md">
-      <div className="max-w-[480px] mx-auto px-4 h-[60px] flex items-center justify-between">
+      <div className="max-w-[480px] lg:max-w-[1080px] mx-auto px-4 h-[60px] flex items-center justify-between">
         <div className="w-20">
           ${inFunnel && html`<button type="button" onClick=${back} aria-label="חזרה לשלב הקודם"
             className="h-10 pl-3 pr-1.5 -mr-1.5 rounded-xl flex items-center gap-0.5 text-[14px] font-semibold text-ink-700 hover:bg-paper active:scale-95 transition">
@@ -1235,7 +1272,7 @@ function App() {
           ${inFunnel && html`<span className="text-[12.5px] font-bold text-ink-500 num">${s.step}<span className="text-[#b5bab3]">/${TOTAL}</span></span>`}
         </div>
       </div>
-      ${inFunnel && html`<div className="max-w-[480px] mx-auto px-4 pb-3">
+      ${inFunnel && html`<div className="max-w-[480px] lg:max-w-[1080px] mx-auto px-4 pb-3"><div className="lg:max-w-[480px]">
         <div className="flex gap-1.5" role="progressbar" aria-valuemin="0" aria-valuemax=${TOTAL} aria-valuenow=${s.step} aria-label=${"שלב " + s.step + " מתוך " + TOTAL}>
           ${Array.from({ length: TOTAL }, (_, i) => html`<div key=${i} className="h-1.5 flex-1 rounded-full bg-line overflow-hidden">
             <div className="h-full bg-brand rounded-full transition-all duration-500 ease-out" style=${{ width: i < s.step - 1 ? "100%" : i === s.step - 1 ? "55%" : "0%" }}></div>
@@ -1245,13 +1282,16 @@ function App() {
           <span className="font-bold text-ink-700">${STEPS[s.step].label}</span>
           <span className="text-ink-500 flex items-center gap-1"><${Icon} n="clock" className="w-3.5 h-3.5" />עוד כ-${remaining} שניות</span>
         </div>
-      </div>`}
+      </div></div>`}
       <div className="h-px bg-line"></div>
     </header>
 
-    <main className="flex-1 w-full max-w-[480px] mx-auto px-4 pt-6 safe-b">
-      <div key=${(s.result ? "r" : proc ? "p" : s.step)} className=${dir === "back" ? "anim-back" : "anim-fwd"}>${body}</div>
-      <${Disclosure} />
+    <main className="flex-1 w-full max-w-[480px] lg:max-w-[1080px] mx-auto px-4 pt-6 lg:pt-10 safe-b">
+      <div className=${wide ? "" : "lg:grid lg:grid-cols-[480px_minmax(0,1fr)] lg:gap-16 lg:items-start"}>
+        <div key=${(s.result ? "r" : proc ? "p" : s.step)} className=${(dir === "back" ? "anim-back" : "anim-fwd") + " min-w-0"}>${body}</div>
+        ${!wide && html`<${SideRail} step=${proc ? TOTAL + 1 : s.step} />`}
+      </div>
+      <div className=${wide ? "" : "lg:max-w-[480px]"}><${Disclosure} /></div>
     </main>
   </div>`;
 }

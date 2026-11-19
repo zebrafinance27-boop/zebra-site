@@ -1,11 +1,20 @@
 ---
 // דסקטופ: לשונית אנכית צמודה לקצה ימין.
 // מובייל: כפתור צף צמוד לתחתית בסגנון ה-CTA של ההדר, שמופיע רק אחרי שגוללים מעבר לטופס (#lead).
+// check=true (car page + car articles): the tab leads to the digital car check (/check/) instead of the form.
+const { check = false } = Astro.props;
 ---
-<a id="zbLeadTab" class="zb-lead-tab" href="#lead" aria-label="בדקו התאמה">
-  <span class="lt-side">השאירו פרטים</span>
-  <span class="lt-pill">בדקו התאמה תוך 30 שניות</span>
-</a>
+{check ? (
+  <a id="zbLeadTab" class="zb-lead-tab" href="/check/" data-check="1" aria-label="בדיקת מימון לרכב">
+    <span class="lt-side">בדיקת מימון לרכב</span>
+    <span class="lt-pill">בדקו כמה תקבלו על הרכב</span>
+  </a>
+) : (
+  <a id="zbLeadTab" class="zb-lead-tab" href="#lead" aria-label="בדקו התאמה">
+    <span class="lt-side">השאירו פרטים</span>
+    <span class="lt-pill">בדקו התאמה תוך 30 שניות</span>
+  </a>
+)}
 
 <script is:inline>
   (function () {
@@ -14,6 +23,7 @@
 
     // לחיצה: גלילה לטופס באותו עמוד, או הפניה לדף הבית אם אין טופס
     t.addEventListener("click", function (e) {
+      if (t.dataset.check) return;      // plain link to /check/
       var target = document.getElementById("lead");
       e.preventDefault();
       if (target) {

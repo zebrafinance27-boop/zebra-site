@@ -1,0 +1,127 @@
+---
+// Entry point to the digital car-equity check (/check/).
+// variant="full": text + a static preview of the results dashboard (car page, car articles)
+// variant="band": one compact strip (home page, under the loan cards)
+const { variant = "full" } = Astro.props;
+const href = "/check/";
+---
+{variant === "band" ? (
+  <section class="cp-band-sec">
+    <div class="wrap">
+      <a class="cp-band" href={href}>
+        <span class="cp-band-ic" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </span>
+        <span class="cp-band-txt">
+          <b>יש לכם רכב? גלו תוך דקה כמה מימון אפשר לקבל עליו.</b>
+          <span>בדיקה דיגיטלית, בלי לשלוח מסמכים ובלי תשלום מראש.</span>
+        </span>
+        <span class="cp-band-go">לבדיקה <i aria-hidden="true">←</i></span>
+      </a>
+    </div>
+  </section>
+) : (
+  <section class="block cp-sec" aria-labelledby="cpTitle">
+    <div class="wrap cp-grid">
+      <div class="cp-text reveal">
+        <span class="cp-eyebrow">בדיקה דיגיטלית · כדקה</span>
+        <h2 id="cpTitle">כמה כסף אפשר לקבל על הרכב שלכם?</h2>
+        <p>עונים על 4 שאלות קצרות על הרכב, ומקבלים מיד תמונת מימון אישית: פוטנציאל המימון ברכב, שלוש חלופות החזר והחזר חודשי משוער.</p>
+        <ul class="cp-points">
+          <li>בלי לשלוח מסמכים ובלי תשלום מראש</li>
+          <li>משחקים עם הסכום ומספר התשלומים ורואים את ההחזר מתעדכן</li>
+          <li>נציג זברה ממשיך איתכם מהנתונים שכבר מילאתם</li>
+        </ul>
+        <a class="btn cp-btn" href={href}>בדקו כמה תקבלו על הרכב</a>
+        <small class="cp-note">סימולציה בלבד. אינה הצעת מימון או אישור אשראי.</small>
+      </div>
+
+      <a class="cp-preview" href={href} aria-label="מעבר לבדיקת המימון" tabindex="-1">
+        <div class="cp-panel">
+          <div class="cp-row cp-head"><span><em>01</em> תמונת המצב שלך</span><span>רכב משנת <em>2020</em></span></div>
+          <div class="cp-label">פוטנציאל מימון משוער ברכב</div>
+          <div class="cp-big"><span>₪</span>60,000</div>
+          <div class="cp-bar" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+        </div>
+        <ul class="cp-routes" aria-hidden="true">
+          <li class="on"><span><em>01</em> החזר חודשי נמוך</span><b><span>₪</span>840</b></li>
+          <li><span><em>02</em> מסלול מאוזן</span><b><span>₪</span>1,005</b></li>
+          <li><span><em>03</em> תקופה קצרה</span><b><span>₪</span>1,281</b></li>
+        </ul>
+        <span class="cp-tag">דוגמה להמחשה</span>
+      </a>
+    </div>
+  </section>
+)}
+
+<style>
+  /* ---------- band ---------- */
+  .cp-band-sec { padding: 0 0 8px; }
+  .cp-band {
+    display: flex; align-items: center; gap: 18px;
+    background: #17300A; color: #fff; padding: 20px 26px;
+    border-inline-start: 6px solid #8FD64A; text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .cp-band:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -22px rgba(23,48,10,.8); }
+  .cp-band-ic { flex: none; width: 48px; height: 48px; display: grid; place-items: center; background: #8FD64A; color: #17300A; }
+  .cp-band-ic svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .cp-band-txt { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .cp-band-txt b { font-size: 1.15rem; font-weight: 800; }
+  .cp-band-txt span { font-size: .95rem; color: rgba(255,255,255,.7); }
+  .cp-band-go { flex: none; font-weight: 800; color: #17300A; background: #8FD64A; padding: 12px 22px; display: inline-flex; gap: 8px; align-items: center; }
+  .cp-band-go i { font-style: normal; transition: transform .2s; }
+  .cp-band:hover .cp-band-go i { transform: translateX(-4px); }
+  @media (max-width: 640px) {
+    .cp-band { flex-wrap: wrap; padding: 18px; gap: 14px; }
+    .cp-band-ic { width: 42px; height: 42px; }
+    .cp-band-txt { flex-basis: calc(100% - 60px); }
+    .cp-band-txt b { font-size: 1.05rem; }
+    .cp-band-go { width: 100%; justify-content: center; }
+  }
+
+  /* ---------- full ---------- */
+  .cp-sec { background: var(--cream); border-block: 1px solid var(--line); }
+  .cp-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  .cp-eyebrow { display: inline-block; font-size: .9rem; font-weight: 700; color: var(--green-deep); margin-bottom: 10px; }
+  .cp-text h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.15; margin: 0 0 14px; }
+  .cp-text p { font-size: 1.1rem; color: #33403a; line-height: 1.65; margin: 0 0 18px; }
+  .cp-points { list-style: none; padding: 0; margin: 0 0 26px; display: grid; gap: 10px; }
+  .cp-points li { position: relative; padding-inline-start: 30px; font-size: 1.02rem; color: var(--ink); }
+  .cp-points li::before { content: ""; position: absolute; inset-inline-start: 0; top: 4px; width: 18px; height: 18px; background: var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='square'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 12px no-repeat; }
+  .cp-btn { display: inline-flex; text-decoration: none; }
+  .cp-note { display: block; margin-top: 12px; font-size: .82rem; color: var(--muted); }
+
+  .cp-preview { position: relative; display: block; text-decoration: none; color: var(--ink); background: #fff; border: 1px solid #d9dccf; box-shadow: 0 30px 60px -36px rgba(20,24,27,.45); transform: rotate(-1.2deg); transition: transform .3s; }
+  .cp-preview:hover { transform: rotate(0deg) translateY(-3px); }
+  .cp-panel { background: #17300A; color: #fff; padding: 18px 20px 20px;
+    background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 26px 26px; }
+  .cp-row { display: flex; justify-content: space-between; font-size: .8rem; color: rgba(255,255,255,.55); border-bottom: 1px solid rgba(255,255,255,.15); padding-bottom: 9px; }
+  .cp-row em, .cp-routes em { font-style: normal; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; color: #8FD64A; }
+  .cp-label { margin-top: 14px; font-size: .86rem; color: rgba(255,255,255,.65); }
+  .cp-big { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 2.6rem; font-weight: 600; letter-spacing: -.03em; direction: ltr; text-align: right; line-height: 1.1; margin-top: 4px; }
+  .cp-big span, .cp-routes b span { font-family: "Noto Sans Hebrew", sans-serif; font-size: .75em; margin-left: 2px; }
+  .cp-bar { display: flex; height: 9px; margin-top: 16px; background: rgba(255,255,255,.1); }
+  .cp-bar .b1 { width: 25%; background: repeating-linear-gradient(135deg, rgba(255,255,255,.45) 0 4px, rgba(255,255,255,.2) 4px 8px); }
+  .cp-bar .b2 { width: 50%; background: #8FD64A; }
+  .cp-bar .b3 { width: 25%; background: rgba(143,214,74,.25); }
+  .cp-routes { list-style: none; margin: 0; padding: 8px; display: grid; gap: 6px; }
+  .cp-routes li { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border: 1px solid var(--line); font-weight: 700; font-size: .98rem; }
+  .cp-routes li em { color: var(--muted); margin-inline-end: 6px; }
+  .cp-routes li b { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 1.25rem; direction: ltr; }
+  .cp-routes li.on { background: #17300A; color: #fff; border-color: #17300A; box-shadow: inset -4px 0 0 #8FD64A; }
+  .cp-routes li.on em { color: #8FD64A; }
+  .cp-routes li.on b { color: #8FD64A; }
+  .cp-tag { position: absolute; top: -12px; inset-inline-end: 16px; background: #8FD64A; color: #17300A; font-size: .75rem; font-weight: 800; padding: 4px 10px; }
+
+  @media (max-width: 900px) {
+    .cp-grid { grid-template-columns: 1fr; gap: 34px; }
+    .cp-preview { transform: none; max-width: 460px; width: 100%; margin-inline: auto; }
+    .cp-preview:hover { transform: none; }
+  }
+  @media (max-width: 600px) {
+    .cp-text p { font-size: 1.02rem; }
+    .cp-btn { width: 100%; justify-content: center; }
+    .cp-big { font-size: 2.1rem; }
+  }
+</style>

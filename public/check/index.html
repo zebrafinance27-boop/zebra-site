@@ -494,15 +494,6 @@ function Welcome({ onStart, resume, onResume }) {
       <div className="absolute inset-x-6 top-6 bottom-2 rounded-[40px] bg-[radial-gradient(ellipse_at_center,#DDEBCF_0%,rgba(238,244,231,.6)_45%,transparent_72%)]"></div>
       <img src="/images/zebra-car.webp" alt="דמות הזברה של זברה לצד רכב" width="760" height="760"
         className="relative mx-auto w-[min(58vw,230px)] h-auto float" fetchpriority="high" />
-      <div className="absolute top-6 left-3 sm:left-6 bg-white/95 backdrop-blur rounded-2xl shadow-lift px-3 py-2 pop" style=${{ animationDelay: ".35s" }}>
-        <div className="text-[10.5px] text-ink-500 font-medium">מימון עד</div>
-        <div className="text-[18px] font-black text-brand-600 leading-none num">100%</div>
-        <div className="text-[10.5px] text-ink-500 font-medium">משווי הרכב*</div>
-      </div>
-      <div className="absolute bottom-6 right-3 sm:right-6 bg-ink text-white rounded-2xl shadow-lift px-3 py-2 flex items-center gap-2 pop" style=${{ animationDelay: ".55s" }}>
-        <span className="w-7 h-7 rounded-lg bg-brand grid place-items-center"><${Icon} n="car" className="w-4 h-4" /></span>
-        <div className="leading-tight"><div className="text-[12px] font-bold">ממשיכים לנסוע</div><div className="text-[10.5px] text-white/60">הרכב נשאר אצלכם</div></div>
-      </div>
     </div>
 
     <h1 className="text-[29px] sm:text-[34px] leading-[1.15] font-black tracking-tight mt-3">כמה כסף תוכלו לקבל <span className="text-brand-600">כנגד הרכב</span> שלכם?</h1>
@@ -1067,15 +1058,6 @@ function SideArt() {
     <div className="relative pt-6 pb-10">
       <div className="absolute inset-x-6 top-10 bottom-4 rounded-[48px] bg-[radial-gradient(ellipse_at_center,#DDEBCF_0%,rgba(238,244,231,.6)_45%,transparent_72%)]"></div>
       <img src="/images/zebra-car.webp" alt="" width="760" height="760" className="relative mx-auto w-[min(100%,440px)] h-auto float" />
-      <div className="absolute top-14 left-6 bg-white/95 backdrop-blur rounded-2xl shadow-lift px-4 py-3 pop" style=${{ animationDelay: ".35s" }}>
-        <div className="text-[12px] text-ink-500 font-medium">מימון עד</div>
-        <div className="text-[24px] font-black text-brand-600 leading-none num">100%</div>
-        <div className="text-[12px] text-ink-500 font-medium">משווי הרכב*</div>
-      </div>
-      <div className="absolute bottom-16 right-6 bg-ink text-white rounded-2xl shadow-lift px-4 py-3 flex items-center gap-2.5 pop" style=${{ animationDelay: ".55s" }}>
-        <span className="w-9 h-9 rounded-lg bg-brand grid place-items-center"><${Icon} n="car" className="w-5 h-5" /></span>
-        <div className="leading-tight"><div className="text-[14px] font-bold">ממשיכים לנסוע</div><div className="text-[12px] text-white/60">הרכב נשאר אצלכם</div></div>
-      </div>
     </div>
   </aside>`;
 }

@@ -131,7 +131,8 @@ const CONFIG = {
 /* DEMO MODE: on localhost / file:// or with ?demo=1 nothing leaves the browser.
    ?live=1 forces live mode (for testing a deployed preview). */
 const QS = new URLSearchParams(location.search);
-const DEMO = !QS.has("live") && (location.protocol === "file:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || QS.has("demo"));
+// *.netlify.app = Netlify deploy previews, which are not connected to the lead server (its env vars are Production-only)
+const DEMO = !QS.has("live") && (location.protocol === "file:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || /\.netlify\.app$/.test(location.hostname) || QS.has("demo"));
 
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
 const html = htm.bind(React.createElement);

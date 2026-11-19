@@ -36,8 +36,7 @@ const faqSchema = {
         <a class="btn ps-hero-btn" href="#sim">לסימולטור ההלוואה</a>
         <span class="biz-for"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>גם כשיש משכנתא קיימת</span>
       </div>
-      <!-- TODO (זברה): להחליף בתמונת זברה עם בית, כשתהיה -->
-      <div class="biz-zebra biz-zebra-wide"><img src="/images/zebra.webp" alt="הזברה של זברה" width="700" height="623" fetchpriority="high"></div>
+      <div class="biz-zebra biz-zebra-wide"><img class="zp-img" src="/images/zebra-property.webp" alt="הזברה של זברה עם מפתח, ליד בית, בניין מגורים ונכס מסחרי" width="1254" height="1254" fetchpriority="high"></div>
     </div>
   </section>
 
@@ -113,5 +112,8 @@ const faqSchema = {
 
 <style>
   .ps-hero-btn { display: inline-flex; margin-top: 18px; text-decoration: none; }
+  /* square art: keep it inside the 250px hero box (the car art is wider than it is tall) */
+  .biz-zebra-wide img.zp-img { width: 250px; }
+  @media (max-width: 720px) { .biz-zebra-wide img.zp-img { width: 140px; } }
   @media (max-width: 720px) { .ps-hero-btn { padding: 12px 18px; font-size: .95rem; margin-top: 12px; } }
 </style>

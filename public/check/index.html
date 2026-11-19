@@ -490,7 +490,7 @@ function DemoBar() {
 /* ---------------- screens ---------------- */
 function Welcome({ onStart, resume, onResume }) {
   return html`<div className="rise">
-    <div className="relative -mx-4 sm:mx-0 px-4 pt-2">
+    <div className="relative -mx-4 sm:mx-0 px-4 pt-2 lg:hidden">
       <div className="absolute inset-x-6 top-6 bottom-2 rounded-[40px] bg-[radial-gradient(ellipse_at_center,#DDEBCF_0%,rgba(238,244,231,.6)_45%,transparent_72%)]"></div>
       <img src="/images/zebra-car.webp" alt="דמות הזברה של זברה לצד רכב" width="760" height="760"
         className="relative mx-auto w-[min(58vw,230px)] h-auto float" fetchpriority="high" />
@@ -1061,38 +1061,22 @@ function Results({ s, onRestart }) {
   </div>`;
 }
 
-/* ---------------- desktop side rail (lg+ only): where you are + what you get at the end ---------------- */
-function SideRail({ step }) {
-  const items = [...STEPS.slice(1).map((x) => x.label), "תמונת המימון שלך"];
-  return html`<aside className="hidden lg:block sticky top-[150px] font-plex" aria-label="שלבי הבדיקה">
-    <div className="bg-forest text-white relative overflow-hidden">
-      <div className="absolute inset-0 grid-lines pointer-events-none"></div>
-      <div className="relative p-7">
-        <div className="text-[12px] text-white/55 border-b border-white/15 pb-3 flex justify-between">
-          <span><span className="fig text-lime">ZB</span>  בדיקת מימון כנגד רכב</span><span>כדקה</span>
-        </div>
-        <ol className="mt-4">
-          ${items.map((t, i) => {
-            const n = i + 1;
-            const st = n < step ? "done" : n === step ? "now" : "wait";
-            return html`<li key=${t} className=${"flex items-center gap-3 py-2.5 border-b border-white/10 last:border-0 " + (st === "wait" ? "text-white/40" : "text-white")}>
-              <span className=${"fig text-[12px] w-6 " + (st === "now" ? "text-lime" : "")}>${String(n).padStart(2, "0")}</span>
-              <span className=${"flex-1 text-[15px] " + (st === "now" ? "font-semibold" : "")}>${t}</span>
-              ${st === "done" ? html`<${Icon} n="check" className="w-4 h-4 text-lime" sw=${3} />` : st === "now" ? html`<span className="w-2 h-2 bg-lime"></span>` : ""}
-            </li>`;
-          })}
-        </ol>
+/* ---------------- desktop art (lg+ only): the zebra + car next to the funnel ---------------- */
+function SideArt() {
+  return html`<aside className="hidden lg:block sticky top-[130px]" aria-hidden="true">
+    <div className="relative pt-6 pb-10">
+      <div className="absolute inset-x-6 top-10 bottom-4 rounded-[48px] bg-[radial-gradient(ellipse_at_center,#DDEBCF_0%,rgba(238,244,231,.6)_45%,transparent_72%)]"></div>
+      <img src="/images/zebra-car.webp" alt="" width="760" height="760" className="relative mx-auto w-[min(100%,440px)] h-auto float" />
+      <div className="absolute top-14 left-6 bg-white/95 backdrop-blur rounded-2xl shadow-lift px-4 py-3 pop" style=${{ animationDelay: ".35s" }}>
+        <div className="text-[12px] text-ink-500 font-medium">מימון עד</div>
+        <div className="text-[24px] font-black text-brand-600 leading-none num">100%</div>
+        <div className="text-[12px] text-ink-500 font-medium">משווי הרכב*</div>
       </div>
-      <div className="relative border-t border-white/15 p-7 pt-5">
-        <div className="text-[12px] text-white/55">בסוף הבדיקה תקבלו</div>
-        <ul className="mt-3 grid gap-2 text-[14px]">
-          ${["פוטנציאל מימון משוער ברכב", "3 חלופות החזר להשוואה", "סימולטור לסכום ולמספר התשלומים"].map((t) => html`<li key=${t} className="flex items-center gap-2.5"><span className="w-1.5 h-1.5 bg-lime"></span>${t}</li>`)}
-        </ul>
+      <div className="absolute bottom-16 right-6 bg-ink text-white rounded-2xl shadow-lift px-4 py-3 flex items-center gap-2.5 pop" style=${{ animationDelay: ".55s" }}>
+        <span className="w-9 h-9 rounded-lg bg-brand grid place-items-center"><${Icon} n="car" className="w-5 h-5" /></span>
+        <div className="leading-tight"><div className="text-[14px] font-bold">ממשיכים לנסוע</div><div className="text-[12px] text-white/60">הרכב נשאר אצלכם</div></div>
       </div>
     </div>
-    ${step > 0 && html`<div className="mt-4 grid grid-cols-3 border border-line text-center">
-      ${[["~30", "גופי מימון"], ["0", "תשלום מראש"], ["100", "תשלומים לכל היותר"]].map(([n, l], i) => html`<div key=${l} className=${"py-3.5 " + (i ? "border-r border-line" : "")}><div className="fig text-[18px] font-semibold">${n}</div><div className="text-[11.5px] text-ink-500 mt-0.5">${l}</div></div>`)}
-    </div>`}
   </aside>`;
 }
 
@@ -1290,7 +1274,7 @@ function App() {
     <main className="flex-1 w-full max-w-[480px] lg:max-w-[1080px] mx-auto px-4 pt-6 lg:pt-10 safe-b">
       <div className=${wide ? "" : "lg:grid lg:grid-cols-[480px_minmax(0,1fr)] lg:gap-16 lg:items-start"}>
         <div key=${(s.result ? "r" : proc ? "p" : s.step)} className=${(dir === "back" ? "anim-back" : "anim-fwd") + " min-w-0"}>${body}</div>
-        ${!wide && html`<${SideRail} step=${proc ? TOTAL + 1 : s.step} />`}
+        ${!wide && html`<${SideArt} />`}
       </div>
       <div className=${wide ? "" : "lg:max-w-[480px]"}><${Disclosure} /></div>
     </main>

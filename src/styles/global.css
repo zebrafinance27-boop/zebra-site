@@ -672,3 +672,10 @@ section.block.biz-sec.ab-first{padding-top:48px}
 .site-nav a.nav-check:hover{background:#17300A;color:#fff;border-color:#17300A}
 .site-nav a.nav-check.active::after,.site-nav a.nav-check::after{display:none}
 @media (min-width:1041px) and (max-width:1260px){.site-nav{gap:14px}.site-nav a{font-size:.92rem}.header-cta .phone-link{display:none}}
+
+/* ===== home: 4 loan cards (adds "כנגד נכס") ===== */
+.zh-cards.zh-cards-4{grid-template-columns:repeat(4,1fr);gap:20px}
+.zh-cards-4 .zh-card{padding:0 20px 22px}
+.zh-cards-4 .zh-card-art{margin:0 -20px 16px}
+@media (max-width:1100px){.zh-cards.zh-cards-4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.zh-cards.zh-cards-4{gap:10px}.zh-cards-4 .zh-card{padding:0 8px 12px}.zh-cards-4 .zh-card-art{margin:0 -8px 8px}}

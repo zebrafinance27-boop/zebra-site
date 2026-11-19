@@ -1,0 +1,108 @@
+---
+// הלוואה כנגד נכס — עמוד מוצר במבנה של עמוד "כנגד רכב".
+// TODO (זברה): להשלים נתוני מוצר אמיתיים כשיהיו — סכום מקסימלי, אחוז מימון משווי הנכס, תקופת החזר, רשימת מסמכים.
+// עד אז העמוד כתוב בלי מספרים, כדי לא להציג תנאים שלא אושרו.
+import Base from "../../layouts/Base.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import RelatedArticles from "../../components/RelatedArticles.astro";
+import Steps from "../../components/Steps.astro";
+
+const faqs = [
+  { q: "מה זה הלוואה כנגד נכס?", a: "הלוואה שבה נכס נדל\"ן שבבעלותכם, כמו דירה או בית, משמש כבטוחה להחזר. הנכס נשאר בבעלותכם ואתם ממשיכים להשתמש בו כרגיל." },
+  { q: "כמה כסף אפשר לקבל?", a: "הסכום נקבע לפי שווי הנכס, המשכנתא או השעבוד הקיימים עליו, וההחזר החודשי שמתאים לכם. נבדוק עבורכם את האפשרויות מול גופי המימון." },
+  { q: "יש על הנכס משכנתא. אפשר בכל זאת?", a: "במקרים רבים כן. הבדיקה נעשית לפי השווי הפנוי בנכס, כלומר שווי הנכס פחות יתרת המשכנתא, ובכפוף לאישור הגוף המממן." },
+  { q: "למה זה בדרך כלל זול יותר מהלוואה רגילה?", a: "כשיש בטוחה כמו נכס, הסיכון של הגוף המממן נמוך יותר, ולכן בדרך כלל אפשר לקבל סכומים גבוהים יותר, פריסה ארוכה יותר וריבית נמוכה יותר מהלוואה בלי בטחונות. התנאים בפועל נקבעים על ידי הגוף המממן." },
+  { q: "לאילו מטרות אפשר להשתמש בכסף?", a: "לכל מטרה: איחוד הלוואות, שיפוץ, עזרה לילדים, השקעה, הון לעסק או כל צורך אחר." },
+  { q: "אילו מסמכים צריך?", a: "בדרך כלל תעודות זהות, מסמכים על הנכס (כמו נסח טאבו) ומסמכים על ההכנסות. את הרשימה המדויקת נעביר לכם לפי המסלול שמתאים לכם." },
+];
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+---
+<Base
+  title="הלוואה כנגד נכס: מימון גבוה על בסיס הדירה שלכם | זברה"
+  description="הלוואה כנגד נכס: מימון על בסיס שווי הדירה או הבית שבבעלותכם, גם כשיש משכנתא קיימת. הנכס נשאר שלכם. בודקים עבורכם מול כ-30 גופי מימון, בלי תשלום מראש."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+
+  <section class="page-hero biz-hero biz-hero-full">
+    <div class="wrap biz-hero-grid biz-hero-wide">
+      <div class="biz-hero-text">
+        <h1>הלוואה כנגד נכס</h1>
+        <p>מימון על בסיס שווי הדירה או הבית שבבעלותכם. הנכס נשאר שלכם, ואתם ממשיכים לגור בו כרגיל.</p>
+        <span class="biz-for"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>גם כשיש משכנתא קיימת</span>
+      </div>
+      <!-- TODO (זברה): להחליף בתמונת זברה עם בית, כשתהיה -->
+      <div class="biz-zebra biz-zebra-wide"><img src="/images/zebra.webp" alt="הזברה של זברה" width="700" height="623" fetchpriority="high"></div>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <div class="biz-cards">
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
+          <h3>הנכס נשאר שלכם</h3>
+          <p>ממשיכים לגור בנכס ולהשתמש בו כרגיל לאורך כל תקופת ההלוואה.</p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+          <h3>סכומים גבוהים ופריסה ארוכה</h3>
+          <p>בזכות הבטוחה בנכס, בדרך כלל אפשר לקבל יותר כסף ולפרוס את ההחזר לתקופה ארוכה יותר.</p>
+        </div>
+        <div class="biz-card">
+          <div class="biz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.6-1-1.7-1.5-3-1.5-1.7 0-3 .9-3 2.2 0 3 6 1.6 6 4.6 0 1.3-1.3 2.2-3 2.2-1.4 0-2.6-.6-3.1-1.6"/><path d="M12 6.5v11"/></svg></div>
+          <h3>בדרך כלל ריבית נמוכה יותר</h3>
+          <p>לרוב התנאים טובים יותר מהלוואה בלי בטחונות. התנאים בפועל נקבעים על ידי הגוף המממן.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap prose">
+      <h2>מימון על בסיס שווי הנכס</h2>
+      <p>הלוואה כנגד נכס מאפשרת לכם להשתמש בשווי הדירה או הבית שבבעלותכם כדי לקבל מימון משמעותי. <strong>הנכס נשאר בבעלותכם</strong>, ואתם ממשיכים לגור בו כרגיל. אנחנו בודקים עבורכם את האפשרויות מול כ-30 גופי מימון ומלווים אתכם עד שהכסף בחשבון.</p>
+
+      <h2>למי זה מתאים?</h2>
+      <ul>
+        <li>בעלי דירה או בית בבעלותם.</li>
+        <li>גם כשיש על הנכס משכנתא קיימת, בהתאם לשווי הפנוי בנכס.</li>
+        <li>מי שצריך סכום גבוה, למשל לאיחוד הלוואות, שיפוץ או השקעה.</li>
+        <li>מי שמחפש החזר חודשי נמוך יותר בזכות פריסה ארוכה.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">מה צריך כדי להתחיל?</h2>
+      <div class="biz-docs">
+        <div class="biz-ic biz-ic-lg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg></div>
+        <div>
+          <h3>כמה פרטים על הנכס</h3>
+          <p>מתחילים בשיחה קצרה. את רשימת המסמכים המדויקת נעביר לכם לפי המסלול שמתאים לכם.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Steps />
+
+  <section class="block biz-sec">
+    <div class="wrap biz-wrap">
+      <h2 class="biz-h2">שאלות נפוצות</h2>
+      <div class="faq biz-faq">
+        {faqs.map((f) => (
+          <details class="faq-item"><summary>{f.q}<span class="fq-ic"></span></summary><div class="faq-a">{f.a}</div></details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <RelatedArticles category="property" />
+
+  <LeadForm />
+</Base>

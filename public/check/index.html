@@ -470,9 +470,9 @@ function RangeSlider({ value, min, max, step, onChange, label, plus }) {
 }
 
 function Disclosure() {
-  return html`<footer className="mt-10 border-t border-line pt-5 pb-2 text-[12px] leading-relaxed text-ink-500">
+  return html`<footer className="mt-10 border-t border-line pt-5 pb-2 text-[12px] leading-relaxed text-ink-500 text-center">
     <p>זברה עוסקת בייעוץ ובתיווך אשראי ואינה גוף מלווה. מתן האשראי ותנאיו כפופים לאישור הגורם המממן ולנתוני הלקוח. אין בבדיקה הראשונית התחייבות למתן אשראי. אי-עמידה בפירעון ההלוואה עלולה לגרור חיוב בריבית פיגורים והליכי הוצאה לפועל.</p>
-    <p className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1">
+    <p className="mt-2.5 flex flex-wrap justify-center gap-x-3 gap-y-1">
       <a className="underline underline-offset-2 hover:text-ink" href=${CONFIG.privacyUrl} target="_blank" rel="noopener">מדיניות פרטיות</a>
       <a className="underline underline-offset-2 hover:text-ink" href=${CONFIG.accessibilityUrl} target="_blank" rel="noopener">הצהרת נגישות</a>
       <span>© ${NOW_YEAR} זברה</span>
@@ -1258,7 +1258,7 @@ function App() {
         <div key=${(s.result ? "r" : proc ? "p" : s.step)} className=${(dir === "back" ? "anim-back" : "anim-fwd") + " min-w-0"}>${body}</div>
         ${!wide && html`<${SideArt} />`}
       </div>
-      <div className=${wide ? "" : "lg:max-w-[480px]"}><${Disclosure} /></div>
+      <div className="max-w-[720px] mx-auto"><${Disclosure} /></div>
     </main>
   </div>`;
 }

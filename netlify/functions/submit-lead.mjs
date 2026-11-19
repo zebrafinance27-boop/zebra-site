@@ -18,8 +18,16 @@ const maxTerm = (y) => (y >= 2023 ? 100 : TERM_BY_YEAR[y] || null);
 // Example loan routes shown to the customer (rate used for the illustration only) — keep in sync with loanRoutes() in index.html
 const ROUTE_RATE = 0.095;
 const monthlyPayment = (principal, n) => { const r = ROUTE_RATE / 12; return (principal * r) / (1 - Math.pow(1 + r, -n)); };
-const loanRoutes = (amount, max) => (!amount || !max ? [] :
-  [max, ...[60, 36, 24, 12].filter((t) => t < max)].slice(0, 2).map((term) => ({ term, monthly: Math.round(monthlyPayment(amount, term)) })));
+// Up to 3 routes: low monthly (max term) · balanced · short — keep in sync with routeTerms() in index.html
+const STD_TERMS = [84, 72, 60, 48, 36, 24, 12];
+function routeTerms(max) {
+  if (!max) return [];
+  const lower = STD_TERMS.filter((t) => t < max);
+  const bal = max > 60 ? 60 : lower[0];
+  const sh = bal > 36 ? 36 : lower.filter((t) => t < bal)[0];
+  return [max, bal, sh].filter(Boolean);
+}
+const loanRoutes = (amount, max) => (!amount || !max ? [] : routeTerms(max).map((term) => ({ term, monthly: Math.round(monthlyPayment(amount, term)) })));
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 // Email typo detection — keep in sync with emailSuggestion() in public/check/index.html
 const MAIL_PROVIDERS = { gmail: "gmail.com", walla: "walla.co.il", hotmail: "hotmail.com", yahoo: "yahoo.com", outlook: "outlook.com", icloud: "icloud.com" };

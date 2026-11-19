@@ -1,0 +1,290 @@
+---
+// סימולטור הלוואה כנגד נכס — מוטמע בעמוד /loans/neged-nechas/.
+// פשוט בכוונה: 3 שאלות + בחירת תקופה, תוצאה אחת ברורה (החזר חודשי) ופס אחד של שיעור המימון.
+// הנחות החישוב (מזברה): תקרת מימון 85% משווי הנכס כולל המשכנתא הקיימת, ריבית לסימולציה 4.8%,
+// תקופה 10–40 שנה, הלוואה ₪200K–₪10M. לשנות כאן ובשרת יחד (netlify/functions/submit-property-lead.mjs).
+---
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<section class="ps-sec" id="sim" aria-labelledby="psTitle">
+  <div class="wrap">
+    <header class="ps-head">
+      <span class="ps-eyebrow">סימולטור הלוואה כנגד נכס</span>
+      <h2 id="psTitle">כמה תחזירו בחודש?</h2>
+      <p>שלוש שאלות, ותשובה אחת ברורה. בלי להשאיר פרטים.</p>
+    </header>
+
+    <div class="ps-card">
+      <div class="ps-mini" aria-hidden="true">החזר חודשי משוער <b class="fig">₪<span id="psMiniM">0</span></b></div>
+
+      <!-- questions -->
+      <div class="ps-q">
+        <div class="ps-field" data-k="value">
+          <label for="psValue">כמה שווה הנכס?</label>
+          <div class="ps-num"><span>₪</span><input id="psValue" inputmode="numeric" autocomplete="off" /></div>
+          <input class="ps-range" type="range" min="0" max="1000" aria-label="שווי הנכס" />
+        </div>
+        <div class="ps-field" data-k="mortgage">
+          <label for="psMortgage">כמה נשאר לשלם על המשכנתא? <small>(0 אם אין)</small></label>
+          <div class="ps-num"><span>₪</span><input id="psMortgage" inputmode="numeric" autocomplete="off" /></div>
+          <input class="ps-range" type="range" min="0" max="1000" aria-label="יתרת המשכנתא" />
+        </div>
+        <div class="ps-field" data-k="amount">
+          <label for="psAmount">כמה כסף תרצו לקבל?</label>
+          <div class="ps-num"><span>₪</span><input id="psAmount" inputmode="numeric" autocomplete="off" /></div>
+          <input class="ps-range" type="range" min="0" max="1000" aria-label="סכום ההלוואה" />
+        </div>
+        <div class="ps-field">
+          <span class="ps-label" id="psYearsLab">על כמה שנים לפרוס?</span>
+          <div class="ps-chips" role="radiogroup" aria-labelledby="psYearsLab">
+            <button type="button" role="radio" data-years="15">15</button>
+            <button type="button" role="radio" data-years="20">20</button>
+            <button type="button" role="radio" data-years="30">30</button>
+            <button type="button" role="radio" data-years="40">40</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- one clear answer -->
+      <div class="ps-a">
+        <div class="ps-a-lab">ההחזר החודשי המשוער</div>
+        <div class="ps-big"><span class="cur">₪</span><b id="psMonthly">0</b></div>
+        <p class="ps-a-sub" id="psSentence"></p>
+
+        <div class="ps-ltv">
+          <div class="ps-ltv-top"><span>המימון הכולל מתוך שווי הנכס</span><b class="fig" id="psLtv">0%</b></div>
+          <div class="ps-bar" aria-hidden="true"><i id="psFill"></i><span class="cap"></span></div>
+        </div>
+        <p class="ps-status" id="psStatus" role="status"></p>
+
+        <button type="button" class="ps-cta" id="psOpen">רוצים בדיקה אישית? השאירו פרטים <i aria-hidden="true">←</i></button>
+      </div>
+    </div>
+
+    <!-- lead step (opens on demand) -->
+    <form class="ps-lead" id="psLead" hidden novalidate>
+      <div class="ps-lead-head"><b>נשלח את המספרים לנציג זברה</b><span>נבדוק עבורכם מול גופי המימון ונחזור אליכם. בלי תשלום מראש.</span></div>
+      <div class="ps-in3">
+        <div class="ps-in"><label for="psName">שם מלא</label><input id="psName" autocomplete="name" /></div>
+        <div class="ps-in"><label for="psPhone">טלפון נייד</label><input id="psPhone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" /></div>
+        <div class="ps-in"><label for="psEmail">מייל</label><input id="psEmail" type="email" autocomplete="email" dir="ltr" /></div>
+      </div>
+      <input class="ps-hp" id="psCompany" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <label class="ps-consent"><input type="checkbox" id="psConsent" /><span>אני מאשר/ת לזברה לשמור ולהעביר את הפרטים לצורך בדיקת הבקשה ויצירת קשר בטלפון, ב-SMS, בוואטסאפ או במייל, בהתאם ל<a href="/privacy/" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</span></label>
+      <p class="ps-err" id="psErr" role="alert"></p>
+      <button type="submit" class="ps-cta ps-send" id="psSend">שליחה</button>
+    </form>
+    <div class="ps-done" id="psDone" hidden><b>הפרטים נשלחו. נציג זברה יחזור אליכם בהקדם.</b><span>מספר פנייה <span class="fig" id="psRef"></span></span></div>
+
+    <details class="ps-how">
+      <summary>איך חישבנו?</summary>
+      <ul>
+        <li>החזר חודשי קבוע (לוח שפיצר), לפי ריבית שנתית משוערת של <span class="fig">4.8%</span>. הריבית בפועל נקבעת על ידי הגוף המממן.</li>
+        <li>המימון הכולל (המשכנתא הקיימת יחד עם ההלוואה החדשה) יכול להגיע עד <span class="fig">85%</span> משווי הנכס.</li>
+        <li>הלוואה של <span class="fig">₪200,000</span> עד <span class="fig">₪10,000,000</span>, לתקופה של 10 עד 40 שנה.</li>
+        <li>לא כולל עמלות, שמאות, ביטוחים או שכר טרחה.</li>
+      </ul>
+    </details>
+    <p class="ps-legal">החישוב להמחשה בלבד ואינו הערכת שווי, הצעת מימון או אישור אשראי. הלוואה בשעבוד נכס כרוכה בסיכון לנכס אם לא עומדים בהחזרים. כל מימון ותנאיו כפופים לאישור הגוף המממן.</p>
+  </div>
+</section>
+
+<script is:inline>
+(function () {
+  var C = { cap: 0.85, rate: 0.048, minLoan: 200000, maxLoan: 10000000, value: [300000, 30000000] };
+  var root = document.getElementById("sim"); if (!root) return;
+  var DEMO = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /\.netlify\.app$/.test(location.hostname);
+  var nf = new Intl.NumberFormat("he-IL");
+  var fmt = function (n) { return nf.format(Math.round(n || 0)); };
+  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+  var $ = function (id) { return document.getElementById(id); };
+  var pmt = function (P, years) { var r = C.rate / 12, n = years * 12; return P * r / (1 - Math.pow(1 + r, -n)); };
+
+  var s = { value: 2000000, mortgage: 500000, amount: 600000, years: 20 };
+  var range = {
+    value: function () { return [C.value[0], C.value[1]]; },
+    mortgage: function () { return [0, s.value]; },
+    amount: function () { return [C.minLoan, C.maxLoan]; },
+  };
+  // quadratic scale: the common range gets most of the slider
+  var toPos = function (v, a, b) { return Math.round(Math.sqrt(clamp((v - a) / (b - a || 1), 0, 1)) * 1000); };
+  var fromPos = function (p, a, b) { return clamp(Math.round((a + (b - a) * Math.pow(p / 1000, 2)) / 10000) * 10000, a, b); };
+  var paint = function (el) { var p = el.value / 10; el.style.background = "linear-gradient(to left,#17300A 0%,#17300A " + p + "%,#E2E4DA " + p + "%,#E2E4DA 100%)"; };
+
+  function render() {
+    ["value", "mortgage", "amount"].forEach(function (k) {
+      var f = root.querySelector('[data-k="' + k + '"]'), sl = f.querySelector(".ps-range"), inp = f.querySelector(".ps-num input"), r = range[k]();
+      if (document.activeElement !== inp) inp.value = fmt(s[k]);
+      sl.value = toPos(s[k], r[0], r[1]); paint(sl);
+    });
+    root.querySelectorAll(".ps-chips button").forEach(function (b) { var on = +b.dataset.years === s.years; b.classList.toggle("on", on); b.setAttribute("aria-checked", String(on)); });
+
+    var monthly = pmt(s.amount, s.years);
+    var ltv = s.value ? (s.mortgage + s.amount) / s.value : 0;
+    var maxLoan = clamp(C.cap * s.value - s.mortgage, 0, C.maxLoan);
+    $("psMonthly").textContent = fmt(monthly);
+    $("psMiniM").textContent = fmt(monthly);
+    $("psSentence").textContent = "על הלוואה של ₪" + fmt(s.amount) + ", ל-" + s.years + " שנה.";
+    $("psLtv").textContent = Math.round(ltv * 100) + "%";
+    var fill = $("psFill"); fill.style.width = clamp(ltv, 0, 1) * 100 + "%"; fill.classList.toggle("over", ltv > C.cap);
+
+    var st = $("psStatus");
+    if (maxLoan < C.minLoan) { st.className = "ps-status bad"; st.textContent = "לפי המספרים, השווי הפנוי בנכס לא מספיק להלוואה כזו. נשמח לבדוק איתכם אפשרויות אחרות."; }
+    else if (ltv > C.cap) { st.className = "ps-status warn"; st.textContent = "זה מעל 85% משווי הנכס. לפי המספרים, אפשר לבחון עד ₪" + fmt(maxLoan) + "."; }
+    else { st.className = "ps-status ok"; st.textContent = "✓ בתוך המסגרת"; }
+  }
+
+  function normalize() {
+    s.value = clamp(s.value || C.value[0], C.value[0], C.value[1]);
+    s.mortgage = clamp(s.mortgage, 0, s.value);
+    s.amount = clamp(s.amount || C.minLoan, C.minLoan, C.maxLoan);
+  }
+
+  ["value", "mortgage", "amount"].forEach(function (k) {
+    var f = root.querySelector('[data-k="' + k + '"]'), sl = f.querySelector(".ps-range"), inp = f.querySelector(".ps-num input");
+    sl.addEventListener("input", function () { var r = range[k](); s[k] = fromPos(+sl.value, r[0], r[1]); normalize(); render(); });
+    inp.addEventListener("input", function () { var d = inp.value.replace(/\D/g, "").slice(0, 9); inp.value = d ? fmt(+d) : ""; s[k] = +d || 0; render(); });
+    inp.addEventListener("blur", function () { normalize(); render(); });
+    inp.addEventListener("focus", function () { inp.select(); });
+  });
+  root.querySelectorAll(".ps-chips button").forEach(function (b) { b.addEventListener("click", function () { s.years = +b.dataset.years; render(); }); });
+
+  // ---- lead step ----
+  var form = $("psLead");
+  $("psOpen").addEventListener("click", function () { form.hidden = false; form.scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(function () { $("psName").focus({ preventScroll: true }); }, 350); });
+  var cookie = function (n) { var m = document.cookie.match("(?:^|; )" + n + "=([^;]*)"); return m ? decodeURIComponent(m[1]) : ""; };
+  var uuid = function () { return crypto.randomUUID ? crypto.randomUUID() : "id-" + Date.now().toString(36) + Math.random().toString(36).slice(2); };
+  var qs = new URLSearchParams(location.search);
+  var sending = false;
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault(); if (sending) return;
+    var name = $("psName").value.trim(), phone = $("psPhone").value.replace(/\D/g, "").replace(/^972/, "0"), email = $("psEmail").value.trim().toLowerCase();
+    var err = name.length < 2 ? "נא למלא שם מלא" : !/^05\d{8}$/.test(phone) ? "נא למלא מספר נייד תקין (10 ספרות, מתחיל ב-05)" : !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? "נא למלא כתובת מייל תקינה" : !$("psConsent").checked ? "יש לאשר את העברת הפרטים כדי להמשיך" : "";
+    $("psErr").textContent = err; if (err) return;
+    var leadId = uuid(), eventId = "lead-" + leadId;
+    var payload = {
+      lead_id: leadId, full_name: name, phone: phone, email: email, consent: true,
+      consent_text: "אישור העברת פרטים לצורך בדיקת הבקשה ויצירת קשר, בהתאם למדיניות הפרטיות",
+      property_value: s.value, existing_mortgage: s.mortgage, requested_amount: s.amount, term_years: s.years,
+      utm_source: qs.get("utm_source") || "", utm_medium: qs.get("utm_medium") || "", utm_campaign: qs.get("utm_campaign") || "",
+      utm_content: qs.get("utm_content") || "", utm_term: qs.get("utm_term") || "", fbclid: qs.get("fbclid") || "",
+      landing_page: location.origin + location.pathname, referrer: document.referrer || "",
+      meta: { event_id: eventId, fbp: cookie("_fbp"), fbc: cookie("_fbc"), event_source_url: location.href },
+      company: $("psCompany").value,
+    };
+    sending = true; $("psSend").disabled = true; $("psSend").textContent = "שולחים…";
+    try {
+      var data;
+      if (DEMO) { await new Promise(function (r) { setTimeout(r, 600); }); console.info("[demo] property lead (not sent)", payload); data = { ok: true, ref: "DEMO-" + leadId.slice(-6).toUpperCase() }; }
+      else {
+        var res = await fetch("/api/submit-property-lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        data = await res.json().catch(function () { return {}; });
+        if (!res.ok || !data.ok) throw new Error(data.error || "HTTP " + res.status);
+      }
+      if (!DEMO && window.fbq) window.fbq("track", "Lead", { content_name: "property_check" }, { eventID: eventId });
+      form.hidden = true; $("psOpen").hidden = true; $("psDone").hidden = false; $("psRef").textContent = data.ref || "";
+    } catch (x) {
+      console.error("property lead failed", x);
+      $("psErr").innerHTML = 'לא הצלחנו לשלוח כרגע. אפשר לנסות שוב, או <a href="https://wa.me/972545995519" target="_blank" rel="noopener">לפנות אלינו בוואטסאפ</a>.';
+    } finally { sending = false; $("psSend").disabled = false; $("psSend").textContent = "שליחה"; }
+  });
+
+  render();
+})();
+</script>
+
+<style>
+  .ps-sec { padding: 72px 0; background: var(--cream); border-block: 1px solid var(--line); font-family: "IBM Plex Sans Hebrew", "Noto Sans Hebrew", sans-serif; scroll-margin-top: 80px; }
+  .ps-sec .fig, .ps-big b, .ps-num input { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .ps-head { text-align: center; max-width: 640px; margin: 0 auto 28px; }
+  .ps-eyebrow { font-size: .88rem; font-weight: 700; color: var(--green-deep); }
+  .ps-head h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); line-height: 1.15; margin: 8px 0 8px; font-weight: 700; }
+  .ps-head p { font-size: 1.08rem; color: var(--muted); margin: 0; }
+
+  .ps-card { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); background: #fff; border: 1px solid #d9dccf; max-width: 1000px; margin: 0 auto; }
+  .ps-mini { display: none; }
+
+  /* questions */
+  .ps-q { padding: 8px 32px 18px; }
+  .ps-field { padding: 22px 0 18px; border-bottom: 1px solid var(--line); }
+  .ps-field:last-child { border-bottom: 0; }
+  .ps-field label, .ps-label { display: block; font-size: 1.05rem; font-weight: 600; color: var(--ink); }
+  .ps-field small { font-weight: 400; color: var(--muted); font-size: .85rem; }
+  .ps-num { display: flex; align-items: baseline; gap: 6px; margin-top: 6px; }
+  .ps-num span { font-size: 1.2rem; color: var(--muted); }
+  .ps-num input { flex: 1; min-width: 0; border: 0; border-bottom: 2px solid transparent; outline: 0; padding: 2px 0; font-size: 1.9rem; font-weight: 600; color: var(--ink); background: transparent; direction: ltr; text-align: right; transition: border-color .15s; }
+  .ps-num input:hover { border-bottom-color: #d9dccf; }
+  .ps-num input:focus { border-bottom-color: #17300A; }
+  .ps-sec input.ps-range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 0; margin: 12px 0 0; outline: 0; cursor: pointer; direction: rtl; background: #E2E4DA; }
+  .ps-sec input.ps-range::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; background: #17300A; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1.5px #17300A; transform: none; }
+  .ps-sec input.ps-range::-moz-range-thumb { width: 18px; height: 18px; background: #17300A; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1.5px #17300A; }
+  .ps-sec input.ps-range:focus-visible { box-shadow: 0 0 0 4px rgba(143,214,74,.4); }
+  .ps-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+  .ps-chips button { height: 46px; border: 1.5px solid #cfd3c6; background: #fff; font: inherit; font-size: 1.05rem; font-weight: 600; color: var(--ink); cursor: pointer; transition: all .15s; }
+  .ps-chips button:hover { border-color: #17300A; }
+  .ps-chips button.on { background: #17300A; border-color: #17300A; color: #fff; }
+  .ps-chips button::after { content: " שנה"; font-size: .8rem; font-weight: 400; opacity: .7; }
+
+  /* answer */
+  .ps-a { background: #17300A; color: #fff; padding: 34px 32px; display: flex; flex-direction: column; }
+  .ps-a-lab { font-size: 1rem; color: rgba(255,255,255,.7); }
+  .ps-big { direction: ltr; text-align: right; line-height: 1; margin-top: 10px; color: #8FD64A; }
+  .ps-big b { font-size: clamp(2.8rem, 6vw, 4rem); font-weight: 600; }
+  .ps-big .cur { font-size: 1.8rem; margin-left: 4px; }
+  .ps-a-sub { margin: 12px 0 0; font-size: 1rem; color: rgba(255,255,255,.8); }
+  .ps-ltv { margin-top: 30px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.15); }
+  .ps-ltv-top { display: flex; justify-content: space-between; align-items: baseline; font-size: .92rem; color: rgba(255,255,255,.75); }
+  .ps-ltv-top b { font-size: 1.3rem; color: #fff; }
+  .ps-bar { position: relative; height: 10px; margin-top: 12px; background: rgba(255,255,255,.14); }
+  .ps-bar i { display: block; height: 100%; background: #8FD64A; transition: width .25s ease; }
+  .ps-bar i.over { background: #F5A524; }
+  .ps-bar { margin-bottom: 28px; }
+  .ps-bar .cap { position: absolute; top: -6px; bottom: -6px; right: 85%; width: 2px; background: #fff; }
+  .ps-bar .cap::after { content: "עד 85%"; position: absolute; top: 24px; left: 50%; transform: translateX(-50%); font-size: .76rem; white-space: nowrap; color: rgba(255,255,255,.6); }
+  .ps-status { margin: 16px 0 0; font-size: .92rem; line-height: 1.5; }
+  .ps-status.ok { color: #8FD64A; }
+  .ps-status.warn { color: #FFC56B; }
+  .ps-status.bad { color: #FFB4A8; }
+  .ps-cta { margin-top: auto; width: 100%; height: 56px; border: 0; cursor: pointer; background: #8FD64A; color: #17300A; font: inherit; font-weight: 700; font-size: 1.05rem; display: inline-flex; align-items: center; justify-content: center; gap: 10px; transition: background .15s; }
+  .ps-a .ps-cta { margin-top: 28px; }
+  .ps-cta:hover { background: #a3e266; }
+  .ps-cta:disabled { opacity: .6; cursor: wait; }
+
+  /* lead step */
+  .ps-lead, .ps-done { max-width: 1000px; margin: 14px auto 0; background: #fff; border: 1px solid #d9dccf; padding: 22px 24px; }
+  .ps-lead { display: grid; gap: 14px; }
+  .ps-lead[hidden], .ps-done[hidden], .ps-cta[hidden] { display: none; }
+  .ps-lead-head { display: grid; gap: 4px; } .ps-lead-head b { font-size: 1.1rem; } .ps-lead-head span { font-size: .9rem; color: var(--muted); }
+  .ps-in3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .ps-in { display: grid; gap: 6px; } .ps-in label { font-size: .88rem; font-weight: 600; }
+  .ps-in input { height: 50px; border: 1.5px solid #cfd3c6; padding: 0 12px; font: inherit; font-size: 1rem; outline: 0; }
+  .ps-in input:focus { border-color: #17300A; }
+  .ps-hp { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); }
+  .ps-consent { display: flex; gap: 10px; font-size: .82rem; color: #33403a; line-height: 1.5; }
+  .ps-consent input { width: 18px; height: 18px; flex: none; margin-top: 2px; accent-color: #17300A; }
+  .ps-consent a { text-decoration: underline; }
+  .ps-err { margin: 0; color: #c0392b; font-size: .88rem; } .ps-err:empty { display: none; } .ps-err a { text-decoration: underline; }
+  .ps-send { background: var(--green); color: #fff; max-width: 320px; }
+  .ps-send:hover { background: var(--green-deep); }
+  .ps-done { display: grid; gap: 6px; border-inline-start: 4px solid #8FD64A; }
+  .ps-done b { font-size: 1.1rem; } .ps-done span { font-size: .9rem; color: var(--muted); }
+
+  .ps-how { max-width: 1000px; margin: 22px auto 0; }
+  .ps-how summary { cursor: pointer; font-weight: 600; font-size: .95rem; color: var(--green-deep); }
+  .ps-how ul { margin: 10px 0 0; padding-inline-start: 18px; display: grid; gap: 6px; font-size: .9rem; color: #33403a; }
+  .ps-legal { max-width: 1000px; margin: 12px auto 0; font-size: .78rem; color: var(--muted); line-height: 1.6; }
+
+  @media (max-width: 860px) {
+    .ps-sec { padding: 48px 0; }
+    .ps-card { grid-template-columns: 1fr; }
+    .ps-mini { display: flex; justify-content: space-between; align-items: baseline; position: sticky; top: 64px; z-index: 5; background: #17300A; color: rgba(255,255,255,.75); font-size: .85rem; padding: 10px 16px; }
+    .ps-mini b { color: #8FD64A; font-size: 1.1rem; }
+    .ps-q { padding: 0 18px 8px; }
+    .ps-num input { font-size: 1.6rem; }
+    .ps-a { padding: 26px 18px; }
+    .ps-in3 { grid-template-columns: 1fr; }
+    .ps-send { max-width: none; }
+  }
+</style>

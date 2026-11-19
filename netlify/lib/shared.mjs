@@ -31,7 +31,7 @@ export const phoneE164 = (p) => (/^05\d{8}$/.test(p) ? "972" + p.slice(1) : p);
  * Send one event to Meta Conversions API.
  * Only identity/context fields are sent (hashed) — NEVER amounts, lien status or loan data.
  */
-export async function sendCapi({ eventName, eventId, eventSourceUrl, req, fbp, fbc, user = {} }) {
+export async function sendCapi({ eventName, eventId, eventSourceUrl, req, fbp, fbc, user = {}, contentName = "car_equity_check" }) {
   const pixel = env("META_PIXEL_ID"), token = env("META_CAPI_TOKEN");
   if (!pixel || !token) return { skipped: true };
   const user_data = {
@@ -55,7 +55,7 @@ export async function sendCapi({ eventName, eventId, eventSourceUrl, req, fbp, f
       action_source: "website",
       event_source_url: eventSourceUrl,
       user_data,
-      custom_data: { content_name: "car_equity_check" },
+      custom_data: { content_name: contentName },
     }],
   };
   const testCode = env("META_TEST_EVENT_CODE");

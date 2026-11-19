@@ -4,4 +4,5 @@ export const BLOG_CATEGORIES = {
   car: { label: "הלוואה כנגד רכב", href: "/loans/neged-rechev/" },
   business: { label: "הלוואה לבעלי עסקים", href: "/loans/baaley-asakim/" },
   any: { label: "הלוואה לכל מטרה", href: "/loans/kol-matara/" },
+  property: { label: "הלוואה כנגד נכס", href: "/loans/neged-nechas/" },
 };

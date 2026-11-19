@@ -11,8 +11,8 @@ const blog = defineCollection({
     // תמונה לכרטיס המאמר (לא חובה)
     cover: z.string().optional(),
     // באילו עמודי הלוואה המאמר יופיע. אפשר כמה:
-    // car = כנגד רכב, business = בעלי עסקים, any = לכל מטרה
-    categories: z.array(z.enum(["car", "business", "any"])).default([]),
+    // car = כנגד רכב, business = בעלי עסקים, any = לכל מטרה, property = כנגד נכס
+    categories: z.array(z.enum(["car", "business", "any", "property"])).default([]),
     // תקציר קצר לכרטיס המאמר. אם אין, מוצג ה-description
     excerpt: z.string().optional(),
     draft: z.boolean().default(false),

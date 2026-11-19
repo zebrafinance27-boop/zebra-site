@@ -55,6 +55,7 @@ const faqSchema = faqs.length && {
   image={post.data.cover || "/images/zebra.webp"}
   type="article"
   checkCta={isCar}
+  mobileTab={false}
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
   {faqSchema && <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />}

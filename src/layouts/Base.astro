@@ -14,6 +14,7 @@ const {
   image = "/images/og-zebra.png",
   type = "website",
   checkCta = false,   // car pages: the floating CTA leads to the digital car check (/check/)
+  mobileTab = true,   // false: hide the floating bottom button on phones (home page + articles); the desktop side tab stays
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -100,6 +101,6 @@ const siteSchema = {
   <SiteScript />
   <CookieConsent />
   <AccessibilityWidget />
-  <LeadTab check={checkCta} />
+  <LeadTab check={checkCta} mobile={mobileTab} />
 </body>
 </html>

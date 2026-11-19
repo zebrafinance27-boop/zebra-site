@@ -2,15 +2,16 @@
 // דסקטופ: לשונית אנכית צמודה לקצה ימין.
 // מובייל: כפתור צף צמוד לתחתית בסגנון ה-CTA של ההדר, שמופיע רק אחרי שגוללים מעבר לטופס (#lead).
 // check=true (car page + car articles): the tab leads to the digital car check (/check/) instead of the form.
-const { check = false } = Astro.props;
+const { check = false, mobile = true } = Astro.props;   // mobile=false: no floating bottom button on phones
+const cls = "zb-lead-tab" + (mobile ? "" : " lt-no-mobile");
 ---
 {check ? (
-  <a id="zbLeadTab" class="zb-lead-tab" href="/check/" data-check="1" aria-label="בדיקת מימון לרכב">
+  <a id="zbLeadTab" class={cls} href="/check/" data-check="1" aria-label="בדיקת מימון לרכב">
     <span class="lt-side">בדיקת מימון לרכב</span>
     <span class="lt-pill">בדקו כמה תקבלו על הרכב</span>
   </a>
 ) : (
-  <a id="zbLeadTab" class="zb-lead-tab" href="#lead" aria-label="בדקו התאמה">
+  <a id="zbLeadTab" class={cls} href="#lead" aria-label="בדקו התאמה">
     <span class="lt-side">השאירו פרטים</span>
     <span class="lt-pill">בדקו התאמה תוך 30 שניות</span>
   </a>
@@ -124,7 +125,8 @@ const { check = false } = Astro.props;
     .zb-lead-tab:hover { padding-right: 20px; }  /* ביטול אפקט הדסקטופ */
     /* When the bottom bar is showing, the WhatsApp button rises above it */
     :global(.floaters) { transition: transform .32s cubic-bezier(.16,1,.3,1); }
-    :global(body:has(.zb-lead-tab.zb-show) .floaters) { transform: translateY(-70px); }
+    :global(body:has(.zb-lead-tab.zb-show:not(.lt-no-mobile)) .floaters) { transform: translateY(-70px); }
+    .zb-lead-tab.lt-no-mobile { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .zb-lead-tab { transition: background .18s, opacity .2s; }

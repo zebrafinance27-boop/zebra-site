@@ -6,6 +6,7 @@ import Base from "../../layouts/Base.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import RelatedArticles from "../../components/RelatedArticles.astro";
 import Steps from "../../components/Steps.astro";
+import PropertySim from "../../components/PropertySim.astro";
 
 const faqs = [
   { q: "מה זה הלוואה כנגד נכס?", a: "הלוואה שבה נכס נדל\"ן שבבעלותכם, כמו דירה או בית, משמש כבטוחה להחזר. הנכס נשאר בבעלותכם ואתם ממשיכים להשתמש בו כרגיל." },
@@ -32,12 +33,15 @@ const faqSchema = {
       <div class="biz-hero-text">
         <h1>הלוואה כנגד נכס</h1>
         <p>מימון על בסיס שווי הדירה או הבית שבבעלותכם. הנכס נשאר שלכם, ואתם ממשיכים לגור בו כרגיל.</p>
+        <a class="btn ps-hero-btn" href="#sim">לסימולטור ההלוואה</a>
         <span class="biz-for"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>גם כשיש משכנתא קיימת</span>
       </div>
       <!-- TODO (זברה): להחליף בתמונת זברה עם בית, כשתהיה -->
       <div class="biz-zebra biz-zebra-wide"><img src="/images/zebra.webp" alt="הזברה של זברה" width="700" height="623" fetchpriority="high"></div>
     </div>
   </section>
+
+  <PropertySim />
 
   <section class="block biz-sec">
     <div class="wrap biz-wrap">
@@ -106,3 +110,8 @@ const faqSchema = {
 
   <LeadForm />
 </Base>
+
+<style>
+  .ps-hero-btn { display: inline-flex; margin-top: 18px; text-decoration: none; }
+  @media (max-width: 720px) { .ps-hero-btn { padding: 12px 18px; font-size: .95rem; margin-top: 12px; } }
+</style>

@@ -32,6 +32,9 @@ const href = "/check/";
           <li>משחקים עם הסכום ומספר התשלומים ורואים את ההחזר מתעדכן</li>
           <li>נציג זברה ממשיך איתכם מהנתונים שכבר מילאתם</li>
         </ul>
+      </div>
+
+      <div class="cp-cta">
         <a class="btn cp-btn" href={href}>בדקו כמה תקבלו על הרכב</a>
         <small class="cp-note">סימולציה בלבד. אינה הצעת מימון או אישור אשראי.</small>
       </div>
@@ -82,7 +85,10 @@ const href = "/check/";
 
   /* ---------- full ---------- */
   .cp-sec { background: var(--cream); border-block: 1px solid var(--line); }
-  .cp-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  .cp-grid { display: grid; grid-template-columns: 1.05fr .95fr; grid-template-areas: "text preview" "cta preview"; gap: 0 56px; align-items: center; }
+  .cp-text { grid-area: text; align-self: end; }
+  .cp-cta { grid-area: cta; align-self: start; }
+  .cp-preview { grid-area: preview; }
   .cp-eyebrow { display: inline-block; font-size: .9rem; font-weight: 700; color: var(--green-deep); margin-bottom: 10px; }
   .cp-text h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.15; margin: 0 0 14px; }
   .cp-text p { font-size: 1.1rem; color: #33403a; line-height: 1.65; margin: 0 0 18px; }
@@ -114,14 +120,34 @@ const href = "/check/";
   .cp-routes li.on b { color: #8FD64A; }
   .cp-tag { position: absolute; top: -12px; inset-inline-end: 16px; background: #8FD64A; color: #17300A; font-size: .75rem; font-weight: 800; padding: 4px 10px; }
 
+  /* tablet + phone: text and preview stay side by side; the button spans the full width below */
   @media (max-width: 900px) {
-    .cp-grid { grid-template-columns: 1fr; gap: 34px; }
-    .cp-preview { transform: none; max-width: 460px; width: 100%; margin-inline: auto; }
-    .cp-preview:hover { transform: none; }
+    .cp-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-areas: "text preview" "cta cta"; gap: 0 18px; align-items: center; }
+    .cp-text { align-self: center; }
+    .cp-cta { margin-top: 22px; }
+    .cp-preview, .cp-preview:hover { transform: none; }
+    .cp-btn { width: 100%; justify-content: center; }
+    .cp-note { text-align: center; }
   }
   @media (max-width: 600px) {
-    .cp-text p { font-size: 1.02rem; }
-    .cp-btn { width: 100%; justify-content: center; }
-    .cp-big { font-size: 2.1rem; }
+    .cp-sec { padding: 44px 0; }
+    .cp-grid { gap: 0 12px; }
+    .cp-eyebrow { font-size: .74rem; margin-bottom: 6px; }
+    .cp-text h2 { font-size: 1.28rem; margin-bottom: 10px; }
+    .cp-text p { display: none; }
+    .cp-points { gap: 7px; margin: 0; }
+    .cp-points li { font-size: .82rem; line-height: 1.4; padding-inline-start: 21px; }
+    .cp-points li::before { width: 14px; height: 14px; top: 2px; background-size: 9px; }
+    .cp-panel { padding: 10px 10px 12px; background-size: 18px 18px; }
+    .cp-row { font-size: .6rem; padding-bottom: 6px; }
+    .cp-row span:last-child { display: none; }
+    .cp-label { font-size: .64rem; margin-top: 8px; }
+    .cp-big { font-size: 1.45rem; }
+    .cp-bar { height: 6px; margin-top: 9px; }
+    .cp-routes { padding: 5px; gap: 4px; }
+    .cp-routes li { padding: 7px 7px; font-size: .66rem; gap: 4px; }
+    .cp-routes li em { display: none; }
+    .cp-routes li b { font-size: .85rem; }
+    .cp-tag { font-size: .6rem; padding: 2px 6px; top: -9px; inset-inline-end: 8px; }
   }
 </style>

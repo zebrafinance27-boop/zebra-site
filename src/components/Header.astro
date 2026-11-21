@@ -1,23 +1,72 @@
 ---
 const { path = "" } = Astro.props;
+
+// "עולם המימון" — all financing products in one menu
+const solutions = [
+  { href: "/loans/kol-matara/", title: "הלוואה לכל מטרה", sub: "כל צורך, בלי ערבים ובלי בטחונות", img: "/images/zebra-any-purpose.webp" },
+  { href: "/loans/neged-rechev/", title: "הלוואה כנגד רכב", sub: "מימון לפי שווי הרכב, הרכב נשאר אצלכם", img: "/images/zebra-car.webp" },
+  { href: "/loans/neged-nechas/", title: "הלוואה כנגד נכס", sub: "מימון על בסיס שווי הדירה או הבית", img: "/images/zebra-property.webp" },
+  { href: "/loans/baaley-asakim/", title: "הלוואות לבעלי עסקים", sub: "הון חוזר, צמיחה וגישור על פערי תזרים", img: "/images/zebra-business.webp" },
+];
+// "סימולטורים" — the two digital calculators
+const sims = [
+  { href: "/check/", no: "01", title: "סימולטור רכב", sub: "כמה כסף תוכלו לקבל על הרכב", meta: "כדקה · 4 שאלות" },
+  { href: "/loans/neged-nechas/#sim", no: "02", title: "סימולטור נכס", sub: "כמה תחזירו בחודש על הלוואה כנגד נכס", meta: "3 שאלות · בלי להשאיר פרטים" },
+];
 const links = [
-  { href: "/", label: "בית" },
-  { href: "/loans/kol-matara/", label: "הלוואה לכל מטרה" },
-  { href: "/loans/baaley-asakim/", label: "לבעלי עסקים" },
-  { href: "/loans/neged-rechev/", label: "כנגד רכב" },
-  { href: "/loans/neged-nechas/", label: "כנגד נכס" },
-  { href: "/check/", label: "סימולטור רכב", check: true },
   { href: "/blog/", label: "מאמרים" },
   { href: "/reviews/", label: "המלצות" },
   { href: "/about/", label: "עלינו" },
 ];
-const isActive = (href) => href.startsWith("/#") ? false : href === "/" ? path === "/" : path.startsWith(href);
+const isActive = (href) => (href === "/" ? path === "/" : path.startsWith(href));
+const inSolutions = path.startsWith("/loans/");
 ---
 <header class="site-header">
   <div class="wrap header-row">
     <a class="brand" href="/" aria-label="זברה"><img src="/images/logo.png" alt="זברה" width="120" height="46"></a>
-    <nav class="site-nav" id="siteNav">
-      {links.map((l) => <a href={l.href} class={[isActive(l.href) ? "active" : "", l.cta ? "nav-cta" : "", l.check ? "nav-check" : ""].join(" ").trim() || undefined}>{l.label}</a>)}
+    <nav class="site-nav" id="siteNav" aria-label="ניווט ראשי">
+      <a href="/" class={isActive("/") ? "active" : undefined}>בית</a>
+
+      <div class="nav-dd" data-dd>
+        <button type="button" class={"dd-btn" + (inSolutions ? " active" : "")} aria-expanded="false" aria-controls="ddSolutions">עולם המימון<i class="dd-chev" aria-hidden="true"></i></button>
+        <div class="dd-panel dd-mega" id="ddSolutions">
+          <div class="dd-mega-grid">
+            <ul class="dd-sol">
+              {solutions.map((s) => (
+                <li><a href={s.href} class={path.startsWith(s.href) ? "here" : undefined}>
+                  <span class="dd-art"><img src={s.img} alt="" loading="lazy" width="96" height="96" /></span>
+                  <span class="dd-txt"><b>{s.title}</b><small>{s.sub}</small></span>
+                  <i class="dd-go" aria-hidden="true">←</i>
+                </a></li>
+              ))}
+            </ul>
+            <a class="dd-feature" href="/#lead">
+              <span class="dd-f-k">לא בטוחים מה מתאים לכם?</span>
+              <span class="dd-f-big"><b dir="ltr">~30</b> גופי מימון</span>
+              <span class="dd-f-sub">בודקים עבורכם את כולם. משלמים רק אחרי שהכסף בחשבון.</span>
+              <span class="dd-f-cta">בדקו התאמה תוך 30 שניות <i aria-hidden="true">←</i></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-dd" data-dd>
+        <button type="button" class="dd-btn dd-btn-sims" aria-expanded="false" aria-controls="ddSims"><span class="dd-dot" aria-hidden="true"></span>סימולטורים<i class="dd-chev" aria-hidden="true"></i></button>
+        <div class="dd-panel dd-sims" id="ddSims">
+          <div class="dd-sims-head">חשבו בעצמכם, תוך דקה</div>
+          <ul class="dd-sim">
+            {sims.map((s) => (
+              <li><a href={s.href}>
+                <span class="dd-sim-no">{s.no}</span>
+                <span class="dd-txt"><b>{s.title}</b><small>{s.sub}</small><em>{s.meta}</em></span>
+                <i class="dd-go" aria-hidden="true">←</i>
+              </a></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {links.map((l) => <a href={l.href} class={isActive(l.href) ? "active" : undefined}>{l.label}</a>)}
     </nav>
     <div class="header-cta">
       <a class="phone-link" id="hdrPhone" href="tel:0545995519">
@@ -32,3 +81,30 @@ const isActive = (href) => href.startsWith("/#") ? false : href === "/" ? path =
     </div>
   </div>
 </header>
+
+<script is:inline>
+/* menus: hover (desktop) or click/tap, Esc and click-outside close */
+(function () {
+  var dds = [].slice.call(document.querySelectorAll("[data-dd]"));
+  if (!dds.length) return;
+  var desk = window.matchMedia("(min-width:1041px) and (hover:hover)");
+  function set(dd, open) {
+    dd.classList.toggle("open", open);
+    dd.querySelector(".dd-btn").setAttribute("aria-expanded", String(open));
+  }
+  function closeAll(except) { dds.forEach(function (d) { if (d !== except) set(d, false); }); }
+  dds.forEach(function (dd) {
+    var btn = dd.querySelector(".dd-btn"), timer;
+    btn.addEventListener("click", function () { var o = !dd.classList.contains("open"); closeAll(dd); set(dd, o); });
+    dd.addEventListener("mouseenter", function () { if (!desk.matches) return; clearTimeout(timer); closeAll(dd); set(dd, true); });
+    dd.addEventListener("mouseleave", function () { if (!desk.matches) return; timer = setTimeout(function () { set(dd, false); }, 160); });
+    dd.addEventListener("focusout", function (e) { if (desk.matches && !dd.contains(e.relatedTarget)) set(dd, false); });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    var open = dds.filter(function (d) { return d.classList.contains("open"); })[0];
+    if (open) { set(open, false); open.querySelector(".dd-btn").focus(); }
+  });
+  document.addEventListener("click", function (e) { if (!e.target.closest("[data-dd]")) closeAll(); });
+})();
+</script>

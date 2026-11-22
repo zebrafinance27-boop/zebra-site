@@ -911,3 +911,30 @@ input[type=range]:active::-moz-range-thumb{transform:scale(1.18)}
   @keyframes zbProgress{to{transform:scaleX(1)}}
 }
 @media (prefers-reduced-motion:reduce){.site-header::after{display:none}.faq-item::details-content{transition:none}}
+
+/* ===== Questionnaire, visuals only (phase 7) =====
+   No change to questions, answers, flow, validation or sending.
+   - the chosen answer shows a check mark before moving on
+   - softer screen changes, progress bar with the brand stripes
+   - clearer focus on fields, readable error messages with an icon
+   - the success check draws itself */
+.opt-card{transition:border-color .18s,background .18s,transform .16s var(--ease-out),box-shadow .18s}
+.opt-card:active{transform:scale(.985)}
+.oc-arr{transition:border-color .15s,transform .25s var(--ease-out),width .25s var(--ease-out),height .25s var(--ease-out)}
+.opt-card.sel .oc-arr{width:13px;height:7px;border-color:var(--green-deep);transform:translateY(-2px) rotate(-45deg)}
+.opt-card.sel .oc-ic{animation:zbPop .35s var(--ease-out)}
+.screen{transition:opacity .34s var(--ease-out),transform .34s var(--ease-out),visibility 0s linear .34s}
+.screen.active{transition:opacity .34s var(--ease-out) .06s,transform .34s var(--ease-out) .06s}
+.wz-track i{transition:width .55s var(--ease-out);
+  background:repeating-linear-gradient(-58deg,rgba(255,255,255,.28) 0 5px,transparent 5px 12px),linear-gradient(90deg,var(--green),var(--green-deep));
+  background-size:28px 100%,100% 100%;animation:zbStripeRun 1.6s linear infinite}
+.field label{transition:color .18s}
+.field:focus-within label{color:var(--green-deep)}
+.field input:focus{border-color:var(--green-deep);box-shadow:0 0 0 4px rgba(67,125,32,.18)}
+.field input.invalid{border-color:#c03434;box-shadow:0 0 0 4px rgba(192,52,52,.12)}
+.err{color:#c03434;font-weight:600}
+.err.show{display:flex;align-items:center;gap:6px;animation:zbRise .25s var(--ease-out)}
+.err.show::before{content:"!";flex:none;width:16px;height:16px;border-radius:50%;background:#c03434;color:#fff;font-size:.72rem;font-weight:800;display:grid;place-items:center;line-height:1}
+.result .badge.ok svg path{stroke-dasharray:22;stroke-dashoffset:22;animation:zbDraw .5s var(--ease-out) .3s forwards}
+@keyframes zbDraw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.result .badge.ok svg path{stroke-dashoffset:0}.wz-track i{animation:none}}

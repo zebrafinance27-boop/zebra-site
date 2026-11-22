@@ -169,7 +169,8 @@ const countObs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersectin
 document.querySelectorAll(".bl .big[data-to]").forEach(el=>countObs.observe(el));
 
 /* ----- reveal on scroll ----- */
-const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.12});
+/* items that enter in the same frame get a small stagger (max 5 steps) */
+const io=new IntersectionObserver((es)=>{let k=0;es.forEach(e=>{if(e.isIntersecting){e.target.style.setProperty("--stagger",Math.min(k++,5)*0.08+"s");e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.12,rootMargin:"0px 0px -6% 0px"});
 document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
 
 

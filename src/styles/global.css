@@ -696,8 +696,8 @@ section.block.biz-sec.ab-first{padding-top:48px}
   background:#fff;border:1px solid #d9dccf;box-shadow:0 30px 60px -30px rgba(20,24,27,.45),0 2px 6px rgba(20,24,27,.05);transition:opacity .18s,transform .22s cubic-bezier(.2,.7,.3,1),visibility .18s;z-index:60}
 .dd-panel::before{content:"";position:absolute;top:-18px;inset-inline:0;height:18px}
 .nav-dd.open .dd-panel{opacity:1;visibility:visible;pointer-events:auto;transform:translate(50%,0)}
-.dd-mega{width:min(860px,100%)}
-.dd-mega-grid{display:grid;grid-template-columns:1fr 250px}
+.dd-mega{width:min(640px,100%)}
+.dd-mega-grid{display:block}
 .dd-sol{list-style:none;margin:0;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .dd-sol a,.dd-sim a{display:flex;align-items:center;gap:14px;padding:12px;color:var(--ink);text-decoration:none;border:1px solid transparent;transition:background .15s,border-color .15s}
 .dd-sol a:hover,.dd-sol a:focus-visible,.dd-sim a:hover,.dd-sim a:focus-visible{background:#F6F8F1;border-color:#e2e8d8;outline:0}

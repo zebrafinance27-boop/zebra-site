@@ -23,7 +23,7 @@ const faqSchema = {
 <section class="zh-hero">
   <div class="zh-bg" aria-hidden="true"><span class="zh-stripes"></span></div>
   <div class="wrap zh-hero-grid">
-    <div class="zh-hero-text reveal">
+    <div class="zh-hero-text">
       <span class="zh-eyebrow">עובדים בשבילך, לא בשביל הבנק.</span>
       <h1><span class="zh-h1-a">עולם של אפשרויות מימון.</span> <span class="zh-h1-b">חברה אחת בצד שלכם.</span></h1>
       <p class="lede">עם כ-30 גופי מימון וליווי מקצועי, אנחנו עוזרים ללקוחות פרטיים ולבעלי עסקים למצוא פתרונות אשראי שמתאימים לצרכים שלהם.</p>
@@ -37,10 +37,8 @@ const faqSchema = {
       </ul>
     </div>
 
-    <div class="zh-stage reveal" id="zhStage">
-      <div class="zh-halo" aria-hidden="true"></div>
-      <div class="zh-ring zh-ring1" aria-hidden="true"></div>
-      <div class="zh-ring zh-ring2" aria-hidden="true"></div>
+    <div class="zh-stage" id="zhStage">
+      <div class="zh-arch" aria-hidden="true"></div>
       <img class="zh-mascot" src="/images/zebra-mascot.webp" alt="הזברה של זברה מימון" width="820" height="1230" fetchpriority="high">
     </div>
   </div>
@@ -172,6 +170,24 @@ document.querySelectorAll(".zh-vid-frame").forEach(function(b){
 (function(){
   var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var fine=window.matchMedia("(pointer: fine)").matches;
+  /* hero depth (desktop only): layers follow the mouse at different depths and drift
+     at different speeds while scrolling. Uses the `translate` property, so it composes
+     with the entrance/float animations instead of replacing them. */
+  var hero=document.querySelector(".zh-hero");
+  if(hero&&!reduce&&window.matchMedia("(min-width: 901px)").matches){
+    var tx=0,ty=0,cx=0,cy=0,sy=0,raf=0;
+    var tick=function(){
+      cx+=(tx-cx)*.08;cy+=(ty-cy)*.08;
+      hero.style.setProperty("--px",cx.toFixed(3));hero.style.setProperty("--py",cy.toFixed(3));hero.style.setProperty("--sy",sy.toFixed(1));
+      raf=(Math.abs(tx-cx)>.002||Math.abs(ty-cy)>.002)?requestAnimationFrame(tick):0;
+    };
+    var kick=function(){if(!raf)raf=requestAnimationFrame(tick);};
+    if(fine){
+      hero.addEventListener("pointermove",function(e){var r=hero.getBoundingClientRect();tx=(e.clientX-r.left)/r.width*2-1;ty=(e.clientY-r.top)/r.height*2-1;kick();});
+      hero.addEventListener("pointerleave",function(){tx=0;ty=0;kick();});
+    }
+    window.addEventListener("scroll",function(){var y=Math.min(window.scrollY,hero.offsetHeight);if(y!==sy){sy=y;kick();}},{passive:true});
+  }
   /* 3D tilt on service cards */
   if(!reduce&&fine){
     document.querySelectorAll("[data-tilt]").forEach(function(card){

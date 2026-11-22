@@ -938,3 +938,38 @@ input[type=range]:active::-moz-range-thumb{transform:scale(1.18)}
 .result .badge.ok svg path{stroke-dasharray:22;stroke-dashoffset:22;animation:zbDraw .5s var(--ease-out) .3s forwards}
 @keyframes zbDraw{to{stroke-dashoffset:0}}
 @media (prefers-reduced-motion:reduce){.result .badge.ok svg path{stroke-dashoffset:0}.wz-track i{animation:none}}
+
+/* ===== Loan pages + articles, the gentle version (phase 8) =====
+   Same language as the home page, quieter. Loan pages: the hero enters line by line
+   and the zebra steps onto the same stripe arch; content rises into view as it is
+   scrolled to (CSS scroll-driven, no script; static where unsupported).
+   Articles stay reading-first: only the title area enters, and links get calmer underlines. */
+.biz-zebra::before{width:230px;height:230px;margin-left:-115px;bottom:14px;filter:none;
+  border-radius:50% 50% 14% 14%/34% 34% 8% 8%;transform-origin:50% 100%;
+  background:repeating-linear-gradient(-58deg,rgba(47,90,19,.085) 0 18px,transparent 18px 46px),linear-gradient(180deg,#f1f6ea,#e2ecd5);
+  box-shadow:inset 0 1px 0 #fff,0 26px 50px -34px rgba(47,90,19,.5);animation:zbArch .9s var(--ease-out) .08s backwards}
+.biz-zebra-wide::before{width:270px;margin-left:-135px}
+.biz-zebra img{animation:zbMascotIn .9s var(--ease-out) .2s backwards}
+.biz-hero-text>*{animation:zbRise .8s var(--ease-out) backwards}
+.biz-hero-text>:nth-child(2){animation-delay:.08s}
+.biz-hero-text>:nth-child(3){animation-delay:.16s}
+.biz-hero-text>:nth-child(4){animation-delay:.24s}
+@media (max-width:720px){.biz-zebra::before,.biz-zebra-wide::before{width:124px;height:132px;margin-left:-62px;bottom:6px}}
+
+.biz-card{transition:translate .3s var(--ease-out),box-shadow .3s var(--ease-out),border-color .3s}
+.biz-ic,.biz-ic svg{transition:background .25s,stroke .25s}
+@media (hover:hover){
+  .biz-card:hover{translate:0 -3px;border-color:#d6e5c5;box-shadow:0 24px 40px -26px rgba(76,138,36,.45)}
+  .biz-card:hover .biz-ic{background:var(--green)}
+  .biz-card:hover .biz-ic svg{stroke:#fff}
+}
+@supports (animation-timeline:view()){
+  .biz-card,.biz-docs,.biz-h2,.biz-sec .prose>*,.biz-faq .faq-item{animation:zbRise linear both;animation-timeline:view();animation-range:entry 0% entry 45%}
+}
+
+.article-head>*{animation:zbRise .7s var(--ease-out) backwards}
+.article-head>:nth-child(2){animation-delay:.06s}
+.article-head>:nth-child(3){animation-delay:.12s}
+.prose a{text-decoration-color:rgba(67,125,32,.45);text-underline-offset:3px;text-decoration-thickness:1.5px;transition:text-decoration-color .2s,color .2s}
+.prose a:hover{color:var(--green-darker);text-decoration-color:currentColor}
+@media (prefers-reduced-motion:reduce){.biz-zebra::before{animation:none}}

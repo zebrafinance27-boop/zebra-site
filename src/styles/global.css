@@ -163,8 +163,7 @@ section.block{padding:80px 0}
 .fab.call{background:var(--green-deep)}
 .fab.call svg{stroke:#fff;fill:none;stroke-width:2}
 
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
-.reveal.in{opacity:1;transform:none}
+/* reveal: see "motion system" at the end of the file */
 
 @media (max-width:900px){
   .cards,.steps,.quotes{grid-template-columns:1fr}
@@ -176,7 +175,7 @@ section.block{padding:80px 0}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-  .reveal{opacity:1;transform:none}
+  .reveal,.reveal:not(.in){opacity:1;transform:none}
   .screen{transition:none}
 }
 /* ===== navigation (multi-page) ===== */
@@ -282,13 +281,6 @@ h1,h2,h3,h4,.display{font-weight:900}
 .bl .big{color:#fff}
 .bl .big::after{content:"";display:block;width:34px;height:4px;border-radius:3px;background:var(--amber);margin:8px auto 0}
 
-/* ---- reveal: add gentle rise+scale, with stagger in grids ---- */
-.reveal{opacity:0;transform:translateY(26px) scale(.985);transition:opacity .6s ease,transform .6s cubic-bezier(.3,.7,.4,1)}
-.reveal.in{opacity:1;transform:none}
-.cards .card:nth-child(2){transition-delay:.08s}
-.cards .card:nth-child(3){transition-delay:.16s}
-.quotes .quote:nth-child(2){transition-delay:.08s}
-.quotes .quote:nth-child(3){transition-delay:.16s}
 
 /* ---- eyebrow gets a little energy ---- */
 .eyebrow::before{background:linear-gradient(90deg,var(--green),var(--amber))}
@@ -746,3 +738,253 @@ section.block.biz-sec.ab-first{padding-top:48px}
 .site-nav .dd-panel a{white-space:normal}
 .site-nav a.dd-feature{padding:22px 20px;white-space:normal;font-size:1rem;font-weight:400;color:#fff}
 .site-nav a.dd-feature:hover{color:#fff}
+
+/* ===== Motion system + accessibility base (phase 1) =====
+   One rhythm for the whole site: a short rise with a soft ease-out.
+   The reveal is an animation (not a transition) so it never fights the
+   hover/tilt transitions of the element itself; groups that enter together
+   get a small stagger (--stagger is set by the observer in SiteScript). */
+:root{--ease-out:cubic-bezier(.16,1,.3,1);--ease-io:cubic-bezier(.65,0,.35,1);--d-fast:.18s;--d-mid:.32s;--d-slow:.7s}
+.reveal:not(.in){opacity:0}
+.reveal.in{animation:zbRise var(--d-slow) var(--ease-out) var(--stagger,0s) backwards}
+@keyframes zbRise{from{opacity:0;transform:translate3d(0,18px,0)}}
+@media (scripting:none){.reveal:not(.in){opacity:1}}
+
+/* buttons: no shine sweep; quiet lift on mouse, press feedback on touch */
+.btn::after{content:none}
+.btn{transition:transform var(--d-fast) var(--ease-out),box-shadow var(--d-fast) var(--ease-out),background-position var(--d-mid) var(--ease-out)}
+@media (hover:none){.btn:hover{transform:none}}
+.btn:active{transform:scale(.97)}
+
+/* keyboard focus: one clear ring everywhere */
+:where(a,button,summary,[tabindex]):focus-visible{outline:3px solid var(--green-deep);outline-offset:3px}
+input[type=range]:focus-visible{outline:3px solid var(--green-deep);outline-offset:6px}
+.field input:focus-visible{box-shadow:0 0 0 4px rgba(67,125,32,.3)}
+footer.ft :focus-visible,.zb-lead-tab:focus-visible{outline-color:#fff}
+
+/* closed mobile menu is out of the tab order */
+@media (max-width:1040px){
+  .site-nav{visibility:hidden;transition:transform .3s var(--ease-out),visibility 0s linear .3s}
+  .site-nav.open{visibility:visible;transition:transform .3s var(--ease-out)}
+}
+@media (prefers-reduced-motion:reduce){.reveal:not(.in){opacity:1}}
+
+/* ===== Hero (phase 2): staged entrance + depth from the brand stripes =====
+   The old glow + dashed rings are replaced by an arch of zebra stripes that the
+   mascot's head breaks out of. On desktop, --px/--py (mouse) and --sy (scroll)
+   are set by index.astro and move each layer at its own depth. */
+.zh-arch{position:absolute;left:50%;bottom:26px;width:400px;height:470px;margin-left:-200px;z-index:1;
+  border-radius:50% 50% 14% 14%/34% 34% 8% 8%;overflow:hidden;transform-origin:50% 100%;
+  background:linear-gradient(180deg,#f1f6ea 0%,#e2ecd5 100%);
+  box-shadow:inset 0 1px 0 #fff,0 34px 60px -38px rgba(47,90,19,.5);
+  translate:calc(var(--px,0)*-10px) calc(var(--py,0)*-6px + var(--sy,0)*.1px)}
+.zh-arch::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-58deg,rgba(47,90,19,.085) 0 22px,transparent 22px 56px)}
+.zh-arch::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(226,236,213,.9))}
+.zh-mascot{translate:calc(var(--px,0)*14px) calc(var(--py,0)*8px + var(--sy,0)*.04px)}
+.zh-stripes{translate:calc(var(--px,0)*6px) calc(var(--sy,0)*.22px)}
+@media (max-width:900px){
+  .zh-arch{width:88%;height:84%;left:6%;margin-left:0;bottom:3%}
+}
+
+/* entrance: text line by line, then the arch rises and the zebra steps onto it */
+.zh-hero .zh-eyebrow,.zh-hero .zh-h1-a,.zh-hero .zh-h1-b,.zh-hero .lede,.zh-hero .hero-actions,.zh-hero .zh-trust{animation:zbRise .8s var(--ease-out) backwards}
+.zh-hero .zh-h1-a{animation-delay:.07s}
+.zh-hero .zh-h1-b{animation-delay:.16s}
+.zh-hero .lede{animation-delay:.26s}
+.zh-hero .hero-actions{animation-delay:.34s}
+.zh-hero .zh-trust{animation-delay:.42s}
+.zh-arch{animation:zbArch .9s var(--ease-out) .08s backwards}
+@keyframes zbArch{from{opacity:0;transform:scaleY(.82)}}
+.zh-mascot{animation:zbMascotIn .9s var(--ease-out) .2s backwards,zhFloatSoft 9s ease-in-out 1.2s infinite}
+@keyframes zbMascotIn{from{opacity:0;transform:translateY(30px) scale(.96)}}
+@media (prefers-reduced-motion:reduce){.zh-arch,.zh-mascot{translate:none;animation:none}}
+
+/* ===== Service cards (phase 3) =====
+   Calmer tilt (set in index.astro), and on hover / keyboard focus the card "wakes up":
+   brand stripes appear behind the zebra, its glow brightens, the zebra lifts,
+   a green line draws under the art and the arrow nudges forward.
+   Touch screens get a press response instead of hover. */
+.zh-card{transition:transform .35s var(--ease-out),box-shadow .3s var(--ease-out),border-color .3s}
+.zh-card-art::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .45s var(--ease-out);
+  background:repeating-linear-gradient(-58deg,rgba(47,90,19,.07) 0 18px,transparent 18px 46px);
+  -webkit-mask-image:radial-gradient(ellipse 70% 80% at 50% 80%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse 70% 80% at 50% 80%,#000 20%,transparent 75%)}
+.zh-card-art::after{content:"";position:absolute;inset-inline:22px;bottom:0;height:2px;border-radius:2px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);transform:scaleX(0);transition:transform .5s var(--ease-out)}
+.zh-card-glow{opacity:.75;transition:opacity .4s var(--ease-out),transform .4s var(--ease-out)}
+.zh-card-art img{transition:transform .45s var(--ease-out)}
+.zh-more i{transition:transform .3s var(--ease-out)}
+@media (hover:hover){
+  .zh-card:hover .zh-card-art::before{opacity:1}
+  .zh-card:hover .zh-card-art::after{transform:scaleX(1)}
+  .zh-card:hover .zh-card-glow{opacity:1;transform:scale(1.15)}
+}
+.zh-card:focus-visible{box-shadow:0 34px 60px -28px rgba(76,138,36,.5);border-color:#d6e5c5}
+.zh-card:focus-visible .zh-card-art::before{opacity:1}
+.zh-card:focus-visible .zh-card-art::after{transform:scaleX(1)}
+.zh-card:focus-visible .zh-card-glow{opacity:1;transform:scale(1.15)}
+.zh-card:focus-visible .zh-card-art img{transform:translateY(-8px) scale(1.04)}
+.zh-card:focus-visible .zh-more i{transform:translateX(-4px) rotate(45deg)}
+@media (hover:none){
+  .zh-card:hover .zh-card-art img{transform:none}
+  .zh-card:active{transform:scale(.98);transition-duration:.12s}
+  .zh-card:active .zh-card-art img{transform:translateY(-5px) scale(1.03);transition-duration:.18s}
+  .zh-card:active .zh-card-art::before{opacity:1}
+}
+
+/* ===== Dark statement panel + stripe wipe (phase 4) =====
+   "אנחנו לא מלווים. אנחנו מתווכים." becomes the one dark moment of the page,
+   in the footer's deep brand green. When it enters, the zebra stripes sweep
+   across it (right to left, RTL); while scrolling past, they drift slowly. */
+.advocate{background:linear-gradient(150deg,#2f5a13 0%,#24470e 55%,#1d3a0b 100%);border:0;color:#fff;isolation:isolate;
+  padding:64px 6vw;box-shadow:0 44px 80px -52px rgba(29,58,11,.85)}
+.advocate::before{content:"";position:absolute;inset:-12% -6%;z-index:-1;pointer-events:none;
+  background:repeating-linear-gradient(-58deg,rgba(255,255,255,.07) 0 26px,transparent 26px 64px);
+  -webkit-mask-image:radial-gradient(ellipse 55% 60% at 50% 50%,rgba(0,0,0,.25),#000 85%);mask-image:radial-gradient(ellipse 55% 60% at 50% 50%,rgba(0,0,0,.25),#000 85%);
+  clip-path:inset(0 0 0 100%);transition:clip-path 1.3s var(--ease-io) .15s}
+.advocate.in::before{clip-path:inset(0)}
+.advocate::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 88% -10%,rgba(149,201,94,.32),transparent 48%),radial-gradient(circle at 8% 110%,rgba(149,201,94,.16),transparent 45%)}
+.advocate h2{color:#fff}
+.advocate>p{color:rgba(255,255,255,.86)}
+.adv-chips span{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:#fff}
+.adv-chips span svg{stroke:#b9e08f}
+.advocate :focus-visible{outline-color:#fff}
+@supports (animation-timeline:view()){
+  .advocate::before{animation:zbDrift linear both;animation-timeline:view()}
+  @keyframes zbDrift{from{translate:0 -28px}to{translate:0 28px}}
+}
+@media (max-width:600px){.advocate{padding:44px 22px;border-radius:24px}}
+@media (prefers-reduced-motion:reduce){.advocate::before{animation:none;clip-path:none;transition:none}}
+
+/* ===== Four steps as a scroll story (phase 5) =====
+   The line fills with moving brand stripes; each step lights up as it is reached
+   with a small pop, and the latest one ("current") gets a soft pulse and a green title. */
+.zh-line i{background:repeating-linear-gradient(-58deg,rgba(255,255,255,.28) 0 6px,transparent 6px 14px),linear-gradient(270deg,var(--green),var(--green-deep));background-size:32px 100%,100% 100%;animation:zbStripeRun 1.6s linear infinite}
+@keyframes zbStripeRun{to{background-position:-32px 0,0 0}}
+.zh-num{transition:background .35s var(--ease-out),color .35s,border-color .35s,transform .45s var(--ease-out),box-shadow .35s}
+.zh-step.on .zh-num{animation:zbPop .5s var(--ease-out)}
+@keyframes zbPop{40%{transform:translateY(-3px) scale(1.12)}}
+.zh-step .zh-num::after{content:"";position:absolute;inset:-7px;border-radius:25px;border:2px solid var(--green);opacity:0;pointer-events:none}
+.zh-step.cur .zh-num::after{animation:zbPulse 2.2s var(--ease-out) .3s infinite}
+@keyframes zbPulse{0%{opacity:.55;transform:scale(.92)}70%,100%{opacity:0;transform:scale(1.18)}}
+.zh-step h3{transition:color .35s}
+.zh-step.cur h3{color:var(--green-deep)}
+@media (prefers-reduced-motion:reduce){.zh-line i,.zh-step .zh-num::after{animation:none}}
+
+/* ===== Small details (phase 6): calculator, FAQ, videos, header ===== */
+/* calculator: steady digits while the number rolls; thumb grows while dragging */
+.cr-amount{font-variant-numeric:tabular-nums}
+input[type=range]::-webkit-slider-thumb{transition:transform .18s var(--ease-out)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.18)}
+input[type=range]::-moz-range-thumb{transition:transform .18s var(--ease-out)}
+input[type=range]:active::-moz-range-thumb{transform:scale(1.18)}
+
+/* FAQ: answers slide open smoothly (where the browser supports it) and fade in */
+@media (hover:hover){.faq-item summary:hover{color:var(--green-deep)}}
+.faq-item summary{transition:color .2s}
+.faq-item summary .fq-ic{transition:transform .35s var(--ease-out),background .2s}
+.faq-item[open] .faq-a{animation:zbRise .45s var(--ease-out)}
+@supports selector(::details-content){
+  .faq-item{interpolate-size:allow-keywords}
+  .faq-item::details-content{block-size:0;overflow:hidden;transition:block-size .38s var(--ease-out),content-visibility .38s allow-discrete}
+  .faq-item[open]::details-content{block-size:auto}
+}
+
+/* testimonial videos: the card lifts and the play button glows, on hover and on keyboard focus */
+.zh-vid-frame{transition:transform .4s var(--ease-out),box-shadow .4s var(--ease-out)}
+.zh-vid-frame img{transition:transform .6s var(--ease-out)}
+.zh-play{transition:transform .3s var(--ease-out),background .3s}
+@media (hover:hover){.zh-vid-frame:hover{transform:translateY(-4px);box-shadow:0 30px 50px -28px rgba(20,24,27,.55)}}
+.zh-vid-frame:focus-visible{transform:translateY(-4px)}
+.zh-vid-frame:focus-visible img{transform:scale(1.04)}
+.zh-vid-frame:focus-visible .zh-play{transform:scale(1.1);background:var(--green)}
+@media (hover:none){.zh-vid-frame:active{transform:scale(.98)}}
+
+/* header: gains depth once the page scrolls, with a thin green reading-progress line.
+   Pure CSS (scroll-driven); browsers without support simply keep today's header. */
+@supports (animation-timeline:scroll()){
+  .site-header{animation:zbHdr linear both;animation-timeline:scroll(root);animation-range:0 120px}
+  @keyframes zbHdr{to{background:rgba(246,245,239,.94);box-shadow:0 10px 30px -22px rgba(20,24,27,.45)}}
+  .site-header::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:2px;pointer-events:none;
+    background:linear-gradient(270deg,var(--green),var(--green-deep));transform-origin:right;transform:scaleX(0);
+    animation:zbProgress linear both;animation-timeline:scroll(root)}
+  @keyframes zbProgress{to{transform:scaleX(1)}}
+}
+@media (prefers-reduced-motion:reduce){.site-header::after{display:none}.faq-item::details-content{transition:none}}
+
+/* ===== Questionnaire, visuals only (phase 7) =====
+   No change to questions, answers, flow, validation or sending.
+   - the chosen answer shows a check mark before moving on
+   - softer screen changes, progress bar with the brand stripes
+   - clearer focus on fields, readable error messages with an icon
+   - the success check draws itself */
+.opt-card{transition:border-color .18s,background .18s,transform .16s var(--ease-out),box-shadow .18s}
+.opt-card:active{transform:scale(.985)}
+.oc-arr{transition:border-color .15s,transform .25s var(--ease-out),width .25s var(--ease-out),height .25s var(--ease-out)}
+.opt-card.sel .oc-arr{width:13px;height:7px;border-color:var(--green-deep);transform:translateY(-2px) rotate(-45deg)}
+.opt-card.sel .oc-ic{animation:zbPop .35s var(--ease-out)}
+.screen{transition:opacity .34s var(--ease-out),transform .34s var(--ease-out),visibility 0s linear .34s}
+.screen.active{transition:opacity .34s var(--ease-out) .06s,transform .34s var(--ease-out) .06s}
+.wz-track i{transition:width .55s var(--ease-out);
+  background:repeating-linear-gradient(-58deg,rgba(255,255,255,.28) 0 5px,transparent 5px 12px),linear-gradient(90deg,var(--green),var(--green-deep));
+  background-size:28px 100%,100% 100%;animation:zbStripeRun 1.6s linear infinite}
+.field label{transition:color .18s}
+.field:focus-within label{color:var(--green-deep)}
+.field input:focus{border-color:var(--green-deep);box-shadow:0 0 0 4px rgba(67,125,32,.18)}
+.field input.invalid{border-color:#c03434;box-shadow:0 0 0 4px rgba(192,52,52,.12)}
+.err{color:#c03434;font-weight:600}
+.err.show{display:flex;align-items:center;gap:6px;animation:zbRise .25s var(--ease-out)}
+.err.show::before{content:"!";flex:none;width:16px;height:16px;border-radius:50%;background:#c03434;color:#fff;font-size:.72rem;font-weight:800;display:grid;place-items:center;line-height:1}
+.result .badge.ok svg path{stroke-dasharray:22;stroke-dashoffset:22;animation:zbDraw .5s var(--ease-out) .3s forwards}
+@keyframes zbDraw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.result .badge.ok svg path{stroke-dashoffset:0}.wz-track i{animation:none}}
+
+/* ===== Loan pages + articles, the gentle version (phase 8) =====
+   Same language as the home page, quieter. Loan pages: the hero enters line by line
+   and the zebra steps onto the same stripe arch; content rises into view as it is
+   scrolled to (CSS scroll-driven, no script; static where unsupported).
+   Articles stay reading-first: only the title area enters, and links get calmer underlines. */
+.biz-zebra::before{width:230px;height:230px;margin-left:-115px;bottom:14px;filter:none;
+  border-radius:50% 50% 14% 14%/34% 34% 8% 8%;transform-origin:50% 100%;
+  background:repeating-linear-gradient(-58deg,rgba(47,90,19,.085) 0 18px,transparent 18px 46px),linear-gradient(180deg,#f1f6ea,#e2ecd5);
+  box-shadow:inset 0 1px 0 #fff,0 26px 50px -34px rgba(47,90,19,.5);animation:zbArch .9s var(--ease-out) .08s backwards}
+.biz-zebra-wide::before{width:270px;margin-left:-135px}
+.biz-zebra img{animation:zbMascotIn .9s var(--ease-out) .2s backwards}
+.biz-hero-text>*{animation:zbRise .8s var(--ease-out) backwards}
+.biz-hero-text>:nth-child(2){animation-delay:.08s}
+.biz-hero-text>:nth-child(3){animation-delay:.16s}
+.biz-hero-text>:nth-child(4){animation-delay:.24s}
+@media (max-width:720px){.biz-zebra::before,.biz-zebra-wide::before{width:124px;height:132px;margin-left:-62px;bottom:6px}}
+
+.biz-card{transition:translate .3s var(--ease-out),box-shadow .3s var(--ease-out),border-color .3s}
+.biz-ic,.biz-ic svg{transition:background .25s,stroke .25s}
+@media (hover:hover){
+  .biz-card:hover{translate:0 -3px;border-color:#d6e5c5;box-shadow:0 24px 40px -26px rgba(76,138,36,.45)}
+  .biz-card:hover .biz-ic{background:var(--green)}
+  .biz-card:hover .biz-ic svg{stroke:#fff}
+}
+@supports (animation-timeline:view()){
+  .biz-card,.biz-docs,.biz-h2,.biz-sec .prose>*,.biz-faq .faq-item{animation:zbRise linear both;animation-timeline:view();animation-range:entry 0% entry 45%}
+}
+
+.article-head>*{animation:zbRise .7s var(--ease-out) backwards}
+.article-head>:nth-child(2){animation-delay:.06s}
+.article-head>:nth-child(3){animation-delay:.12s}
+.prose a{text-decoration-color:rgba(67,125,32,.45);text-underline-offset:3px;text-decoration-thickness:1.5px;transition:text-decoration-color .2s,color .2s}
+.prose a:hover{color:var(--green-darker);text-decoration-color:currentColor}
+@media (prefers-reduced-motion:reduce){.biz-zebra::before{animation:none}}
+
+/* ===== Polish: stronger arch stripes + two more stripe seams ===== */
+.zh-arch::before{background:repeating-linear-gradient(-58deg,rgba(47,90,19,.13) 0 22px,transparent 22px 56px)}
+.zh-arch::after{background:linear-gradient(180deg,transparent 65%,rgba(226,236,213,.75))}
+/* a short band of zebra stripes along the top edge of the steps and FAQ sections,
+   drawing itself out from the centre as the section scrolls in */
+.zh-how,.zh-faq{position:relative}
+.zh-how::before,.zh-faq::before{content:"";position:absolute;top:-1px;left:50%;width:min(560px,70vw);margin-left:calc(min(560px,70vw) / -2);height:6px;pointer-events:none;
+  background:repeating-linear-gradient(-58deg,var(--green) 0 6px,transparent 6px 14px);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);opacity:.55}
+@supports (animation-timeline:view()){
+  .zh-how::before,.zh-faq::before{animation:zbSeam linear both;animation-timeline:view();animation-range:entry 0% entry 70%}
+  @keyframes zbSeam{from{transform:scaleX(0)}}
+}
+@media (prefers-reduced-motion:reduce){.zh-how::before,.zh-faq::before{animation:none}}

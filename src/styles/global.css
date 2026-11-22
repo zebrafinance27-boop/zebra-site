@@ -679,3 +679,70 @@ section.block.biz-sec.ab-first{padding-top:48px}
 .zh-cards-4 .zh-card-art{margin:0 -20px 16px}
 @media (max-width:1100px){.zh-cards.zh-cards-4{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:600px){.zh-cards.zh-cards-4{gap:10px}.zh-cards-4 .zh-card{padding:0 8px 12px}.zh-cards-4 .zh-card-art{margin:0 -8px 8px}}
+
+/* ===== header dropdowns: "עולם המימון" + "סימולטורים" ===== */
+.header-row{position:relative}
+.nav-dd{position:static}
+.dd-btn{font:inherit;font-weight:600;font-size:.98rem;color:var(--ink);background:none;border:0;padding:4px 0;cursor:pointer;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;position:relative}
+.dd-btn:hover,.nav-dd.open .dd-btn{color:var(--green-deep)}
+.dd-btn.active::after{content:"";position:absolute;bottom:-2px;inset-inline:0;height:2px;background:var(--green);border-radius:2px}
+.dd-chev{width:7px;height:7px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(-45deg);transition:transform .2s}
+.nav-dd.open .dd-chev{transform:translateY(1px) rotate(135deg)}
+.dd-btn-sims{color:#17300A;background:#EEF4E7;border:1px solid #cfe2b9;padding:5px 11px;font-weight:700}
+.dd-btn-sims:hover,.nav-dd.open .dd-btn-sims{background:#17300A;color:#fff;border-color:#17300A}
+.dd-dot{width:7px;height:7px;background:#8FD64A;box-shadow:0 0 0 3px rgba(143,214,74,.3)}
+
+.dd-panel{position:absolute;top:calc(100% - 4px);right:50%;transform:translate(50%,8px);opacity:0;visibility:hidden;pointer-events:none;
+  background:#fff;border:1px solid #d9dccf;box-shadow:0 30px 60px -30px rgba(20,24,27,.45),0 2px 6px rgba(20,24,27,.05);transition:opacity .18s,transform .22s cubic-bezier(.2,.7,.3,1),visibility .18s;z-index:60}
+.dd-panel::before{content:"";position:absolute;top:-18px;inset-inline:0;height:18px}
+.nav-dd.open .dd-panel{opacity:1;visibility:visible;pointer-events:auto;transform:translate(50%,0)}
+.dd-mega{width:min(640px,100%)}
+.dd-mega-grid{display:block}
+.dd-sol{list-style:none;margin:0;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.dd-sol a,.dd-sim a{display:flex;align-items:center;gap:14px;padding:12px;color:var(--ink);text-decoration:none;border:1px solid transparent;transition:background .15s,border-color .15s}
+.dd-sol a:hover,.dd-sol a:focus-visible,.dd-sim a:hover,.dd-sim a:focus-visible{background:#F6F8F1;border-color:#e2e8d8;outline:0}
+.dd-sol a.here{background:#F6F8F1}
+.dd-art{flex:none;width:64px;height:64px;background:linear-gradient(180deg,#EEF4E7,#fff);display:grid;place-items:end center;overflow:hidden}
+.dd-art img{width:60px;height:60px;object-fit:contain;object-position:bottom;transition:transform .25s cubic-bezier(.3,.7,.4,1)}
+.dd-sol a:hover .dd-art img{transform:translateY(-3px) scale(1.06)}
+.dd-txt{flex:1;display:grid;gap:3px;min-width:0}
+.dd-txt b{font-size:1rem;font-weight:700}
+.dd-txt small{font-size:.84rem;color:var(--muted);line-height:1.4}
+.dd-txt em{font-style:normal;font-size:.76rem;color:var(--green-deep);font-weight:600;margin-top:2px}
+.dd-go{font-style:normal;color:var(--green-deep);opacity:0;transform:translateX(6px);transition:opacity .15s,transform .15s}
+.dd-sol a:hover .dd-go,.dd-sim a:hover .dd-go{opacity:1;transform:none}
+.dd-feature{display:flex;flex-direction:column;gap:6px;padding:22px 20px;background:#17300A;color:#fff;text-decoration:none;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:24px 24px}
+.dd-f-k{font-size:.84rem;color:rgba(255,255,255,.65)}
+.dd-f-big{font-size:1.05rem;color:#fff;margin-top:4px}
+.dd-f-big b{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:2rem;font-weight:600;color:#8FD64A;letter-spacing:-.03em;margin-inline-end:4px}
+.dd-f-sub{font-size:.86rem;color:rgba(255,255,255,.75);line-height:1.5}
+.dd-f-cta{margin-top:auto;padding-top:14px;font-weight:700;color:#8FD64A;display:inline-flex;gap:8px}
+.dd-feature:hover .dd-f-cta i{transform:translateX(-4px)}
+.dd-f-cta i{font-style:normal;transition:transform .2s}
+.dd-sims{width:min(520px,100%)}
+.dd-sims-head{padding:14px 22px 10px;font-size:.82rem;color:var(--muted);border-bottom:1px solid var(--line)}
+.dd-sim{list-style:none;margin:0;padding:8px;display:grid;gap:4px}
+.dd-sim-no{flex:none;width:44px;height:44px;display:grid;place-items:center;background:#17300A;color:#8FD64A;font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;font-size:.95rem}
+
+@media (min-width:1041px) and (max-width:1260px){.dd-btn{font-size:.92rem}}
+@media (max-width:1040px){
+  .site-nav{max-height:calc(100dvh - 64px);overflow-y:auto}
+  .nav-dd{width:100%}
+  .dd-btn{width:100%;justify-content:space-between;font-size:1rem}
+  .dd-btn-sims{padding:8px 12px}
+  .dd-panel{position:static;transform:none;opacity:1;visibility:visible;pointer-events:auto;box-shadow:none;border:0;width:100%;display:none;margin-top:8px}
+  .nav-dd.open .dd-panel{display:block;transform:none}
+  .dd-panel::before{display:none}
+  .dd-mega-grid{grid-template-columns:1fr}
+  .dd-sol{grid-template-columns:1fr;padding:0;gap:2px}
+  .dd-sol a,.dd-sim a{padding:8px 6px;gap:12px}
+  .dd-art{width:48px;height:48px}.dd-art img{width:46px;height:46px}
+  .dd-feature,.dd-sims-head{display:none}
+  .dd-sim{padding:0}
+  .dd-sim-no{width:38px;height:38px}
+  .dd-go{display:none}
+}
+.site-nav .dd-panel a{white-space:normal}
+.site-nav a.dd-feature{padding:22px 20px;white-space:normal;font-size:1rem;font-weight:400;color:#fff}
+.site-nav a.dd-feature:hover{color:#fff}

@@ -798,3 +798,35 @@ footer.ft :focus-visible,.zb-lead-tab:focus-visible{outline-color:#fff}
 .zh-mascot{animation:zbMascotIn .9s var(--ease-out) .2s backwards,zhFloatSoft 9s ease-in-out 1.2s infinite}
 @keyframes zbMascotIn{from{opacity:0;transform:translateY(30px) scale(.96)}}
 @media (prefers-reduced-motion:reduce){.zh-arch,.zh-mascot{translate:none;animation:none}}
+
+/* ===== Service cards (phase 3) =====
+   Calmer tilt (set in index.astro), and on hover / keyboard focus the card "wakes up":
+   brand stripes appear behind the zebra, its glow brightens, the zebra lifts,
+   a green line draws under the art and the arrow nudges forward.
+   Touch screens get a press response instead of hover. */
+.zh-card{transition:transform .35s var(--ease-out),box-shadow .3s var(--ease-out),border-color .3s}
+.zh-card-art::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .45s var(--ease-out);
+  background:repeating-linear-gradient(-58deg,rgba(47,90,19,.07) 0 18px,transparent 18px 46px);
+  -webkit-mask-image:radial-gradient(ellipse 70% 80% at 50% 80%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse 70% 80% at 50% 80%,#000 20%,transparent 75%)}
+.zh-card-art::after{content:"";position:absolute;inset-inline:22px;bottom:0;height:2px;border-radius:2px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);transform:scaleX(0);transition:transform .5s var(--ease-out)}
+.zh-card-glow{opacity:.75;transition:opacity .4s var(--ease-out),transform .4s var(--ease-out)}
+.zh-card-art img{transition:transform .45s var(--ease-out)}
+.zh-more i{transition:transform .3s var(--ease-out)}
+@media (hover:hover){
+  .zh-card:hover .zh-card-art::before{opacity:1}
+  .zh-card:hover .zh-card-art::after{transform:scaleX(1)}
+  .zh-card:hover .zh-card-glow{opacity:1;transform:scale(1.15)}
+}
+.zh-card:focus-visible{box-shadow:0 34px 60px -28px rgba(76,138,36,.5);border-color:#d6e5c5}
+.zh-card:focus-visible .zh-card-art::before{opacity:1}
+.zh-card:focus-visible .zh-card-art::after{transform:scaleX(1)}
+.zh-card:focus-visible .zh-card-glow{opacity:1;transform:scale(1.15)}
+.zh-card:focus-visible .zh-card-art img{transform:translateY(-8px) scale(1.04)}
+.zh-card:focus-visible .zh-more i{transform:translateX(-4px) rotate(45deg)}
+@media (hover:none){
+  .zh-card:hover .zh-card-art img{transform:none}
+  .zh-card:active{transform:scale(.98);transition-duration:.12s}
+  .zh-card:active .zh-card-art img{transform:translateY(-5px) scale(1.03);transition-duration:.18s}
+  .zh-card:active .zh-card-art::before{opacity:1}
+}

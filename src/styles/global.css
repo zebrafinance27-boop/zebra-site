@@ -830,3 +830,28 @@ footer.ft :focus-visible,.zb-lead-tab:focus-visible{outline-color:#fff}
   .zh-card:active .zh-card-art img{transform:translateY(-5px) scale(1.03);transition-duration:.18s}
   .zh-card:active .zh-card-art::before{opacity:1}
 }
+
+/* ===== Dark statement panel + stripe wipe (phase 4) =====
+   "אנחנו לא מלווים. אנחנו מתווכים." becomes the one dark moment of the page,
+   in the footer's deep brand green. When it enters, the zebra stripes sweep
+   across it (right to left, RTL); while scrolling past, they drift slowly. */
+.advocate{background:linear-gradient(150deg,#2f5a13 0%,#24470e 55%,#1d3a0b 100%);border:0;color:#fff;isolation:isolate;
+  padding:64px 6vw;box-shadow:0 44px 80px -52px rgba(29,58,11,.85)}
+.advocate::before{content:"";position:absolute;inset:-12% -6%;z-index:-1;pointer-events:none;
+  background:repeating-linear-gradient(-58deg,rgba(255,255,255,.07) 0 26px,transparent 26px 64px);
+  -webkit-mask-image:radial-gradient(ellipse 55% 60% at 50% 50%,rgba(0,0,0,.25),#000 85%);mask-image:radial-gradient(ellipse 55% 60% at 50% 50%,rgba(0,0,0,.25),#000 85%);
+  clip-path:inset(0 0 0 100%);transition:clip-path 1.3s var(--ease-io) .15s}
+.advocate.in::before{clip-path:inset(0)}
+.advocate::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 88% -10%,rgba(149,201,94,.32),transparent 48%),radial-gradient(circle at 8% 110%,rgba(149,201,94,.16),transparent 45%)}
+.advocate h2{color:#fff}
+.advocate>p{color:rgba(255,255,255,.86)}
+.adv-chips span{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:#fff}
+.adv-chips span svg{stroke:#b9e08f}
+.advocate :focus-visible{outline-color:#fff}
+@supports (animation-timeline:view()){
+  .advocate::before{animation:zbDrift linear both;animation-timeline:view()}
+  @keyframes zbDrift{from{translate:0 -28px}to{translate:0 28px}}
+}
+@media (max-width:600px){.advocate{padding:44px 22px;border-radius:24px}}
+@media (prefers-reduced-motion:reduce){.advocate::before{animation:none;clip-path:none;transition:none}}

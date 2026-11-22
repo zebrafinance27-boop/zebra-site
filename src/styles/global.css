@@ -973,3 +973,18 @@ input[type=range]:active::-moz-range-thumb{transform:scale(1.18)}
 .prose a{text-decoration-color:rgba(67,125,32,.45);text-underline-offset:3px;text-decoration-thickness:1.5px;transition:text-decoration-color .2s,color .2s}
 .prose a:hover{color:var(--green-darker);text-decoration-color:currentColor}
 @media (prefers-reduced-motion:reduce){.biz-zebra::before{animation:none}}
+
+/* ===== Polish: stronger arch stripes + two more stripe seams ===== */
+.zh-arch::before{background:repeating-linear-gradient(-58deg,rgba(47,90,19,.13) 0 22px,transparent 22px 56px)}
+.zh-arch::after{background:linear-gradient(180deg,transparent 65%,rgba(226,236,213,.75))}
+/* a short band of zebra stripes along the top edge of the steps and FAQ sections,
+   drawing itself out from the centre as the section scrolls in */
+.zh-how,.zh-faq{position:relative}
+.zh-how::before,.zh-faq::before{content:"";position:absolute;top:-1px;left:50%;width:min(560px,70vw);margin-left:calc(min(560px,70vw) / -2);height:6px;pointer-events:none;
+  background:repeating-linear-gradient(-58deg,var(--green) 0 6px,transparent 6px 14px);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);opacity:.55}
+@supports (animation-timeline:view()){
+  .zh-how::before,.zh-faq::before{animation:zbSeam linear both;animation-timeline:view();animation-range:entry 0% entry 70%}
+  @keyframes zbSeam{from{transform:scaleX(0)}}
+}
+@media (prefers-reduced-motion:reduce){.zh-how::before,.zh-faq::before{animation:none}}

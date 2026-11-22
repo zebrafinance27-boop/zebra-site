@@ -870,3 +870,44 @@ footer.ft :focus-visible,.zb-lead-tab:focus-visible{outline-color:#fff}
 .zh-step h3{transition:color .35s}
 .zh-step.cur h3{color:var(--green-deep)}
 @media (prefers-reduced-motion:reduce){.zh-line i,.zh-step .zh-num::after{animation:none}}
+
+/* ===== Small details (phase 6): calculator, FAQ, videos, header ===== */
+/* calculator: steady digits while the number rolls; thumb grows while dragging */
+.cr-amount{font-variant-numeric:tabular-nums}
+input[type=range]::-webkit-slider-thumb{transition:transform .18s var(--ease-out)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.18)}
+input[type=range]::-moz-range-thumb{transition:transform .18s var(--ease-out)}
+input[type=range]:active::-moz-range-thumb{transform:scale(1.18)}
+
+/* FAQ: answers slide open smoothly (where the browser supports it) and fade in */
+@media (hover:hover){.faq-item summary:hover{color:var(--green-deep)}}
+.faq-item summary{transition:color .2s}
+.faq-item summary .fq-ic{transition:transform .35s var(--ease-out),background .2s}
+.faq-item[open] .faq-a{animation:zbRise .45s var(--ease-out)}
+@supports selector(::details-content){
+  .faq-item{interpolate-size:allow-keywords}
+  .faq-item::details-content{block-size:0;overflow:hidden;transition:block-size .38s var(--ease-out),content-visibility .38s allow-discrete}
+  .faq-item[open]::details-content{block-size:auto}
+}
+
+/* testimonial videos: the card lifts and the play button glows, on hover and on keyboard focus */
+.zh-vid-frame{transition:transform .4s var(--ease-out),box-shadow .4s var(--ease-out)}
+.zh-vid-frame img{transition:transform .6s var(--ease-out)}
+.zh-play{transition:transform .3s var(--ease-out),background .3s}
+@media (hover:hover){.zh-vid-frame:hover{transform:translateY(-4px);box-shadow:0 30px 50px -28px rgba(20,24,27,.55)}}
+.zh-vid-frame:focus-visible{transform:translateY(-4px)}
+.zh-vid-frame:focus-visible img{transform:scale(1.04)}
+.zh-vid-frame:focus-visible .zh-play{transform:scale(1.1);background:var(--green)}
+@media (hover:none){.zh-vid-frame:active{transform:scale(.98)}}
+
+/* header: gains depth once the page scrolls, with a thin green reading-progress line.
+   Pure CSS (scroll-driven); browsers without support simply keep today's header. */
+@supports (animation-timeline:scroll()){
+  .site-header{animation:zbHdr linear both;animation-timeline:scroll(root);animation-range:0 120px}
+  @keyframes zbHdr{to{background:rgba(246,245,239,.94);box-shadow:0 10px 30px -22px rgba(20,24,27,.45)}}
+  .site-header::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:2px;pointer-events:none;
+    background:linear-gradient(270deg,var(--green),var(--green-deep));transform-origin:right;transform:scaleX(0);
+    animation:zbProgress linear both;animation-timeline:scroll(root)}
+  @keyframes zbProgress{to{transform:scaleX(1)}}
+}
+@media (prefers-reduced-motion:reduce){.site-header::after{display:none}.faq-item::details-content{transition:none}}

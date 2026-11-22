@@ -192,13 +192,29 @@ document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
     const pct=((el.value-el.min)/(el.max-el.min))*100;
     el.style.setProperty("--pct",pct+"%");
   }
+  // Monthly payment "rolls" to the new value instead of jumping.
+  // aria-busy keeps screen readers from announcing every in-between number.
+  const reduceCalc=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let shown=null, tw=0;
+  function showMonthly(v){
+    if(shown===null||reduceCalc){shown=v;monthlyOut.textContent=ils(v);return;}
+    const from=shown,t0=performance.now(),d=380;
+    cancelAnimationFrame(tw);monthlyOut.setAttribute("aria-busy","true");
+    const step=t=>{
+      const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);
+      shown=from+(v-from)*e;monthlyOut.textContent=ils(shown);
+      if(k<1)tw=requestAnimationFrame(step);
+      else{shown=v;monthlyOut.textContent=ils(v);monthlyOut.removeAttribute("aria-busy");}
+    };
+    tw=requestAnimationFrame(step);
+  }
   function calc(){
     const P=+amount.value, n=+term.value, r=(+rate.value)/100/12;
     const m = r>0 ? P*r/(1-Math.pow(1+r,-n)) : P/n;
     amountOut.textContent=ils(P);
     termOut.textContent=n+" \u05d7\u05d5\u05d3\u05e9\u05d9\u05dd";
     rateOut.textContent=(+rate.value)+"%";
-    monthlyOut.textContent=ils(m);
+    showMonthly(m);
     fillTrack(amount); fillTrack(term); fillTrack(rate);
   }
   // Loan type: each type has its own max amount and max number of payments

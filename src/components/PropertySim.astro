@@ -156,6 +156,17 @@
   var cookie = function (n) { var m = document.cookie.match("(?:^|; )" + n + "=([^;]*)"); return m ? decodeURIComponent(m[1]) : ""; };
   var uuid = function () { return crypto.randomUUID ? crypto.randomUUID() : "id-" + Date.now().toString(36) + Math.random().toString(36).slice(2); };
   var qs = new URLSearchParams(location.search);
+  // attribution, read at send time: SiteScript stores the ad params of this or an earlier visit (7 days, localStorage "zb_attr_v1").
+  // If this URL has its own params they win; if storage is blocked, fall back to the URL.
+  function attribution() {
+    var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid"], st = {};
+    try { var x = JSON.parse(localStorage.getItem("zb_attr_v1")); if (x && x.ts && Date.now() - x.ts < 7 * 864e5) st = x.a || {}; } catch (e) {}
+    var fromUrl = keys.some(function (k) { return qs.get(k); }), o = {};
+    keys.forEach(function (k) { o[k] = (fromUrl ? qs.get(k) : st[k]) || ""; });
+    o.landing_page = (!fromUrl && st.landing_page) || location.origin + location.pathname;
+    o.referrer = (!fromUrl && st.referrer) || document.referrer || "";
+    return o;
+  }
   var sending = false;
 
   form.addEventListener("submit", async function (e) {
@@ -164,13 +175,14 @@
     var err = name.length < 2 ? "נא למלא שם מלא" : !/^05\d{8}$/.test(phone) ? "נא למלא מספר נייד תקין (10 ספרות, מתחיל ב-05)" : !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? "נא למלא כתובת מייל תקינה" : !$("psConsent").checked ? "יש לאשר את העברת הפרטים כדי להמשיך" : "";
     $("psErr").textContent = err; if (err) return;
     var leadId = uuid(), eventId = "lead-" + leadId;
+    var at = attribution();
     var payload = {
       lead_id: leadId, full_name: name, phone: phone, email: email, consent: true,
       consent_text: "אישור העברת פרטים לצורך בדיקת הבקשה ויצירת קשר, בהתאם למדיניות הפרטיות",
       property_value: s.value, existing_mortgage: s.mortgage, requested_amount: s.amount, term_years: s.years,
-      utm_source: qs.get("utm_source") || "", utm_medium: qs.get("utm_medium") || "", utm_campaign: qs.get("utm_campaign") || "",
-      utm_content: qs.get("utm_content") || "", utm_term: qs.get("utm_term") || "", fbclid: qs.get("fbclid") || "",
-      landing_page: location.origin + location.pathname, referrer: document.referrer || "",
+      utm_source: at.utm_source, utm_medium: at.utm_medium, utm_campaign: at.utm_campaign,
+      utm_content: at.utm_content, utm_term: at.utm_term, fbclid: at.fbclid,
+      landing_page: at.landing_page, referrer: at.referrer,
       meta: { event_id: eventId, fbp: cookie("_fbp"), fbc: cookie("_fbc"), event_source_url: location.href },
       company: $("psCompany").value,
     };

@@ -1,4 +1,25 @@
 <script is:inline>
+/* Campaign attribution on every page: if the URL carries utm_* / fbclid, keep them for 7 days
+   (localStorage "zb_attr_v1"), so a lead sent later from /check or the property simulator still
+   carries the ad — even when the visitor landed on another page first or came back in a new tab.
+   Same format as ATTR in public/check/index.html. */
+(function () {
+  try {
+    var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid"];
+    var qs = new URLSearchParams(location.search), fresh = {}, has = false;
+    keys.forEach(function (k) { var v = qs.get(k); if (v) { fresh[k] = v.slice(0, 300); has = true; } });
+    if (!has) return;
+    var KEY = "zb_attr_v1", prev = {};
+    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.ts && Date.now() - x.ts < 7 * 864e5) prev = x.a || {}; } catch (e) {}
+    // a new ad click replaces the previous campaign (no mixing); same params again keep the first landing page
+    var same = keys.every(function (k) { return (fresh[k] || "") === (prev[k] || ""); });
+    var a = Object.assign({}, fresh, same && prev.landing_page ? { landing_page: prev.landing_page, referrer: prev.referrer || "", fbclid_ts: prev.fbclid_ts } : { landing_page: location.origin + location.pathname, referrer: document.referrer || "" });
+    if (fresh.fbclid && !a.fbclid_ts) a.fbclid_ts = Date.now();
+    localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), a: a }));
+  } catch (e) {}
+})();
+</script>
+<script is:inline>
 /* =========================================================================
    הגדרות — עדכנו כאן את פרטי הקשר שלכם:
    ========================================================================= */

@@ -160,16 +160,33 @@ const ss = {
 };
 const getCookie = (n) => { const m = document.cookie.match(new RegExp("(?:^|; )" + n + "=([^;]*)")); return m ? decodeURIComponent(m[1]) : ""; };
 
-/* ---------------- attribution (captured once per session, survives step navigation) ---------------- */
+/* Campaign attribution (utm_* + fbclid).
+   Kept for the whole visit (sessionStorage) AND for 7 days across tabs/visits (localStorage "zb_attr_v1"),
+   so it survives a return visit in a new tab and a visit that started on another page of the site
+   (src/components/SiteScript.astro saves the same key on every page). Newer campaign params win. */
 const ATTR = (() => {
   const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid"];
+  const LKEY = "zb_attr_v1";
+  let stored = null, storedTs = 0;
+  try { const x = JSON.parse(localStorage.getItem(LKEY)); if (x && x.ts && Date.now() - x.ts < CONFIG.storageTtlMs) { stored = x.a; storedTs = x.ts; } } catch (e) {}
   let saved = null; try { saved = JSON.parse(sessionStorage.getItem("zb_attr")); } catch (e) {}
   const fresh = {}; keys.forEach((k) => { const v = QS.get(k); if (v) fresh[k] = v.slice(0, 300); });
-  const a = Object.assign({}, saved || {}, fresh);
+  const hasFresh = Object.keys(fresh).length > 0;
+  const prev = Object.assign({}, stored || {}, saved || {});
+  // a new ad click replaces the previous campaign completely (no mixing of old and new utm values)
+  const a = hasFresh ? Object.assign({}, fresh) : Object.assign({}, prev);
+  if (hasFresh) {
+    // a new ad click: this page is the landing page of this campaign visit
+    const same = keys.every((k) => (fresh[k] || "") === (prev[k] || ""));
+    a.landing_page = same && prev.landing_page ? prev.landing_page : location.origin + location.pathname;
+    a.referrer = same && prev.landing_page ? prev.referrer || "" : document.referrer || "";
+    if (fresh.fbclid) a.fbclid_ts = fresh.fbclid === prev.fbclid && prev.fbclid_ts ? prev.fbclid_ts : Date.now();
+  }
   if (!a.landing_page) a.landing_page = location.origin + location.pathname;
   if (!a.referrer) a.referrer = document.referrer || "";
   if (!a.fbclid_ts && a.fbclid) a.fbclid_ts = Date.now();
   ss.set("zb_attr", JSON.stringify(a));
+  if (keys.some((k) => a[k])) { try { localStorage.setItem(LKEY, JSON.stringify({ ts: hasFresh || !storedTs ? Date.now() : storedTs, a })); } catch (e) {} }
   return a;
 })();
 /* ---------------- step URLs ---------------- */

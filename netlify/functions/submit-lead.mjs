@@ -8,7 +8,7 @@
 //   WEBHOOK_SECRET        recommended  shared secret; sent as X-Zebra-Token + X-Zebra-Signature (HMAC-SHA256 of body)
 //   ALLOWED_ORIGINS       recommended  e.g. https://zebra-finance.co.il,https://www.zebra-finance.co.il
 //   META_PIXEL_ID / META_CAPI_TOKEN / META_TEST_EVENT_CODE (optional)
-import { env, json, checkOrigin, hmac, sendCapi } from "../lib/shared.mjs";
+import { env, json, checkOrigin, hmac, sendCapi, clientIp } from "../lib/shared.mjs";
 
 const LIEN = { free: "הרכב בבעלותי וללא שעבוד", loan: "קיימת הלוואה או שעבוד על הרכב", unsure: "לא בטוח/ה" };
 const MIN_YEAR = 2011;
@@ -107,6 +107,7 @@ export default async (req) => {
   else { equity = Math.max(0, value - balance); basis = "value_minus_balance"; }
 
   const now = new Date();
+  const meta = b.meta || {};
   const lead = {
     lead_id: leadId,
     reference: ref(leadId),
@@ -134,6 +135,16 @@ export default async (req) => {
     utm_content: str(b.utm_content), utm_term: str(b.utm_term), fbclid: str(b.fbclid, 300),
     landing_page: str(b.landing_page, 500), referrer: str(b.referrer, 500),
     source: "car_equity_check",
+    // Browser identifiers for the worker's lead-quality report to Meta (green/orange/red → Qualified/Disqualified),
+    // so Meta can match that later event to this visitor's ad click. Same values the CAPI Lead below uses.
+    // No financial data here — and the worker never puts these on monday.
+    meta: {
+      fbc: str(meta.fbc, 400),
+      fbp: str(meta.fbp, 200),
+      event_source_url: str(meta.event_source_url, 500) || str(b.landing_page, 500),
+      client_ip: clientIp(req) || "",
+      user_agent: str(req.headers.get("user-agent") || "", 400),
+    },
   };
 
   // ---- forward to the lead webhook (→ monday) ----
@@ -156,7 +167,6 @@ export default async (req) => {
   if (!forwarded) return json(502, { ok: false, error: "upstream" }, origin);
 
   // ---- Meta CAPI Lead (only after the lead is safely stored). No financial data. ----
-  const meta = b.meta || {};
   const [firstName, ...rest] = fullName.split(/\s+/);
   try {
     await sendCapi({

@@ -12,6 +12,7 @@ import { env, json, checkOrigin, hmac, sendCapi } from "../lib/shared.mjs";
 
 const LIEN = { free: "הרכב בבעלותי וללא שעבוד", loan: "קיימת הלוואה או שעבוד על הרכב", unsure: "לא בטוח/ה" };
 const MIN_YEAR = 2011;
+const MIN_LOAN = 12000;   // smallest loan Zebra advances — keep in sync with CONFIG.minLoan in public/check/index.html
 // Max monthly payments by vehicle year — keep in sync with TERM_BY_YEAR in public/check/index.html
 const TERM_BY_YEAR = { 2011: 12, 2012: 24, 2013: 24, 2014: 36, 2015: 36, 2016: 36, 2017: 48, 2018: 48, 2019: 60, 2020: 60, 2021: 72, 2022: 84 };
 const maxTerm = (y) => (y >= 2023 ? 100 : TERM_BY_YEAR[y] || null);
@@ -91,6 +92,9 @@ export default async (req) => {
   if (!lien) errors.push("lien_status");
   if (value == null || Number.isNaN(value) || Number.isNaN(balance) || amount === null || Number.isNaN(amount)) errors.push("amounts");
   else if (amount > value) errors.push("requested_amount_exceeds_vehicle_value");
+  else if (amount < MIN_LOAN) errors.push("requested_amount_below_minimum");
+  // no room for the minimum loan (≈100% financed) — the page ends the funnel before this, keep in sync with CONFIG.minLoan
+  else if (value < MIN_LOAN || (balance != null && value - balance < MIN_LOAN)) errors.push("not_eligible");
   if (b.consent !== true) errors.push("consent");
   if (errors.length) return json(422, { ok: false, error: "validation", fields: errors }, origin);
 

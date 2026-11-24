@@ -116,8 +116,14 @@ const CONFIG = {
   metaPixelId: "3921297834677512", // Zebra-owned Pixel — same as src/layouts/Base.astro (public ID, safe in the browser)
   minYear: 2011,
   value: { min: 10000, max: 500000, step: 1000, initial: 50000 },
-  amount: { min: 5000, max: 500000, step: 1000 },
-  storageKey: "zb_check_v1",
+  amount: { min: 12000, max: 500000, step: 1000 },
+  // smallest loan Zebra can advance. If the car's free equity (value − existing loan) is below this,
+  // the funnel ends politely before the details step. Keep in sync with netlify/functions/submit-lead.mjs
+  minLoan: 12000,
+  // the check always starts from the beginning on a new page load; mid-funnel it also restarts
+  // after this long without the visitor on the page (tab hidden / no interaction)
+  idleResetMs: 5 * 60 * 1000,
+  storageKey: "zb_check_v1",       // old saved-progress key; now only deleted on load
   // Every step gets its own URL so Meta can build audiences / custom conversions by URL:
   //   /check/ → /check/year → /check/value → /check/lien → /check/amount → /check/details → /check/offer
   // "path" needs the rewrite in public/_redirects. "hash" (#year…) for hosts without rewrites. "none" keeps one URL.
@@ -190,7 +196,7 @@ const ATTR = (() => {
   return a;
 })();
 /* ---------------- step URLs ---------------- */
-const SLUGS = { 0: "", 1: "year", 2: "value", 3: "lien", 4: "amount", 5: "details", results: "offer" };
+const SLUGS = { 0: "", 1: "year", 2: "value", 3: "lien", 4: "amount", 5: "details", nofit: "not-eligible", results: "offer" };
 // keeps the query string (utm_*, fbclid) on every step URL
 function urlFor(key) {
   const slug = SLUGS[key] ?? "";
@@ -278,6 +284,21 @@ function computeEquity(s) {
   }
   return { equity: null, basis: "incomplete" };
 }
+// No room for the minimum loan: the car is worth less than it, or the existing loan leaves less than it free.
+// An unknown balance can't be judged here, so that visitor continues and the details are checked by phone.
+function notEligible(s) {
+  if (Number(s.value) < CONFIG.minLoan) return true;
+  const { equity } = computeEquity(s);
+  return equity != null && equity < CONFIG.minLoan;
+}
+// furthest step the entered data allows (back/forward and stale history entries can't skip past it)
+function maxStep(s) {
+  if (!s.year) return 1;
+  if (!(s.value >= CONFIG.value.min)) return 2;
+  if (!s.lien || (s.lien === "loan" && !s.balanceUnknown && !(s.balance > 0)) || notEligible(s)) return 3;
+  if (!(s.amount >= CONFIG.amount.min)) return 4;
+  return 5;
+}
 
 function normalizePhone(raw) {
   let d = digits(raw);
@@ -350,15 +371,8 @@ const INITIAL = () => ({
   result: null,             // { ref, submittedAt, payload }
 });
 
-function loadState() {
-  const saved = ls.get(CONFIG.storageKey);
-  if (!saved || !saved.ts || Date.now() - saved.ts > CONFIG.storageTtlMs) return INITIAL();
-  const st = Object.assign(INITIAL(), saved.s);
-  if (st.step > TOTAL) st.step = TOTAL;                                   // state saved by an older funnel version
-  if (typeof st.year !== "number" || st.year < CONFIG.minYear) st.year = null;
-  if (!(st.value >= CONFIG.value.min)) st.value = CONFIG.value.initial;
-  return st;
-}
+// progress is no longer kept between visits: drop what older versions saved
+ls.del(CONFIG.storageKey);
 
 /* ---------------- icons (stroke, 24 grid) ---------------- */
 const P = {
@@ -505,7 +519,7 @@ function DemoBar() {
 }
 
 /* ---------------- screens ---------------- */
-function Welcome({ onStart, resume, onResume }) {
+function Welcome({ onStart }) {
   return html`<div className="rise">
     <div className="relative -mx-4 sm:mx-0 px-4 pt-2 lg:hidden">
       <div className="absolute inset-x-6 top-6 bottom-2 rounded-[40px] bg-[radial-gradient(ellipse_at_center,#DDEBCF_0%,rgba(238,244,231,.6)_45%,transparent_72%)]"></div>
@@ -513,14 +527,11 @@ function Welcome({ onStart, resume, onResume }) {
         className="relative mx-auto w-[min(58vw,230px)] h-auto float" fetchpriority="high" />
     </div>
 
-    <h1 className="text-[29px] sm:text-[34px] leading-[1.15] font-black tracking-tight mt-3">כמה כסף תוכלו לקבל <span className="text-brand-600">כנגד הרכב</span> שלכם?</h1>
+    <h1 className="text-[29px] sm:text-[34px] leading-[1.15] font-black tracking-tight mt-3">כמה כסף תוכלו לקבל <span className="text-brand-600">בעזרת הרכב</span> שלכם?</h1>
     <p className="text-[16px] text-ink-500 mt-3 leading-relaxed">בדיקה דיגיטלית קצרה שתעזור לכם לגלות את אפשרויות המימון שלכם – בלי למכור את הרכב.</p>
 
     <div className="mt-7">
-      ${resume
-        ? html`<${PrimaryButton} onClick=${onResume}>המשך מהמקום שעצרתם <${Icon} n="arrowL" className="w-5 h-5" /><//>
-               <button type="button" onClick=${onStart} className="w-full mt-3 h-11 text-[14.5px] font-semibold text-ink-700 hover:text-ink">התחלת בדיקה חדשה</button>`
-        : html`<${PrimaryButton} onClick=${onStart}>בואו נתחיל בבדיקה <${Icon} n="arrowL" className="w-5 h-5 transition group-hover:-translate-x-1" /><//>`}
+      <${PrimaryButton} onClick=${onStart}>בואו נתחיל בבדיקה <${Icon} n="arrowL" className="w-5 h-5 transition group-hover:-translate-x-1" /><//>
       <div className="flex items-center justify-center gap-2 text-[13px] text-ink-500 mt-3 font-medium">
         <span>ללא תשלום מראש</span><span className="w-1 h-1 rounded-full bg-[#c9cdc6]"></span><span>תהליך דיגיטלי</span><span className="w-1 h-1 rounded-full bg-[#c9cdc6]"></span><span className="flex items-center gap-1"><${Icon} n="clock" className="w-3.5 h-3.5" />כדקה</span>
       </div>
@@ -537,7 +548,7 @@ function Welcome({ onStart, resume, onResume }) {
 function StepYear({ s, set, next }) {
   const pick = (y) => { set({ year: y }); setTimeout(next, 260); };
   return html`<div>
-    <${StepTitle} title="מהי שנת הייצור של הרכב שלכם?" sub="אפשר למצוא אותה ברישיון הרכב." />
+    <${StepTitle} title="מה שנת הרכב שלכם?" sub="אפשר למצוא אותה ברישיון הרכב." />
     <div className="grid grid-cols-4 gap-2.5">
       ${YEARS.map((y) => {
         const on = s.year === y;
@@ -622,7 +633,7 @@ function StepAmount({ s, set, next }) {
   };
   const within = equity != null && amount != null && amount <= equity;
   const ratio = equity ? clamp((amount || 0) / equity, 0, 1.4) : 0;
-  const invalid = amount === "" || amount == null || amount < 1000;
+  const invalid = amount === "" || amount == null || amount < min;
   const quick = [0.25, 0.5, 0.75, 1].map((r) => ({ r, v: clamp(roundTo(max * r, step), min, max) }));
 
   return html`<div>
@@ -638,6 +649,7 @@ function StepAmount({ s, set, next }) {
       <label className="block mt-5 text-[13px] font-semibold text-ink-700 mb-1.5" htmlFor="amtIn">או הקלידו סכום</label>
       <${MoneyInput} id="amtIn" value=${amount} placeholder="למשל 30,000" onChange=${typed} onEnter=${() => !invalid && next()} />
       ${capped && html`<p role="alert" className="text-[13px] text-brand-700 mt-2">הסכום המקסימלי הוא שווי הרכב שציינתם – ${ILS(max)}</p>`}
+      ${!capped && amount !== "" && amount != null && amount < min && html`<p role="alert" className="text-[13px] text-red-600 mt-2">סכום ההלוואה המינימלי הוא ${ILS(min)}</p>`}
     </div>
 
     <div className="mt-3 rounded-3xl bg-ink text-white p-5 stripes relative overflow-hidden">
@@ -666,6 +678,30 @@ function StepAmount({ s, set, next }) {
 
     <div className="mt-6"><${PrimaryButton} onClick=${next} disabled=${invalid}>המשך <${Icon} n="arrowL" className="w-5 h-5" /><//></div>
     <${TrustLine} icon="calendar">${maxTerm(s.year) ? `לרכב משנת ${s.year}: פריסה של עד ${maxTerm(s.year)} תשלומים` : "פריסה של עד 100 תשלומים"}<//>
+  </div>`;
+}
+
+/* Polite end of the funnel when the car has no room for the minimum loan (≈100% financed). No details are collected. */
+function NotEligible({ s, onBack }) {
+  const hasLoan = s.lien === "loan" && Number(s.value) >= CONFIG.minLoan;
+  return html`<div className="rise text-center">
+    <img src="/images/zebra-mascot.webp" alt="" className="w-24 h-auto mx-auto" />
+    <h1 className="text-[26px] sm:text-[30px] leading-[1.2] font-extrabold tracking-tight mt-5">תודה שבדקתם איתנו</h1>
+    <p className="text-[16px] text-ink-700 mt-3 leading-relaxed">
+      ${hasLoan
+        ? "לפי הנתונים שמסרתם, יתרת ההלוואה הקיימת קרובה לשווי הרכב, ולכן אין כרגע ברכב מספיק שווי פנוי כדי שנוכל לקדם עבורכם הלוואה כנגדו."
+        : "לפי הנתונים שמסרתם, שווי הרכב נמוך מסכום ההלוואה המינימלי, ולכן לא נוכל לקדם עבורכם הלוואה כנגדו."}
+    </p>
+    <div className="mt-5 rounded-2xl bg-paper px-4 py-3.5 text-[14.5px] text-ink-700">
+      הלוואה כנגד רכב אצלנו מתחילה מ-<strong>${ILS(CONFIG.minLoan)}</strong>
+    </div>
+    <p className="text-[14.5px] text-ink-500 mt-4 leading-relaxed">
+      ${hasLoan ? "כשיתרת ההלוואה תרד, נשמח שתחזרו לבדוק שוב." : "אם הנתונים ישתנו, נשמח שתחזרו לבדוק שוב."}
+    </p>
+    <div className="mt-7 grid gap-3">
+      <a href="/" className="w-full h-14 rounded-2xl bg-ink text-white text-[16px] font-bold grid place-items-center hover:opacity-90 transition">לאתר זברה</a>
+      <button type="button" onClick=${onBack} className="w-full h-11 text-[14.5px] font-semibold text-ink-700 hover:text-ink">טעיתי בנתונים, חזרה לתיקון</button>
+    </div>
   </div>`;
 }
 
@@ -1137,18 +1173,16 @@ async function sendLead(payload) {
 
 /* ---------------- app shell ---------------- */
 function App() {
-  const [s, setS] = useState(loadState);
+  // every page load starts at the welcome screen (nothing is restored from an earlier visit)
+  const [s, setS] = useState(INITIAL);
   const [dir, setDir] = useState("fwd");
   const [submitting, setSubmitting] = useState(false);
   const [proc, setProc] = useState(null); // { done, error }
-  const [resumable, setResumable] = useState(() => { const x = loadState(); return !x.result && x.step > 0 && x.step <= TOTAL ? x.step : 0; });
   const inflight = useRef(false);
   const topRef = useRef(null);
+  const sRef = useRef(s); sRef.current = s;   // latest state for timers / delayed callbacks
 
   const set = useCallback((patch) => setS((p) => Object.assign({}, p, patch)), []);
-
-  // persist everything (except honeypot) so refresh / back never loses data
-  useEffect(() => { const { company, ...rest } = s; ls.set(CONFIG.storageKey, { ts: Date.now(), s: rest }); }, [s]);
 
   // pixel init; PageView is sent once per screen (each screen has its own URL)
   useEffect(() => { Track.init(); }, []);
@@ -1159,11 +1193,16 @@ function App() {
   useEffect(() => {
     const startStep = s.result ? "results" : s.step;
     history.replaceState({ zb: startStep }, "", urlFor(startStep));
+    const rank = (k) => (k === "nofit" ? 3.5 : k);
     const onPop = (e) => {
       setS((p) => {
         if (p.result) { history.pushState({ zb: "results" }, "", urlFor("results")); return p; }
-        const to = e.state && typeof e.state.zb === "number" ? e.state.zb : 0;
-        setDir(to < p.step ? "back" : "fwd");
+        const want = e.state && (typeof e.state.zb === "number" || e.state.zb === "nofit") ? e.state.zb : 0;
+        let to = want;
+        if (want === "nofit") { if (!notEligible(p)) to = maxStep(p); }
+        else if (want > maxStep(p)) to = p.step === 0 ? 0 : maxStep(p);   // entry left over from before a restart / data changed
+        if (to !== want) history.replaceState({ zb: to }, "", urlFor(to));
+        setDir(rank(to) < rank(p.step) ? "back" : "fwd");
         return Object.assign({}, p, { step: to });
       });
     };
@@ -1171,23 +1210,44 @@ function App() {
     return () => removeEventListener("popstate", onPop);
   }, []);
 
+  // restart from the beginning after 5 minutes away (tab in the background, or no touch / typing),
+  // and when the page comes back from the browser's back-forward cache
+  useEffect(() => {
+    let last = Date.now();
+    const inProgress = () => { const p = sRef.current; return !p.result && p.step !== 0 && !inflight.current; };
+    const expireIfIdle = () => { if (Date.now() - last > CONFIG.idleResetMs && inProgress()) restart(); };
+    const onActive = () => { last = Date.now(); };
+    const onVis = () => { if (document.visibilityState === "visible") expireIfIdle(); };
+    const onShow = (e) => { if (e.persisted && inProgress()) restart(); };
+    const timer = setInterval(() => { if (document.visibilityState === "visible") expireIfIdle(); }, 15000);
+    ["pointerdown", "keydown", "input", "scroll"].forEach((t) => addEventListener(t, onActive, { passive: true, capture: true }));
+    document.addEventListener("visibilitychange", onVis);
+    addEventListener("pageshow", onShow);
+    return () => {
+      clearInterval(timer);
+      ["pointerdown", "keydown", "input", "scroll"].forEach((t) => removeEventListener(t, onActive, { capture: true }));
+      document.removeEventListener("visibilitychange", onVis);
+      removeEventListener("pageshow", onShow);
+    };
+  }, []);
+
   useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" }); }, [s.step, !!s.result, !!proc]);
 
   const go = (n) => { setDir("fwd"); history.pushState({ zb: n }, "", urlFor(n)); set({ step: n }); };
   const next = () => {
-    const cur = s.step;
-    if (cur === 2) Track.once("VehicleDetailsCompleted", { custom: true });
-    if (cur === 4) Track.once("FinancingDetailsCompleted", { custom: true });
-    go(cur + 1);
+    const cur = sRef.current;   // year / lien advance on a short timer, so read the latest answers
+    if (cur.step === 2) Track.once("VehicleDetailsCompleted", { custom: true });
+    if (cur.step === 3 && notEligible(cur)) return go("nofit");
+    if (cur.step === 4) Track.once("FinancingDetailsCompleted", { custom: true });
+    go(cur.step + 1);
   };
   const back = () => history.back();
 
-  const start = (fresh) => {
-    if (fresh) { const n = INITIAL(); setS(n); setResumable(0); }
+  const start = () => {
+    setS(INITIAL());
     Track.once("StartApplication", { custom: true });
     setDir("fwd"); history.pushState({ zb: 1 }, "", urlFor(1)); set({ step: 1 });
   };
-  const resume = () => { Track.once("StartApplication", { custom: true }); go(resumable); };
 
   const submit = async () => {
     if (inflight.current) return;           // double-submit guard
@@ -1216,7 +1276,7 @@ function App() {
     }
   };
 
-  const restart = () => { ls.del(CONFIG.storageKey); setProc(null); setResumable(0); setS(INITIAL()); setDir("back"); history.replaceState({ zb: 0 }, "", urlFor(0)); };
+  function restart() { setProc(null); setS(INITIAL()); setDir("back"); history.replaceState({ zb: 0 }, "", urlFor(0)); }
 
   const waFallback = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent("היי זברה, התחלתי בדיקת מימון כנגד רכב ואשמח להמשיך איתכם.")}`;
 
@@ -1228,7 +1288,8 @@ function App() {
   let body;
   if (s.result) body = html`<${Results} s=${s} onRestart=${restart} />`;
   else if (proc) body = html`<${Processing} s=${s} done=${proc.done} error=${proc.error} onRetry=${submit} waLink=${waFallback} />`;
-  else if (s.step === 0) body = html`<${Welcome} onStart=${() => start(true)} resume=${resumable} onResume=${resume} />`;
+  else if (s.step === 0) body = html`<${Welcome} onStart=${start} />`;
+  else if (s.step === "nofit") body = html`<${NotEligible} s=${s} onBack=${back} />`;
   else {
     const props = { s, set, next };
     body = [null,
@@ -1247,7 +1308,7 @@ function App() {
     <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-md">
       <div className="max-w-[480px] lg:max-w-[1080px] mx-auto px-4 h-[60px] flex items-center justify-between">
         <div className="w-20">
-          ${inFunnel && html`<button type="button" onClick=${back} aria-label="חזרה לשלב הקודם"
+          ${(inFunnel || s.step === "nofit") && html`<button type="button" onClick=${back} aria-label="חזרה לשלב הקודם"
             className="h-10 pl-3 pr-1.5 -mr-1.5 rounded-xl flex items-center gap-0.5 text-[14px] font-semibold text-ink-700 hover:bg-paper active:scale-95 transition">
             <${Icon} n="chevR" className="w-5 h-5" />חזרה</button>`}
         </div>

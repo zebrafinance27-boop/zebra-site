@@ -615,15 +615,17 @@ function StepLien({ s, set, next }) {
 
 function StepAmount({ s, set, next }) {
   const { min, step } = CONFIG.amount;
-  const max = Math.max(min, Number(s.value) || min);   // never more than the car value entered
   const { equity, basis } = computeEquity(s);
+  // never more than the car's free equity (value − existing loan); car value when the balance is unknown
+  const max = Math.max(min, equity != null ? equity : Number(s.value) || min);
+  const capLabel = basis === "value_minus_balance" ? "השווי הפנוי ברכב (שווי הרכב פחות יתרת ההלוואה)" : "שווי הרכב שציינתם";
   const amount = s.amount;
   const [capped, setCapped] = useState(false);
   useEffect(() => {
     if (s.amount == null) {
       const base = equity != null && equity > 0 ? roundTo(equity * 0.6, step) : roundTo(max * 0.5, step);
       set({ amount: clamp(base, min, max) });
-    } else if (s.amount > max) set({ amount: max });   // car value was lowered after going back
+    } else if (s.amount > max) set({ amount: max });   // value / balance changed after going back
   }, []);
   const [bump, setBump] = useState(0);
   const change = (v) => { setCapped(false); set({ amount: v }); setBump((b) => b + 1); };
@@ -637,7 +639,7 @@ function StepAmount({ s, set, next }) {
   const quick = [0.25, 0.5, 0.75, 1].map((r) => ({ r, v: clamp(roundTo(max * r, step), min, max) }));
 
   return html`<div>
-    <${StepTitle} title="איזה סכום תרצו לקבל?" sub=${html`בחרו סכום עד שווי הרכב שציינתם (${ILS(max)}).`} />
+    <${StepTitle} title="איזה סכום תרצו לקבל?" sub=${html`בחרו סכום עד ${capLabel} – ${ILS(max)}.`} />
     <div className="rounded-3xl bg-white border border-line shadow-card p-5">
       <div className="text-center text-[13px] text-ink-500 font-medium">סכום המימון המבוקש</div>
       <div key=${bump} className="text-center text-[46px] font-black leading-tight mt-1 text-brand-600">${amount === "" || amount == null ? html`<span className="text-[#c9cdc6]">₪0</span>` : ILS(amount)}</div>
@@ -648,7 +650,7 @@ function StepAmount({ s, set, next }) {
       </div>`}
       <label className="block mt-5 text-[13px] font-semibold text-ink-700 mb-1.5" htmlFor="amtIn">או הקלידו סכום</label>
       <${MoneyInput} id="amtIn" value=${amount} placeholder="למשל 30,000" onChange=${typed} onEnter=${() => !invalid && next()} />
-      ${capped && html`<p role="alert" className="text-[13px] text-brand-700 mt-2">הסכום המקסימלי הוא שווי הרכב שציינתם – ${ILS(max)}</p>`}
+      ${capped && html`<p role="alert" className="text-[13px] text-brand-700 mt-2">הסכום המקסימלי הוא ${capLabel} – ${ILS(max)}</p>`}
       ${!capped && amount !== "" && amount != null && amount < min && html`<p role="alert" className="text-[13px] text-red-600 mt-2">סכום ההלוואה המינימלי הוא ${ILS(min)}</p>`}
     </div>
 
@@ -905,7 +907,7 @@ function Results({ s, onRestart }) {
 
   // simulator state — local to this screen; nothing here is sent anywhere
   const aMin = Math.min(CONFIG.amount.min, req);
-  const aMax = Math.max(req, value || req);
+  const aMax = Math.max(req, equity != null ? equity : value || req);   // same cap as the amount step
   const [amt, setAmt] = useState(req);
   const [term, setTerm] = useState(terms[0] || max || 12);
   const opts = terms.map((t, i) => Object.assign({ term: t, kind: routeKind(i, terms.length) }, quote(amt, t)));

@@ -106,6 +106,7 @@ All fields are always present. `null` means "not applicable / unknown". Amounts 
 | `submitted_at` / `submitted_at_il` | string | ISO UTC / Israel local time |
 | `consent` | `true` | Always true (the form can't be sent without it). `consent_text` is the wording the customer approved. |
 | `utm_*`, `fbclid` | string | Campaign attribution, `""` when absent |
+| `meta` | object | Browser identifiers for the worker's lead-quality report to Meta (Conversions API): `fbc`, `fbp`, `event_source_url`, `client_ip`, `user_agent` (each `""` when absent). Not for monday. Receivers that don't use it can ignore it. |
 | `landing_page`, `referrer` | string | |
 | `source` | `"car_equity_check"` | Distinguishes this funnel from the site's older contact form |
 

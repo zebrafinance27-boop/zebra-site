@@ -93,6 +93,7 @@ export default async (req) => {
   if (value == null || Number.isNaN(value) || Number.isNaN(balance) || amount === null || Number.isNaN(amount)) errors.push("amounts");
   else if (amount > value) errors.push("requested_amount_exceeds_vehicle_value");
   else if (amount < MIN_LOAN) errors.push("requested_amount_below_minimum");
+  else if (balance != null && amount > value - balance) errors.push("requested_amount_exceeds_equity");
   // no room for the minimum loan (≈100% financed) — the page ends the funnel before this, keep in sync with CONFIG.minLoan
   else if (value < MIN_LOAN || (balance != null && value - balance < MIN_LOAN)) errors.push("not_eligible");
   if (b.consent !== true) errors.push("consent");
